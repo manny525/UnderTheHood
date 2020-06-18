@@ -1,0 +1,1 @@
+Add your node_modules, expo etc to the gitignore files before commiting.

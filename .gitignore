@@ -1,0 +1,11 @@
+merchantApp-frontend/node_modules/**/*
+merchantApp-frontend/.expo/*
+merchantApp-frontend/npm-debug.*
+merchantApp-frontend/*.jks
+merchantApp-frontend/*.p8
+merchantApp-frontend/*.p12
+merchantApp-frontend/*.key
+merchantApp-frontend/*.mobileprovision
+merchantApp-frontend/*.orig.*
+merchantApp-frontend/web-build/
+merchantApp-frontend/web-report/
