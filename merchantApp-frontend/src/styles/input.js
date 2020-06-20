@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 const styles = StyleSheet.create({
     input: {
         height: 30,
-        width: '80%',
+        width: Dimensions.get('window').width / 2,
         borderColor: 'grey',
         borderWidth: 1,
         borderRadius: 10,

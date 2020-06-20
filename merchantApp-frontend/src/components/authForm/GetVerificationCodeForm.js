@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, ScrollView, StyleSheet, TextInput, Text, Keyboard } from 'react-native';
-import inputStyles from '../styles/input';
-import MainButton from './MainButton';
+import inputStyles from '../../styles/input';
+import MainButton from '../MainButton';
 import validator from 'validator';
 
 const GetVerificationCodeForm = (props) => {
@@ -26,6 +26,7 @@ const GetVerificationCodeForm = (props) => {
                 placeholder='Email Id'
                 onChangeText={(text) => { setEmailText(text) }}
                 value={emailText}
+                keyboardType='email-address'
             />
             <MainButton onPress={validateEmail}>Verify</MainButton>
         </View>

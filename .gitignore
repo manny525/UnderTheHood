@@ -9,3 +9,6 @@ merchantApp-frontend/*.mobileprovision
 merchantApp-frontend/*.orig.*
 merchantApp-frontend/web-build/
 merchantApp-frontend/web-report/
+merchantApp-backend/inventory/node_modules
+merchantApp-backend/inventory/config
+merchantApp-backend/whatever

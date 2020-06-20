@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, ScrollView, StyleSheet, TextInput, Text, Dimensions, Picker, KeyboardAvoidingViewBase } from 'react-native';
-import inputStyle from '../styles/input';
-import MainButton from './MainButton'
-import colors from '../constants/colors';
+import inputStyle from '../../styles/input';
+import MainButton from '../MainButton'
+import colors from '../../constants/colors';
 import GeneralSignUp from './GeneralSignUp';
 import GoodsProviderValidation from './GoodsProviderValidation';
+import ServiceProviderValidation from './ServiceProviderValidation';
 
 
 const SignUpForm = (props) => {
@@ -12,6 +13,9 @@ const SignUpForm = (props) => {
     const onNext = (data) => {
         if (data.merchantType === 'goods') {
             setDisplay(<GoodsProviderValidation />)
+        }
+        else if (data.merchantType === 'service') {
+            setDisplay(<ServiceProviderValidation />)
         }
     }
 

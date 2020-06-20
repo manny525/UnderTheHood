@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, KeyboardAvoidingView, ScrollView, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
-import GetVerificationCodeForm from '../components/GetVerificationCodeForm';
-import SignUpForm from '../components/SignUpForm';
-import EnterVerificationCode from '../components/EnterVerificationCode';
-import GoodsProviderValidation from '../components/GoodsProviderValidation';
+import GetVerificationCodeForm from '../components/authForm/GetVerificationCodeForm';
+import SignUpForm from '../components/authForm/SignUpForm';
+import EnterVerificationCode from '../components/authForm/EnterVerificationCode';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(false)
@@ -38,7 +37,6 @@ const AuthScreen = (props) => {
             Keyboard.dismiss()
         }}>
             <View style={styles.screen}>
-                {/* <GoodsProviderValidation /> */}
                 {verificationStage}
             </View>
         </TouchableWithoutFeedback>

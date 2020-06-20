@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
-import MainButton from './MainButton';
-import inputStyle from '../styles/input';
+import MainButton from '../MainButton';
+import inputStyle from '../../styles/input';
 
 const EnterVerificationCode = (props) => {
     const [vCode, setVCode] = useState('')
@@ -22,6 +22,7 @@ const EnterVerificationCode = (props) => {
                 keyboardType='number-pad'
                 onChangeText={(text) => { setVCode(text) }}
                 value={vCode}
+                maxLength={6}
             />
             <MainButton style={{ marginVertical: 5, paddingVertical: 8 }} onPress={validateCode}>Verify</MainButton>
             <MainButton style={{ paddingVertical: 8 }} onPress={onCancel}>Cancel</MainButton>
