@@ -12,10 +12,10 @@ const SignUpForm = (props) => {
     
     const onNext = (data) => {
         if (data.merchantType === 'goods') {
-            setDisplay(<GoodsProviderValidation />)
+            setDisplay(<GoodsProviderValidation data={{...data, email:props.email}} />)
         }
         else if (data.merchantType === 'service') {
-            setDisplay(<ServiceProviderValidation />)
+            setDisplay(<ServiceProviderValidation data={{...data, email:props.email}} />)
         }
     }
 

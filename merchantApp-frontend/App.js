@@ -9,8 +9,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Header title={'MERCHANT APP'} />
-      {/* {!!login==false ? <AuthScreen setLogin={setLogin} /> : <></>} */}
-      <GoodsProviderValidation />
+      {!!login==false ? <AuthScreen setLogin={setLogin} /> : <></>}
     </View>
   );
 }

@@ -4,15 +4,25 @@ const sharp = require('sharp')
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = new express.Router()
-const { sendWelcomeEmail, deleteAccountEmail } = require('../emails/account')
+const { sendVerificationCode } = require('../emails/account')
 
-router.post('/users', async (req, res) => {
+router.post('/users/verifyEmail', async (req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email)
+        const vCode = sendVerificationCode(user.email)
+        res.status(201).send({user, vCode})
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+router.post('/users/newUser', async (req, res) => {
+    console.log(req.body)
     const user = new User(req.body)
     try {
         await user.save()
-        sendWelcomeEmail(user.email, user.name)
         const token = await user.generateAuthToken()
-        res.status(201).send({ user, token })
+        res.status(201).send({ user, token } )
     } catch (e) {
         res.status(400).send(e)
     }
@@ -20,7 +30,7 @@ router.post('/users', async (req, res) => {
 
 router.post('/users/login', async (req, res) => {
     try{
-        const user = await User.findByCredentials(req.body.email, req.body.password)
+        const user = await User.findByCredentials(req.body.email)
         const token = await user.generateAuthToken()
         res.send({ user, token })
     } catch(e) {
@@ -40,23 +50,13 @@ router.post('/users/logout', auth, async (req, res) => {
     }
 })
 
-router.post('/users/logoutAll', auth, async (req, res) => {
-    try {
-        req.user.tokens = []
-        await req.user.save()
-        res.send()
-    } catch (e) {
-        res.status(500).send()
-    }
-})
-
 router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
 router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email', 'password', 'age']
+    const allowedUpdates = ['email', 'merchantName', 'pan']
     const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidUpdate) {
@@ -73,7 +73,6 @@ router.patch('/users/me', auth, async (req, res) => {
 
 router.delete('/users/me', auth, async (req, res) => {
     try {
-        deleteAccountEmail(req.user.email, req.user.name)
         await req.user.remove()
         res.send(req.user)
     } catch(e) {

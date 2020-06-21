@@ -31,7 +31,7 @@ const GoodsProviderValidation = (props) => {
             const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=6ed4de0702acb6&lat=${lat}&lon=${log}&format=json`)
             const data = await res.json()
             setPinCode(data.address.postcode)
-        } catch(error) {
+        } catch (error) {
 
         }
 
@@ -42,7 +42,34 @@ const GoodsProviderValidation = (props) => {
             setError('*Please provide all the details to register')
         }
         else {
+            // console.log(props.data)
+            // console.log({ lat: location.coords.latitude, lon: location.coords.longitude, pinCode })
+            // console.log(goodsProviderType)
+            // console.log(merchantPAN)
             setError('')
+            const body = await JSON.stringify({
+                email: props.data.email,
+                merchantName: props.data.merchantName,
+                typeOfMerchant: props.data.merchantType,
+                aadhar: props.data.aadhar,
+                providerOf: goodsProviderType,
+                pan: merchantPAN,
+                location: {
+                    lat: location.coords.latitude,
+                    lon: location.coords.longitude,
+                    postalCode: pinCode
+                }
+            })
+            fetch('http://192.168.1.6:3000/users/newUser', {
+                method: "POST",
+                body,
+                headers: { 
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(resJson => console.log(resJson))
+            .catch(e => console.log(e))
         }
     }
 
@@ -84,12 +111,12 @@ const GoodsProviderValidation = (props) => {
                 }
             </Picker>
             <View style={styles.panContiner}>
-                <TextInput 
-                    style={{ ...inputStyle.input, width: 200, marginTop: 1 }} 
-                    placeholder="Merchant PAN" 
-                    onChangeText={veriftPANLength} 
-                    maxLength={16} 
-                    keyboardType='number-pad' 
+                <TextInput
+                    style={{ ...inputStyle.input, width: 200, marginTop: 1 }}
+                    placeholder="Merchant PAN"
+                    onChangeText={veriftPANLength}
+                    maxLength={16}
+                    keyboardType='number-pad'
                 />
                 {imgSrc ? <Image style={styles.tinyLogo} source={imgSrc} /> : <></>}
             </View>
