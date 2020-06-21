@@ -1,3 +1,4 @@
+.vscode/
 merchantApp-frontend/node_modules/**/*
 merchantApp-frontend/.expo/*
 merchantApp-frontend/npm-debug.*
@@ -11,3 +12,17 @@ merchantApp-frontend/web-build/
 merchantApp-frontend/web-report/
 merchantApp-backend/node_modules
 merchantApp-backend/config
+CustomerApp-frontend/node_modules/**/*
+CustomerApp-frontend/.expo/*
+CustomerApp-frontend/npm-debug.*
+CustomerApp-frontend/*.jks
+CustomerApp-frontend/*.p8
+CustomerApp-frontend/*.p12
+CustomerApp-frontend/*.key
+CustomerApp-frontend/*.mobileprovision
+CustomerApp-frontend/*.orig.*
+CustomerApp-frontend/web-build/
+CustomerApp-frontend/web-report/
+
+# macOS
+.DS_Store
