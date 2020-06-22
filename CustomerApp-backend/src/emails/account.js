@@ -3,15 +3,14 @@ const sgMail=require('@sendgrid/mail')
 sgMail.setApiKey(process.env.sendgridapi)
 
 
-const welcomemail=async(email,name)=>{
+const welcomemail=async(email,name,otp)=>{
     try{
         await sgMail.send({
             to:email,
             from:'aagrawal1@student.nitw.ac.in',
-            subject:'Email Verification!',
-            text:`Welcome to the app,${name}.`,
-            //Give Html Link for verification
-            // html:"<a href=''> Link </a> <script src='./../utils/js/email.js'> </script> ",
+            subject:'Account Verification!',
+            text:`Welcome to the app,${name}.
+            OTP is ${otp}`,
         })
     }catch(e){
         console.log('error');
