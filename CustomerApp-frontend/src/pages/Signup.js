@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
-import Form from '../components/Form';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import SignupForm from '../components/SignupForm';
 import { Actions } from 'react-native-router-flux';
 
 export default class Signup extends Component {
@@ -11,17 +11,21 @@ export default class Signup extends Component {
 
     render() {
         return(
+            <TouchableWithoutFeedback onPress={()=>{
+                Keyboard.dismiss();
+            }}>
             <View style={styles.container}>
                 
                 <View style={styles.appNameCont}>
                     <Text style={styles.appName}>Customer App</Text>
                 </View>
-                <Form type="Signup"/>
+                <SignupForm type='Signup'/>
                 <View style={styles.signinTextCont}> 
                     <Text style={styles.signinText}>Already have an account? </Text>
                     <TouchableOpacity onPress={this.signin}><Text style={styles.signinButton}>Sign in</Text></TouchableOpacity>
                 </View>
             </View>
+            </TouchableWithoutFeedback>
         )
     }
 }

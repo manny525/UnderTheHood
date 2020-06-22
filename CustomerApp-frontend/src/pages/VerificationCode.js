@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard ,Alert} from 'react-native';
-import Form from '../components/Form';
+import Form from '../components/LoginForm';
 import { Actions } from 'react-native-router-flux';
 
 export default class VerificationCode extends Component {
@@ -9,23 +9,50 @@ export default class VerificationCode extends Component {
     {
         super(props);
         this.state = {  
-            vCode:'' 
-        } 
+            vCode:'',
+            data:{
+                code:''
+            }
+        } ;
     }
      
-    getVerificationCode(email,password)
-    {
-        return '1234';
+      getVerificationCode(){
+            // setError('')
+            // const body = await JSON.stringify({
+            //     email: this.props.email,
+            //     password:this.props.password,
+                //  ContactNumber:this.props.ContactNumber,
+                //  username : this.props.Username
+            // })
+            // fetch('http://192.168.1.6:3000/users/newUser', {
+            //     method: "POST",
+            //     body,
+            //     headers: { 
+            //         'Content-Type': 'application/json'
+            //     }
+            // })
+            // .then(res => res.json())
+            // .then((userData) => {this.setState({data:userData})})
+            // .catch(e => console.log(e))
+            
+            this.setState({data:{code:'1234'}});
     }
+
     validateCode=()=>{
-       const {vCode}=this.state;
-       if(this.getVerificationCode(this.props.email,this.props.password)===vCode)
+
+        this.setState({data:{code:'1234'}});
+
+       const {vCode,data}=this.state;
+       console.log(vCode);
+       console.log(data.code);
+       
+       if(vCode===data.verificationcode)
        {
            alert('Successful');
-           Actions.home();
+           Actions.home({data:data});
        }
        else{
-           alert('Enter correct code')
+           alert('Enter correct code');
        }
     }
     render() {
@@ -41,8 +68,9 @@ export default class VerificationCode extends Component {
                 underlineColorAndroid='rgba(0,0,0,0)' 
                 placeholder="Verification Code"
                 placeholderTextColor = "#002f6c"
+                keyboardType='number-pad'
                 />
-            
+    
                 <TouchableOpacity style={styles.button}> 
                     <Text style={styles.buttonText} onPress={this.validateCode}>Verify</Text>
                 </TouchableOpacity>
