@@ -3,7 +3,7 @@ const Item = require('../models/item')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-router.post('/items', async (req, res) => {
+router.post('/items', auth, async (req, res) => {
     const item = new Item({
         ...req.body
     })
@@ -15,7 +15,7 @@ router.post('/items', async (req, res) => {
     }
 })
 
-router.get('/items', async (req, res) => {
+router.get('/items', auth, async (req, res) => {
     const match = {}
     if (req.query.item) {
         match.item = req.query.item === 'true'
@@ -31,20 +31,7 @@ router.get('/items', async (req, res) => {
     }
 })
 
-// router.get('/tasks/:id', auth, async (req, res) => {
-//     const _id = req.params.id
-//     try {
-//         const task = await Task.findOne({ _id, owner: req.user._id })
-//         if (!task) {
-//             return res.status(404).send()
-//         }
-//         res.send(task)
-//     } catch (e) {
-//         res.status(500).send()
-//     }
-// })
-
-router.patch('/items', async (req, res) => {
+router.patch('/items', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['mrp']
     const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
@@ -65,7 +52,7 @@ router.patch('/items', async (req, res) => {
     }
 })
 
-router.delete('/items', async (req, res) => {
+router.delete('/items', auth, async (req, res) => {
     try {
         const item = await Item.findOneAndDelete({ item: req.query.item })
         if (!item) {

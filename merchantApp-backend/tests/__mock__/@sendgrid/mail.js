@@ -1,8 +1,0 @@
-module.exports = {
-    sendApiKey() {
-
-    },
-    send() {
-        
-    }
-}

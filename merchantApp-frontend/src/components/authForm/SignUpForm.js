@@ -9,25 +9,23 @@ import ServiceProviderValidation from './ServiceProviderValidation';
 
 
 const SignUpForm = (props) => {
-    
+
     const onNext = (data) => {
         if (data.merchantType === 'goods') {
-            setDisplay(<GoodsProviderValidation data={{...data, email:props.email}} />)
+            setDisplay(<GoodsProviderValidation data={{ ...data, email: props.email }} setLogin={props.setLogin} />)
         }
         else if (data.merchantType === 'service') {
-            setDisplay(<ServiceProviderValidation data={{...data, email:props.email}} />)
+            setDisplay(<ServiceProviderValidation data={{ ...data, email: props.email }} setLogin={props.setLogin} />)
         }
     }
 
     const [display, setDisplay] = useState(<GeneralSignUp onNext={onNext} />)
 
     return (
-        <KeyboardAvoidingView>
-            <View>
-                <View style={styles.formContainer}><Text>Merchant Registration</Text></View>
-                {display}
-            </View>
-        </KeyboardAvoidingView>
+        <View style={styles.formContainer}>
+            <Text>Merchant Registration</Text>
+            { display }
+        </View>
     )
 }
 

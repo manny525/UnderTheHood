@@ -7,11 +7,21 @@ import validator from 'validator';
 const GetVerificationCodeForm = (props) => {
     const [emailText, setEmailText] = useState('')
     const [errorText, setErrorText] = useState('')
-    const validateEmail = () => {
+    const validateEmail = async () => {
         if (validator.isEmail(emailText)) {
-            setEmailText('')
             setErrorText('')
             Keyboard.dismiss()
+            const body = JSON.stringify( { email: emailText } )
+            // fetch('http://192.168.1.6:3000/users/verifyEmail', {
+            //     method: "POST",
+            //     body,
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // })
+            //     .then(res => res.json())
+            //     .then(res => props.onVerify(2, emailText, res.vCode.toString()))
+            //     .catch(e => console.log(e))
             props.onVerify(2, emailText, '123456')
         }
         else {
@@ -21,8 +31,8 @@ const GetVerificationCodeForm = (props) => {
     return (
         <View style={styles.formContainer}>
             <Text>{errorText}</Text>
-            <TextInput 
-                style={inputStyles.input} 
+            <TextInput
+                style={inputStyles.input}
                 placeholder='Email Id'
                 onChangeText={(text) => { setEmailText(text) }}
                 value={emailText}

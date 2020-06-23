@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Inventory = require('./inventory')
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -21,15 +21,16 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    shopName: {
+        type: String,
+        required: false,
+        trim: true
+    },
     typeOfMerchant: {
         type: String,
         required: true
     },
     providerOf: {
-        type: String,
-        required: true
-    },
-    aadhar: {
         type: String,
         required: true
     },
@@ -67,21 +68,10 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
-// userSchema.statics.findByCredentials = async (email, password) => {
-//     const user = await User.findOne({ email })
-
-//     if (!user) {
-//         throw new Error('Unable to login')
-//     }
-
-//     const isMatch = await bcrypt.compare(password, user.password)
-
-//     if (!isMatch) {
-//         throw new Error('Unable to login')
-//     }
-
-//     return user
-// }
+userSchema.statics.findByCredentials = async (email) => {
+    const user = await User.findOne({ email })
+    return user
+}
 
 userSchema.methods.toJSON = function () {
     const user = this
@@ -103,12 +93,13 @@ userSchema.methods.toJSON = function () {
 //     next()
 // })
 
-//delete user tasks when user is removed
-// userSchema.pre('remove', async function (next) {
-//     const user = this
-//     await Task.deleteMany({ owner: user._id })
-//     next()
-// })
+//delete user inventory when user is removed
+
+userSchema.pre('remove', async function (next) {
+    const user = this
+    await Inventory.deleteOne({ owner: user._id })
+    next()
+})
 
 const User = mongoose.model('User', userSchema)
 

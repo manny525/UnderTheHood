@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, Alert } from 'react-native';
 import MainButton from '../MainButton';
 import inputStyle from '../../styles/input';
 
 const EnterVerificationCode = (props) => {
     const [vCode, setVCode] = useState('')
     const validateCode = () => {
+        // console.log(vCode)
+        console.log(props.vCode)
         if (vCode === props.vCode) {
             props.onVerify(3, props.email)
+        }
+        else {
+            Alert.alert('Wrong', 'Enter the correct verification code', [{ text: 'Ok', style: 'cancel' }])
         }
     }
     const onCancel = () => {

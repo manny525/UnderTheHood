@@ -1,22 +1,41 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { createStore, combineReducers } from 'redux';
+import { Provider, useDispatch } from 'react-redux'
+import * as Font from 'expo-font';
+import { AppLoading } from 'expo';
+import userReducer from './src/store/reducers/user'
 import AuthScreen from './src/screens/AuthScreen'
-import Header from './src/components/Header';
-import GoodsProviderValidation from './src/components/authForm/GoodsProviderValidation';
+import MerchantNavigator from './src/navigations/MerchantNavigator';
+import { setUser } from './src/store/actions/user';
+
+const rootReducer = combineReducers({
+  user: userReducer
+})
+
+const fetchFonts = () => {
+  return Font.loadAsync({
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf')
+  })
+}
+
+const store = createStore(rootReducer)
 
 export default function App() {
   const [login, setLogin] = useState(false)
+  const [dataLoaded, setDataLoaded] = useState(false)
+
+  if (!dataLoaded) {
+    return <AppLoading
+      startAsync={fetchFonts}
+      onFinish={() => setDataLoaded(true)}
+      onError={(err) => console.log(err)}
+    />
+  }
+
   return (
-    <View style={styles.container}>
-      <Header title={'MERCHANT APP'} />
-      {!!login==false ? <AuthScreen setLogin={setLogin} /> : <></>}
-    </View>
+    <Provider store={store}>
+      {login ? <MerchantNavigator /> : <AuthScreen setLogin={setLogin} />}
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center'
-  },
-});

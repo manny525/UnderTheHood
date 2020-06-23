@@ -18,10 +18,11 @@ const styles= StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 25,
-        width: '50%',
+        width: '70%',
         alignItems: 'center'
     },
     buttonText: {
+        fontFamily: 'open-sans',
         color: 'white',
         fontSize: 18
     }

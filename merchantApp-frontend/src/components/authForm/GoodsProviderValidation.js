@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
 import colors from '../../constants/colors';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
+import { setUser } from '../../store/actions/user';
+import { useDispatch } from 'react-redux';
 
 const GoodsProviderValidation = (props) => {
     const [merchantPAN, setMerchantPAN] = useState('')
@@ -15,6 +17,7 @@ const GoodsProviderValidation = (props) => {
     const [error, setError] = useState('')
     const [goodsProviderType, setGoodsProviderType] = useState('')
     const [pinCode, setPinCode] = useState('')
+    const [existingUser, setExistingUser] = useState(null)
 
     const [typeOfGoodsProviders, setTypeofGoodsProviders] = useState(['Grocery', 'Medical', 'Hardware', 'Computer Accessories'])
 
@@ -42,16 +45,13 @@ const GoodsProviderValidation = (props) => {
             setError('*Please provide all the details to register')
         }
         else {
-            // console.log(props.data)
-            // console.log({ lat: location.coords.latitude, lon: location.coords.longitude, pinCode })
-            // console.log(goodsProviderType)
-            // console.log(merchantPAN)
             setError('')
             const body = await JSON.stringify({
                 email: props.data.email,
                 merchantName: props.data.merchantName,
                 typeOfMerchant: props.data.merchantType,
                 aadhar: props.data.aadhar,
+                shopName,
                 providerOf: goodsProviderType,
                 pan: merchantPAN,
                 location: {
@@ -68,7 +68,10 @@ const GoodsProviderValidation = (props) => {
                 }
             })
             .then(res => res.json())
-            .then(resJson => console.log(resJson))
+            .then(user =>  {
+                setExistingUser(user)
+                props.setLogin(true) 
+            })
             .catch(e => console.log(e))
         }
     }
@@ -89,72 +92,79 @@ const GoodsProviderValidation = (props) => {
             setImgSrc(require('../../../assets/greentick.png'))
         }
     }
+    
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(setUser(existingUser))
+    }, [existingUser])
 
     return (
-        <View style={styles.formContainer}>
-            <TextInput
-                style={inputStyle.input}
-                placeholder='Shop Name'
-                onChangeText={(text) => { setShopName(text) }}
-                value={shopName}
-            />
-            {error ? <Text> {error} </Text> : <></>}
-            <Picker
-                style={styles.onePicker} itemStyle={styles.onePickerItem}
-                mode='dropdown'
-                selectedValue={goodsProviderType}
-                onValueChange={(itemValue, itemIndex) => setGoodsProviderType(itemValue)}
-            >
-                <Picker.Item label="Select" value="" />
-                {
-                    typeOfGoodsProviders.map(type => <Picker.Item key={type} label={type} value={type.toLowerCase()} />)
-                }
-            </Picker>
-            <View style={styles.panContiner}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
+            <KeyboardAvoidingView style={styles.formContainer}>
+                {error ? <Text> {error} </Text> : <></>}
                 <TextInput
-                    style={{ ...inputStyle.input, width: 200, marginTop: 1 }}
-                    placeholder="Merchant PAN"
-                    onChangeText={veriftPANLength}
-                    maxLength={16}
-                    keyboardType='number-pad'
+                    style={inputStyle.input}
+                    placeholder='Shop Name'
+                    onChangeText={(text) => { setShopName(text) }}
+                    value={shopName}
                 />
-                {imgSrc ? <Image style={styles.tinyLogo} source={imgSrc} /> : <></>}
-            </View>
-            {location ?
-                <MapView
-                    style={styles.mapStyle}
-                    initialRegion={{
-                        latitude: location.coords.latitude,
-                        longitude: location.coords.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421
-                    }}
+                <Picker
+                    style={styles.onePicker} itemStyle={styles.onePickerItem}
+                    mode='dropdown'
+                    selectedValue={goodsProviderType}
+                    onValueChange={(itemValue, itemIndex) => setGoodsProviderType(itemValue)}
                 >
-                    <Marker
-                        coordinate={{ latitude: location.coords.latitude, longitude: location.coords.longitude }}
-                        title={'Shop Location'}
+                    <Picker.Item label="Select" value="" />
+                    {
+                        typeOfGoodsProviders.map(type => <Picker.Item key={type} label={type} value={type.toLowerCase()} />)
+                    }
+                </Picker>
+                <View style={styles.panContiner}>
+                    <TextInput
+                        style={{ ...inputStyle.input, width: 200, marginTop: 1 }}
+                        placeholder="Merchant PAN"
+                        onChangeText={veriftPANLength}
+                        maxLength={16}
+                        keyboardType='number-pad'
                     />
-                </MapView> :
+                    <Image style={styles.tinyLogo} source={imgSrc} />
+                </View>
+                {location ?
+                    <MapView
+                        style={styles.mapStyle}
+                        initialRegion={{
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421
+                        }}
+                    >
+                        <Marker
+                            coordinate={{ latitude: location.coords.latitude, longitude: location.coords.longitude }}
+                            title={'Shop Location'}
+                        />
+                    </MapView> :
+                    <MainButton
+                        onPress={onGetLocation}
+                        style={{ paddingHorizontal: 15, backgroundColor: colors.secondary }}>Get Location</MainButton>
+                }
                 <MainButton
-                    onPress={onGetLocation}
-                    style={{ paddingHorizontal: 15, paddingVertical: 8, backgroundColor: colors.secondary }}>Get Location</MainButton>
-            }
-            <MainButton
-                style={{ marginTop: 5 }}
-                onPress={onSubmit}>Register</MainButton>
-        </View>
+                    style={{ marginTop: 5 }}
+                    onPress={onSubmit}>Register</MainButton>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     )
 }
 
 const styles = StyleSheet.create({
     formContainer: {
+        flex: 1,
         marginTop: 10,
         alignItems: 'center'
     },
     dropdown: {
         paddingHorizontal: Dimensions.get('window').width / 4
-    },
-    picker: {
     },
     onePicker: {
         height: 30,
@@ -162,7 +172,7 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderWidth: 1,
         borderRadius: 10,
-        marginVertical: 10,
+        marginBottom: 10,
         backgroundColor: colors.opaque
     },
     onePickerItem: {
@@ -173,9 +183,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     panContiner: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 30
     },
     tinyLogo: {
+        marginTop: 5,
         marginLeft: 10,
         height: 20,
         width: 20

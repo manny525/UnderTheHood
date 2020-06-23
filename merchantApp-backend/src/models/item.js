@@ -1,18 +1,25 @@
 const mongoose = require('mongoose')
 
 const itemSchema = mongoose.Schema({
-    item: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    itemCategory: {
-        type: String,
-        required: true
-    },
-    mrp: {
-        type: Number,
-        required: true
+    category: {
+        categoryName: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true
+        },
+        items: [{
+            item: {
+                type: String,
+                required: true,
+                trim: true,
+                unique: true
+            },
+            mrp: {
+                type: Number,
+                required: true
+            }
+        }]
     }
 })
 

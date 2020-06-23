@@ -1,23 +1,25 @@
-const sgMail = require('@sendgrid/mail')
+const sgMail = require('@sendgrid/mail');
+const { response } = require('express');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const generateVerificationCode = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) ) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const sendVerificationCode = (email) => {
-    const vCode = generateVerificationCode(100000,999999)
-    sgMail.send({
-        to: email,
-        from: 'mtolia9@gmail.com',
-        subject: 'Verificaton Code',
-        text: `Your verification code is ${vCode}`
-    }).then(() => {
-        return vCode
-    }).catch((e) => {
-        console.log(e.response.body)
-    })
+const sendVerificationCode = async (email) => {
+    const vCode = await generateVerificationCode(100000, 999999)
+    try {
+        await sgMail.send({
+            to: email,
+            from: 'mtolia9@gmail.com',
+            subject: 'Verificaton Code',
+            text: `Your verification code is ${vCode}`
+        })
+    } catch (e) {
+        return e
+    }
+    return vCode
 }
 
 // const sendWelcomeEmail = (email, name) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image } from 'react-native';
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
@@ -13,6 +13,7 @@ const ServiceProviderValidation = (props) => {
     const [locationError, setLocationError] = useState('')
     const [error, setError] = useState('')
     const [serviceProviderType, setServiceProviderType] = useState('')
+    const [existingUser, setExistingUser] = useState(null)
 
     const [typeOfServiceProviders, setTypeofServiceProviders] = useState(['Barber', 'Electrician', 'Mechanic', 'Car Washer', 'Plumber', ])
 
@@ -26,11 +27,37 @@ const ServiceProviderValidation = (props) => {
     }
 
     const onSubmit = async () => {
-        if (!location || !merchantPAN || !serviceProviderType) {
+        if (!location || !merchantPAN || !goodsProviderType || !shopName) {
             setError('*Please provide all the details to register')
         }
         else {
             setError('')
+            const body = await JSON.stringify({
+                email: props.data.email,
+                merchantName: props.data.merchantName,
+                typeOfMerchant: props.data.merchantType,
+                aadhar: props.data.aadhar,
+                providerOf: goodsProviderType,
+                pan: merchantPAN,
+                location: {
+                    lat: location.coords.latitude,
+                    lon: location.coords.longitude,
+                    postalCode: pinCode
+                }
+            })
+            fetch('http://192.168.1.6:3000/users/newUser', {
+                method: "POST",
+                body,
+                headers: { 
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(user =>  {
+                setExistingUser(user)
+                props.setLogin(true) 
+            })
+            .catch(e => console.log(e))
         }
     }
 
@@ -50,6 +77,12 @@ const ServiceProviderValidation = (props) => {
             setImgSrc(require('../../../assets/greentick.png'))
         }
     }
+
+    const dispatch = useDispatch()
+    
+    useCallback(() => {
+        dispatch(setUser(existingUser))
+    }, [existingUser])
 
     return (
         <View style={styles.formContainer}>
