@@ -3,6 +3,8 @@ const validator=require('validator')
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
 const  randomize = require('randomatic')
+const Cards =require('./card')
+const Loyalty = require('./loyalty') 
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -64,6 +66,18 @@ const userSchema = new mongoose.Schema({
     }],
 })
 
+userSchema.virtual('Cards',{
+    ref:'Cards',
+    localField:'_id',
+    foreignField:'owner'
+})
+
+userSchema.virtual('Loyalty',{
+    ref:'Loyalty',
+    localField:'_id',
+    foreignField:'customer'
+})
+
 userSchema.methods.toJSON = function(){
     const user=this
     const userobj=user.toObject()
@@ -83,11 +97,11 @@ userSchema.methods.generateToken = async function(){
 userSchema.statics.findUser = async(email,password)=>{
     const user= await User.findOne({email})
     if(!user){
-        throw new Error('Unable to login')
+        throw new Error('Invalid email')
     }
     const match=await bcrypt.compare(password,user.password)
     if(!match){
-        throw new Error('Unable to login')
+        throw new Error('Invalid Password')
     }
     return user
 }
@@ -104,6 +118,13 @@ userSchema.pre('save',async function(next){
         ser= await User.findOne({referral})
     }
     user.referral=referral
+    next()
+})
+
+userSchema.pre('remove',async function(next){
+    const user = this
+    await Cards.deleteMany({owner:user._id})
+    await Loyalty.deleteMany({customer:user._id})
     next()
 })
 

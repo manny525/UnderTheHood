@@ -2,6 +2,7 @@ const User = require('./../models/user')
 const auth=require('./../middleware/auth')
 const check=require('../middleware/number_verification/number')
 const {welcomemail} = require('../emails/account')
+const  randomize = require('randomatic')
 
 const express=require('express')
 const router= new express.Router()
@@ -10,9 +11,10 @@ router.post('/register/user',check,async(req,res)=>{
     const user= new User(req.body)
     try{
         await user.save()
-        welcomemail(user.email,user.name)
+        const otp=randomize('*',6)
+        welcomemail(user.email,user.name,otp)
         const token=await user.generateToken()
-        res.status(201).send({user,token})
+        res.status(201).send({user,token,otp})
     }catch(e){
         res.status(400).send(e)
     }
@@ -23,8 +25,8 @@ router.post('/user/login',async(req,res)=>{
         const user=await User.findUser(req.body.email,req.body.password)
         const token=await user.generateToken()
         res.send({user,token})
-    }catch(e){
-        res.status(400).send()
+    }catch(error){
+        res.status(400).send({error})
     }
 })
 
