@@ -11,7 +11,7 @@ router.post('/register/user',check,async(req,res)=>{
     const user= new User(req.body)
     try{
         await user.save()
-        const otp=randomize('0',6)
+        const otp=randomize('*',6)
         welcomemail(user.email,user.name,otp)
         const token=await user.generateToken()
         res.status(201).send({user,token,otp})
@@ -25,8 +25,8 @@ router.post('/user/login',async(req,res)=>{
         const user=await User.findUser(req.body.email,req.body.password)
         const token=await user.generateToken()
         res.send({user,token})
-    }catch(e){
-        res.status(400).send()
+    }catch(error){
+        res.status(400).send({error})
     }
 })
 

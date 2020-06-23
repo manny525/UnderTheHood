@@ -30,9 +30,9 @@ router.get('/loyalty',auth,async(req,res)=>{
 
 router.patch('/loyalty',auth,async(req,res)=>{
     try{
-        const loyalty = await Loyalty.findOneAndUpdate({customer:req.user._id},points=req.body.points)
-        res.send(loyalty)
-    }catch(e){
+        const  loyalty = await Loyalty.findOneAndUpdate({customer:req.user._id,merchant:req.body.merchant}, {$inc:{points:req.body.value}})
+        res.send()
+    }catch(error){
         res.status(400).send({error})
     }
 })
