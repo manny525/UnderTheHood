@@ -4,23 +4,57 @@ import { Actions } from 'react-native-router-flux';
 
 
 export default class SignupForm extends Component {
+    
+    
     constructor(props){        
       super(props);        
       this.state={            
          email:'',
          password: '' ,
          Username:'',
-         ContactNumber:''       
+         ContactNumber:'',
+         isLoaded:false,
+         data:undefined
       }   
     }
 
     checkExistingUser(email,password){
         //check in DB if exist pass on all parameters to home page
-            return true;
+            return false;
+    }
+
+    async getVerificationCode(){
+
+        const that=this;
+        return new Promise(async function(resolve, reject) {           
+            const body = await JSON.stringify({
+                name : that.state.Username,
+                contact:that.state.ContactNumber,
+                email: that.state.email,
+                password:that.state.password
+            })
+            fetch('http://192.168.43.195:3000/register/user', {
+                method: "POST",
+                body,
+                headers: { 
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then((userdata)=>{
+                console.log(userdata);
+                that.setState({data:userdata,isLoaded:true});
+                resolve();
+                })
+            .catch(e => console.log(e))
+
+            
+        })
+            
     }
 
     validateData =async()=>{
-        const {email,password,Username,ContactNumber} = this.state;
+        const {email,password,Username,ContactNumber,data} = this.state;
     
         if(this.props.type === 'Signup')
         {
@@ -49,7 +83,18 @@ export default class SignupForm extends Component {
                }
                else
                {
-                  Actions.verificationCode({username:Username,ContactNumber:ContactNumber,email:email,password:password});
+                    await this.getVerificationCode();   
+                    if(this.state.isLoaded)
+                    {
+                        const userdata=this.state.data;
+                        console.log(userdata);
+                        if(userdata!==undefined)
+                        {
+                            const OTP=userdata.otp;
+                            Actions.verificationCode({data:userdata,vCode:OTP,Username:Username,ContactNumber:ContactNumber,email:email,password:password});
+                        }  
+                    }
+                             
                }
            }
         }
