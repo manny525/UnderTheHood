@@ -3,9 +3,10 @@ const router= new express.Router()
 const Cards= require('./../models/card')
 const auth=require('./../middleware/auth')
 const cardvalidator = require('./../middleware/card_validation/card')
+const validate = require('./../middleware/card_validation_visa_api/validator')
 require('./../db/mongoose')
 
-router.post('/add/card',[auth,cardvalidator],async(req,res)=>{
+router.post('/add/card',[auth,validate],async(req,res)=>{
     try{
         const card = new Cards({
             ...req.body,
