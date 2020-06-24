@@ -16,6 +16,11 @@ const loyaltySchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         //ref:'Merchant'
+    },
+    promocode:{
+        type:String,
+        trim:true,
+        default:undefined,
     }
 })
 

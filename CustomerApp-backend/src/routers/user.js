@@ -11,7 +11,7 @@ router.post('/register/user',check,async(req,res)=>{
     const user= new User(req.body)
     try{
         await user.save()
-        const otp=randomize('*',6)
+        const otp=randomize('0',6)
         welcomemail(user.email,user.name,otp)
         const token=await user.generateToken()
         res.status(201).send({user,token,otp})

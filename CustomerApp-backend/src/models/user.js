@@ -111,13 +111,15 @@ userSchema.pre('save',async function(next){
     if(user.isModified('password')){
         user.password=await bcrypt.hash(user.password,8)
     }
-    var referral=randomize('*',5)
-    var ser= await User.findOne({referral})
-    while(ser){
-        referral=randomize('*',5)
-        ser= await User.findOne({referral})
+    if(user.isModified('referral')){
+        var referral=randomize('*',5)
+        var ser= await User.findOne({referral})
+        while(ser){
+            referral=randomize('*',5)
+            ser= await User.findOne({referral})
+        }
+        user.referral=referral
     }
-    user.referral=referral
     next()
 })
 
