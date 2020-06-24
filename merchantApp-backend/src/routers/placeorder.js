@@ -21,7 +21,7 @@ router.get('/placeorder', auth, async (req, res) => {
         match.order = req.query.order === 'true'
     }
     try {
-        const order = await Order.findOne({ o: req.query.order })
+        const order = await PlaceOrder.findOne({ o: req.query.order })
         if (!o) {
             return res.status(404).send()
         }
