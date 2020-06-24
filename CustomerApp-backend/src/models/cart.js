@@ -1,8 +1,5 @@
 require("./../db/mongoose");
 
-// var mongoose = require("mongoose");
-// var mongoose = require("mongoose");
-
 mongoose.connect("mongodb://127.0.0.1:27017/new_Hack", {
     useNewUrlParser: true,
     useCreateIndex: true,
