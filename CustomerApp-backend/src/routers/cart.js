@@ -1,4 +1,4 @@
-// require('./../db/mongoose')
+require("./../db/mongoose");
 var cart = require("./../models/cart");
 const auth = require("./../middleware/auth");
 var express = require("express");
