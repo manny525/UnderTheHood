@@ -44,6 +44,17 @@ router.patch('/placeorder', auth, async (req, res) => {
         if (!p) {
             res.status(404).send()
         }
+        const m = await User.findOne({ o: placeorder['merchantID'] })
+        const c = await User.findOne({ o: placeorder['customerID'] })
+        if(!m)
+        {
+            res.status(404).send()
+        }
+        if(!c)
+        {
+            res.status(404).send()
+        }
+        //Stiil have to check for item availability based on ID
         updates.forEach((update) => placeorder[update] = "approved")
         await placeorder.save()
         res.send(placeorder)
@@ -51,3 +62,5 @@ router.patch('/placeorder', auth, async (req, res) => {
         res.status(400).send(e)
     }
 })
+
+module.exports = router
