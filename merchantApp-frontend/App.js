@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createStore, combineReducers } from 'redux';
-import { Provider, useDispatch } from 'react-redux'
+import { Provider } from 'react-redux'
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import userReducer from './src/store/reducers/user'
 import inventoryReducer from './src/store/reducers/inventory'
 import AuthScreen from './src/screens/AuthScreen'
 import MerchantNavigator from './src/navigations/MerchantNavigator';
-import { setUser } from './src/store/actions/user';
+import AsyncStorage from '@react-native-community/async-storage'
+import getUserFromToken from './src/apiCalls/getUserFromToken';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -15,29 +16,50 @@ const rootReducer = combineReducers({
 })
 
 const fetchFonts = () => {
-  return Font.loadAsync({
-    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
-    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf')
-  })
+  
 }
 
 const store = createStore(rootReducer)
 
 export default function App() {
-  const [login, setLogin] = useState(false)
   const [dataLoaded, setDataLoaded] = useState(false)
+  const [tokenLoaded, setTokenLoaded] = useState(false)
+  const [login, setLogin] = useState(false)
+  const [userData, setUserData] = useState(null)
 
-  if (!dataLoaded) {
+  async function loadToken() {
+    try {
+      // await AsyncStorage.clear()
+      const token = await AsyncStorage.getItem('token');
+      const _id = await AsyncStorage.getItem('owner');
+      if (token !== null) {
+        const body = await JSON.stringify({
+          _id,
+          token
+        })
+        const user = await getUserFromToken(body)
+        await setUserData(user)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    return Font.loadAsync({
+      'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+      'open-sans': require('./assets/fonts/OpenSans-Regular.ttf')
+    })
+  }
+
+  if (!tokenLoaded) {
     return <AppLoading
-      startAsync={fetchFonts}
-      onFinish={() => setDataLoaded(true)}
+      startAsync={loadToken}
+      onFinish={() => setTokenLoaded(true)}
       onError={(err) => console.log(err)}
     />
   }
 
   return (
     <Provider store={store}>
-      {login ? <MerchantNavigator /> : <AuthScreen setLogin={setLogin} />}
+      {login ? <MerchantNavigator /> : <AuthScreen setLogin={setLogin} userData={userData} />}
     </Provider>
-  );
+  )
 }

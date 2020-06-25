@@ -11,6 +11,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator()
 
 const MerchantNavigator = () => {
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Home" >

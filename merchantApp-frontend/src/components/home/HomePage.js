@@ -4,7 +4,6 @@ import MainButton from '../MainButton';
 import { useSelector } from 'react-redux';
 
 const HomePage = ({ navigation }) => {
-
     const userData = useSelector(state => state.user.user)
     const token = userData.token
     const user = userData.user

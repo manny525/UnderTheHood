@@ -68,9 +68,16 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
-userSchema.statics.findByCredentials = async (email) => {
-    const user = await User.findOne({ email })
-    return user
+userSchema.statics.findByToken = async ({ token, _id }) => {
+    const user = await User.findById(_id)
+    let returnUser = null
+    user.tokens.forEach(userToken => {
+        console.log(userToken)
+        if (userToken.token === token) {
+            returnUser = user
+        }
+    })
+    return returnUser
 }
 
 userSchema.methods.toJSON = function () {

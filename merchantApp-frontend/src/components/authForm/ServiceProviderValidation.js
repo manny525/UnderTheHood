@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image } from 'react-native';
+import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
 import colors from '../../constants/colors';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
+import { setUser } from '../../store/actions/user';
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ServiceProviderValidation = (props) => {
     const [merchantPAN, setMerchantPAN] = useState('')
@@ -85,6 +87,22 @@ const ServiceProviderValidation = (props) => {
             dispatch(setUser(existingUser))
         }
     }, [existingUser])
+
+    useEffect(() => {
+        async function setToken() {
+          try {
+            await AsyncStorage.setItem('token', existingUser.token);
+            await AsyncStorage.setItem('owner', existingUser.user._id);
+            if (token !== null) {
+              console.log(token);
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        }
+        if (existingUser)
+          setToken()
+      }, [existingUser])
 
     return (
         <View style={styles.formContainer}>

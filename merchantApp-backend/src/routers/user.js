@@ -54,6 +54,24 @@ router.post('/users/findUser', async (req, res) => {
     }
 })
 
+router.post('/users/getUserFromToken', async (req, res) => {
+    try {
+        const user = await User.findByToken(req.body)
+        console.log(user)
+        if (user) {
+            if (user.typeOfMerchant === 'goods')
+            {
+                const inventory = await Inventory.findOne({ owner: user._id })
+                return res.send({ user, token: req.body.token, inventory })
+            }
+            return res.send({ user, token: req.body.token})
+        }
+        return res.status(404).send({error: 'User not found'})
+    } catch(e) {
+        res.send(e)
+    }
+})
+
 router.post('/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {

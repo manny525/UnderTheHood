@@ -8,7 +8,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { setUser } from '../../store/actions/user';
 import { setInventory } from '../../store/actions/inventory';
 import { useDispatch } from 'react-redux';
-import InventoryHome from '../inventory/InventoryHome';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const GoodsProviderValidation = (props) => {
     const [merchantPAN, setMerchantPAN] = useState('')
@@ -105,6 +105,22 @@ const GoodsProviderValidation = (props) => {
             props.setLogin(true)
         }
     }, [existingUser])
+
+    useEffect(() => {
+        async function setToken() {
+          try {
+            await AsyncStorage.setItem('token', existingUser.token);
+            await AsyncStorage.setItem('owner', existingUser.user._id);
+            if (token !== null) {
+              console.log(token);
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        }
+        if (existingUser)
+          setToken()
+      }, [existingUser])
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
