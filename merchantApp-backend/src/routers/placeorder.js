@@ -17,16 +17,12 @@ router.post('/placeorder/new', auth, async (req, res) => {
 })
 
 router.get('/placeorder', auth, async (req, res) => {
-    const match = {}
-    if (req.query.order) {
-        match.order = req.query.order === 'true'
-    }
     try {
-        const order = await PlaceOrder.findOne({ o: req.query.order })
-        if (!o) {
+        const orders = await PlaceOrder.findAll({ merchantID: req.query.merchantID })
+        if (!orders) {
             return res.status(404).send()
         }
-        res.send(order)
+        res.send(orders)
     } catch(e) {
         res.status(500).send()
     }
@@ -41,28 +37,13 @@ router.patch('/placeorder', auth, async (req, res) => {
         return res.status(400).send({error: 'Invalid updates'})
     }
     try {
-        const placeorder = await PlaceOrder.findOne({ p: req.order })
-        if (!p) {
+        const order = await PlaceOrder.findbyId(req.body._id)
+        if (!order) {
             res.status(404).send()
         }
-        const m = await User.findOne({ o: placeorder['merchantID'] })
-        const c = await User.findOne({ o: placeorder['customerID'] })
-        if(!m)
-        {
-            res.status(404).send()
-        }
-        if(!c)
-        {
-            res.status(404).send()
-        }
-        const i = await Item.findOne({ o: placeorder['orderItems.itemID'] })
-        if(!i)
-        {
-            res.status(404).send()
-        }
-        updates.forEach((update) => placeorder[update] = "approved")
-        await placeorder.save()
-        res.send(placeorder)
+        updates.forEach((update) => order[update] = "true")
+        await order.save()
+        res.send(order)
     } catch{e} {
         res.status(400).send(e)
     }

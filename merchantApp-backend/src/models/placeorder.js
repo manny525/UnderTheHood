@@ -2,12 +2,6 @@ const mongoose = require('mongoose')
 const Inventory = require('./inventory')
 
 const placeorderSchema = new mongoose.Schema({
-    orderID: {
-        type: String,
-        unique: true,
-        required: true,
-        trim: true
-    },
     merchantID: {
         type: String,
         unique: true,
@@ -26,8 +20,8 @@ const placeorderSchema = new mongoose.Schema({
         trim: true
     },
     status: {
-        type: String,
-        default: 'pending'
+        type: Boolean,
+        default: 'false'
     },
     orderItems: {
         itemId: {
@@ -43,7 +37,7 @@ const placeorderSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-        mrp: {
+        sp: {
             type: String,
             required: true
         }
