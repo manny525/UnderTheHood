@@ -6,8 +6,7 @@ import inputStyle from '../../styles/input';
 const EnterVerificationCode = (props) => {
     const [vCode, setVCode] = useState('')
     const validateCode = () => {
-        // console.log(vCode)
-        console.log(props.vCode)
+        
         if (vCode === props.vCode) {
             props.onVerify(3, props.email)
         }

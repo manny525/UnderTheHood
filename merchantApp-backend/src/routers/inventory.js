@@ -16,73 +16,91 @@ router.post('/inventory/new', auth, async (req, res) => {
     }
 })
 
-router.get('/inventory', auth ,async (req, res) => {
-    const match = {}
-    if (req.query.owner) {
-        match.owner = req.query.owner === 'true'
-    }
+router.get('/inventory', auth, async (req, res) => {
     try {
         const inventory = await Inventory.findOne({ owner: req.query.owner })
         if (!inventory) {
             return res.status(404).send()
         }
+        console.log(inventory)
         res.send(inventory)
-    } catch(e) {
+    } catch (e) {
         res.status(500).send()
     }
 })
 
-router.patch('/inventory/addItem', auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['item']
-    const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
-    
-    const {itemId, itemName, available, categoryId, sellingPrice, owner} = req.body.item
-    
-    if (!isValidUpdate) {
-        return res.status(400).send({error: 'Invalid updates'})
+router.patch('/inventory/addCategory', auth, async (req, res) => {
+    const { categoryName, owner } = req.body.category
+    try {
+        const inventory = await Inventory.findOne({ owner })
+        console.log(inventory)
+        if (!inventory) {
+            return res.status(404).send()
+        }
+        inventory.categories.push({ categoryName, items: [],  })
+        await inventory.save()
+        res.send(inventory)
+    } catch (e) {
+        res.status(400).send()
     }
+})
+
+router.delete('/inventory/deleteCategory', auth, async (req, res) => {
+    const { _id, owner } = req.body.category
+    try {
+        const inventory = await Inventory.findOne({ owner })
+        if (!inventory) {
+            return res.status(404).send()
+        }
+        inventory.categories.forEach((category, i) => {
+            if (category._id.toString() === _id) {
+                inventory.categories.splice(i, 1)
+            }
+        })
+        await inventory.save()
+        res.send(inventory)
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+
+router.patch('/inventory/addItem', auth, async (req, res) => {
+    const { itemName, available, categoryId, sellingPrice, owner } = req.body.item
     try {
         const inventory = await Inventory.findOne({ owner })
         if (!inventory) {
             return res.status(404).send()
         }
         inventory.categories.forEach(category => {
-            if (category.categoryId === categoryId) {
-                category.items.push({itemId, itemName, available, sellingPrice})
+            if (category._id.toString() === categoryId) {
+                category.items.push({ itemName, available, sellingPrice })
             }
         })
         await inventory.save()
         res.send(inventory)
-    } catch(e) {
+    } catch (e) {
         res.status(400).send()
     }
 })
 
 router.patch('/inventory/updateItem', auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['item']
-    const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
-    
-    const {itemId, itemName, available, categoryId, sellingPrice, owner} = req.body.item
+    const { _id, itemName, available, categoryId, sellingPrice, owner } = req.body.item
+
+    console.log(req.body.item.available)
 
     const updatedItem = {
-        itemId, itemName, available, sellingPrice
+        itemName, available, sellingPrice
     }
-    
-    if (!isValidUpdate) {
-        return res.status(400).send({error: 'Invalid updates'})
-    }
+
     try {
         const inventory = await Inventory.findOne({ owner })
         if (!inventory) {
             return res.status(404).send()
         }
         inventory.categories.forEach((category) => {
-            if (category.categoryId === categoryId) {
+            if (category._id.toString() === categoryId) {
                 category.items.forEach((item, i) => {
-                    console.log(category.items[i])
-                    if (item.itemId === itemId) {
+                    if (item._id.toString() === _id) {
                         category.items[i] = updatedItem
                     }
                 })
@@ -90,31 +108,27 @@ router.patch('/inventory/updateItem', auth, async (req, res) => {
         })
         await inventory.save()
         res.send(inventory)
-    } catch(e) {
+    } catch (e) {
         res.status(400).send()
     }
 })
 
-router.patch('/inventory/deleteItem', auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['item']
-    const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
-    
-    const {itemId, categoryId, owner} = req.body.item
-    
-    if (!isValidUpdate) {
-        return res.status(400).send({error: 'Invalid updates'})
-    }
+router.delete('/inventory/deleteItem', auth, async (req, res) => {
+
+    const { _id, categoryId, owner } = req.body.item
+
     try {
         const inventory = await Inventory.findOne({ owner })
         if (!inventory) {
-            return res.status(404).send()
+            return res.status(404).send({ error: 'Not found' })
         }
         inventory.categories.forEach((category) => {
-            if (category.categoryId === categoryId) {
+            if (category._id.toString() === categoryId) {
                 category.items.forEach((item, i) => {
-                    console.log(category.items[i])
-                    if (item.itemId === itemId) {
+                    console.log(item._id.toString())
+                    console.log(_id)
+                    if (item._id.toString() === _id) {
+                        console.log('found')
                         category.items.splice(i, 1)
                     }
                 })
@@ -122,7 +136,7 @@ router.patch('/inventory/deleteItem', auth, async (req, res) => {
         })
         await inventory.save()
         res.send(inventory)
-    } catch(e) {
+    } catch (e) {
         res.status(400).send()
     }
 })
