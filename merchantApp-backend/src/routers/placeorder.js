@@ -1,6 +1,7 @@
 const express = require('express')
 const PlaceOrder = require('../models/placeorder')
 const User = require('../models/user')
+const Item = require('../models/item')
 const router = new express.Router()
 
 router.post('/placeorder/new', auth, async (req, res) => {
@@ -54,7 +55,11 @@ router.patch('/placeorder', auth, async (req, res) => {
         {
             res.status(404).send()
         }
-        //Stiil have to check for item availability based on ID
+        const i = await Item.findOne({ o: placeorder['orderItems.itemID'] })
+        if(!i)
+        {
+            res.status(404).send()
+        }
         updates.forEach((update) => placeorder[update] = "approved")
         await placeorder.save()
         res.send(placeorder)
