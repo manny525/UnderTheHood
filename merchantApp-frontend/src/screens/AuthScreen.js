@@ -7,9 +7,10 @@ import Header from '../components/Header';
 import { setUser } from '../store/actions/user';
 import { useDispatch } from 'react-redux';
 import { setInventory } from '../store/actions/inventory';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const AuthScreen = (props) => {
-    const [existingUser, setExistingUser] = useState(null)
+    const [existingUser, setExistingUser] = useState(props.userData)
 
     const checkExistingUser = async (email) => {
         const body = await JSON.stringify({
@@ -25,7 +26,7 @@ const AuthScreen = (props) => {
         const user = await response.json()
         return user
     }
-    
+
     const changeVerificationStage = async (number, email = '', vCode = '') => {
         if (number === 1) {
             setVerificationStage(<GetVerificationCodeForm onVerify={changeVerificationStage} />)
@@ -34,30 +35,61 @@ const AuthScreen = (props) => {
             setVerificationStage(<EnterVerificationCode vCode={vCode} email={email} onVerify={changeVerificationStage} />)
         }
         else if (number === 3) {
-            const userData = await checkExistingUser(email)
-            if (userData.existingUser) {
-                setExistingUser({ token: userData.token, user: userData.user, inventory: userData.inventory })
-                props.setLogin(true)
-            }
-            else {
-                setVerificationStage(<SignUpForm email={email} setLogin={props.setLogin}/>)
+            if (!existingUser) {
+                const userData = await checkExistingUser(email)
+                if (userData.existingUser) {
+                    setExistingUser({ token: userData.token, user: userData.user, inventory: userData.inventory })
+                }
+                else {
+                    setVerificationStage(<SignUpForm email={email} setLogin={props.setLogin} />)
+                }
             }
         }
     }
-    
+
     const [verificationStage, setVerificationStage] = useState(<GetVerificationCodeForm onVerify={changeVerificationStage} />)
-    
+
     const dispatch = useDispatch()
-    
+
     useEffect(() => {
+        async function login() {
+            if (existingUser) {
+                await dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
+                if (existingUser.inventory) {
+                    await dispatch(setInventory(existingUser.inventory))
+                }
+                props.setLogin(true)
+            }
+        }
+        login()
+    }, [existingUser])
+
+    useEffect(() => {
+        console.log(existingUser)
         if (existingUser) {
-            dispatch(setUser({user:existingUser.user, token: existingUser.token}))
+            dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
             if (existingUser.inventory) {
                 dispatch(setInventory(existingUser.inventory))
             }
+            console.log(true)
+            props.setLogin(true)
         }
+    }, [])
+
+    useEffect(() => {
+        async function setToken() {
+            try {
+                await AsyncStorage.setItem('token', existingUser.token);
+                await AsyncStorage.setItem('owner', existingUser.user._id);
+                console.log('saved')
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        if (existingUser)
+            setToken()
     }, [existingUser])
-    
+
     return (
         <SafeAreaView style={styles.screen} >
             <Header title="MERCHANT APP" />
