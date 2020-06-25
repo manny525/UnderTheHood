@@ -44,6 +44,11 @@ router.patch("/merchant/add", [auth, urlencodedParser], async (req, res) => {
     try {
         var cartID = req.body.merchantID.toString() + req.user._id.toString();
         var currentCart = await cart.findById(cartID);
+        if (!currentCart) {
+            currentCart = new cart({ _id: cartID });
+            await currentCart.save();
+        }
+
         await currentCart.addItem(req.body.item, currentCart);
         res.status(201).send();
     } catch (err) {
