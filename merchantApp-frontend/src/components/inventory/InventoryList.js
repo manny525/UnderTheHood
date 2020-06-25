@@ -3,12 +3,12 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'rea
 import colors from '../../constants/colors'
 import InventoryItems from './InventoryItems';
 
-const InventoryList = ({ item }) => {
+const InventoryList = ({ category }) => {
     const [imgSrc, setImgSrc] = useState(require('../../../assets/dropdown.png'))
     const [openList, setOpenList] = useState(false)
     return (
         <View>
-            <TouchableOpacity activeOpacity = {0.4} onPress={() => {
+            <TouchableOpacity activeOpacity={0.4} onPress={() => {
                 if (openList) {
                     setImgSrc(require('../../../assets/dropdown.png'))
                 }
@@ -18,11 +18,16 @@ const InventoryList = ({ item }) => {
                 setOpenList(!openList)
             }}>
                 <View style={styles.categoryContainer}>
-                    <Text style={styles.category} >{item.category}</Text>
+                    <Text style={styles.category} >{category.categoryName}</Text>
                     <Image style={styles.tinyLogo} source={imgSrc} />
                 </View>
             </TouchableOpacity>
-            {openList && <InventoryItems items={item.list} category={item.category} />}
+            {openList &&
+                <InventoryItems 
+                    items={category.items} 
+                    category={{categoryName: category.categoryName, _id: category._id}} 
+                />
+            }
         </View>
     )
 }
@@ -45,6 +50,31 @@ const styles = StyleSheet.create({
         marginRight: 5,
         height: 20,
         width: 20
+    },
+    addItem: {
+        marginTop: 10,
+        width: '50%',
+        marginLeft: 50,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    header2: {
+        width: Dimensions.get('window').width,
+        height: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.primary,
+        fontSize: 18
+    },
+    modalHeader: {
+        alignItems: 'center'
+    },
+    tinyLogoArrow: {
+        height: 40,
+        width: 40
+    },
+    itemModalContainer: {
+        alignItems: 'center'
     }
 })
 

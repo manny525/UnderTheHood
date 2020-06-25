@@ -20,7 +20,7 @@ const ServiceProviderValidation = (props) => {
     const onGetLocation = async () => {
         let { status } = await Location.requestPermissionsAsync();
         if (status !== 'granted') {
-            setLocationError('Permission to access location was denied');
+            return setLocationError('Permission to access location was denied');
         }
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location)
@@ -81,7 +81,9 @@ const ServiceProviderValidation = (props) => {
     const dispatch = useDispatch()
     
     useCallback(() => {
-        dispatch(setUser(existingUser))
+        if (existingUser) {
+            dispatch(setUser(existingUser))
+        }
     }, [existingUser])
 
     return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Modal, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import InventoryHome from '../components/inventory/InventoryHome';
 
 const InventoryScreen = () => {

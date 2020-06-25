@@ -5,6 +5,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 const { sendVerificationCode } = require('../emails/account')
+const Inventory = require('../models/inventory')
 
 router.post('/users/verifyEmail', async (req, res) => {
     try {
@@ -20,7 +21,16 @@ router.post('/users/newUser', async (req, res) => {
     try {
         await user.save()
         const token = await user.generateAuthToken()
-        res.status(201).send({ user, token })
+        if (user.typeOfMerchant === 'goods') {
+            const inventory = new Inventory({
+                categories: [],
+                owner: user._id    
+            })
+            await inventory.save()
+            return res.status(201).send({ user, token, inventory })
+        }
+        else 
+            return res.status(201).send({ user, token })
     } catch (e) {
         res.status(400).send(e)
     }
@@ -30,8 +40,12 @@ router.post('/users/findUser', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email })
         if (user) {
-            console.log('exists')
             const token = await user.generateAuthToken()
+            if (user.typeOfMerchant === 'goods')
+            {
+                const inventory = await Inventory.findOne({ owner: user._id })
+                return res.send({ user, token, existingUser: true, inventory })
+            }
             return res.send({ user, token, existingUser: true })
         }
         return res.status(404).send({ existingUser: false })
