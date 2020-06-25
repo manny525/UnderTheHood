@@ -17,8 +17,16 @@ router.post('/placeorder/new', auth, async (req, res) => {
 })
 
 router.get('/placeorder', auth, async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['status']
+    const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidUpdate) {
+        return res.status(400).send({error: 'Invalid updates'})
+    }
     try {
-        const orders = await PlaceOrder.findAll({ merchantID: req.query.merchantID })
+        var orders= new Array();
+        orders = await PlaceOrder.findAll({ merchantID: req.query.merchantID })
         if (!orders) {
             return res.status(404).send()
         }
@@ -41,7 +49,7 @@ router.patch('/placeorder', auth, async (req, res) => {
         if (!order) {
             res.status(404).send()
         }
-        updates.forEach((update) => order[update] = "true")
+        updates.forEach((update) => order[update] = "completed")
         await order.save()
         res.send(order)
     } catch{e} {

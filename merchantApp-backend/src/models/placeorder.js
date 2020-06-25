@@ -20,8 +20,8 @@ const placeorderSchema = new mongoose.Schema({
         trim: true
     },
     status: {
-        type: Boolean,
-        default: 'false'
+        type: String,
+        default: 'pending'
     },
     orderItems: {
         itemId: {
