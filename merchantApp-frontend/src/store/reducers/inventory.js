@@ -1,6 +1,4 @@
-const initalState = {
-    items: []
-}
+const initalState = {}
 
 const inventoryReducer = (state = initalState, action) => {
     switch(action.type) {
@@ -8,11 +6,6 @@ const inventoryReducer = (state = initalState, action) => {
             return {
                 inventory: action.inventory
             }
-        case 'UPDATE_INVENTORY': {
-            return {
-                
-            }
-        }
         default: 
             return state
     }

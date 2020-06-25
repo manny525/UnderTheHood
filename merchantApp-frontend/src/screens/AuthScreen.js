@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import GetVerificationCodeForm from '../components/authForm/GetVerificationCodeForm';
 import SignUpForm from '../components/authForm/SignUpForm';
@@ -6,9 +6,10 @@ import EnterVerificationCode from '../components/authForm/EnterVerificationCode'
 import Header from '../components/Header';
 import { setUser } from '../store/actions/user';
 import { useDispatch } from 'react-redux';
+import { setInventory } from '../store/actions/inventory';
 
 const AuthScreen = (props) => {
-    const [existingUser, setExistingUser] = useState()
+    const [existingUser, setExistingUser] = useState(null)
 
     const checkExistingUser = async (email) => {
         const body = await JSON.stringify({
@@ -30,14 +31,12 @@ const AuthScreen = (props) => {
             setVerificationStage(<GetVerificationCodeForm onVerify={changeVerificationStage} />)
         }
         else if (number === 2) {
-            console.log(vCode)
             setVerificationStage(<EnterVerificationCode vCode={vCode} email={email} onVerify={changeVerificationStage} />)
         }
         else if (number === 3) {
             const userData = await checkExistingUser(email)
             if (userData.existingUser) {
-                console.log(userData.token)
-                setExistingUser({ token: userData.token, user: userData.user })
+                setExistingUser({ token: userData.token, user: userData.user, inventory: userData.inventory })
                 props.setLogin(true)
             }
             else {
@@ -46,12 +45,17 @@ const AuthScreen = (props) => {
         }
     }
     
-    let [verificationStage, setVerificationStage] = useState(<GetVerificationCodeForm onVerify={changeVerificationStage} />)
+    const [verificationStage, setVerificationStage] = useState(<GetVerificationCodeForm onVerify={changeVerificationStage} />)
     
     const dispatch = useDispatch()
     
     useEffect(() => {
-        dispatch(setUser(existingUser))
+        if (existingUser) {
+            dispatch(setUser({user:existingUser.user, token: existingUser.token}))
+            if (existingUser.inventory) {
+                dispatch(setInventory(existingUser.inventory))
+            }
+        }
     }, [existingUser])
     
     return (

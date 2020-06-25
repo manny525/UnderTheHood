@@ -6,7 +6,9 @@ import colors from '../../constants/colors';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { setUser } from '../../store/actions/user';
+import { setInventory } from '../../store/actions/inventory';
 import { useDispatch } from 'react-redux';
+import InventoryHome from '../inventory/InventoryHome';
 
 const GoodsProviderValidation = (props) => {
     const [merchantPAN, setMerchantPAN] = useState('')
@@ -18,6 +20,7 @@ const GoodsProviderValidation = (props) => {
     const [goodsProviderType, setGoodsProviderType] = useState('')
     const [pinCode, setPinCode] = useState('')
     const [existingUser, setExistingUser] = useState(null)
+    const [inventory, setUserInventory] = useState(null)
 
     const [typeOfGoodsProviders, setTypeofGoodsProviders] = useState(['Grocery', 'Medical', 'Hardware', 'Computer Accessories'])
 
@@ -68,9 +71,9 @@ const GoodsProviderValidation = (props) => {
                 }
             })
             .then(res => res.json())
-            .then(user =>  {
-                setExistingUser(user)
-                props.setLogin(true) 
+            .then(userData =>  {
+                setUserInventory(userData.inventory) 
+                setExistingUser({ user: userData.user, token: userData.token })
             })
             .catch(e => console.log(e))
         }
@@ -96,7 +99,11 @@ const GoodsProviderValidation = (props) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setUser(existingUser))
+        if (existingUser) {
+            dispatch(setUser(existingUser))
+            dispatch(setInventory(inventory))
+            props.setLogin(true)
+        }
     }, [existingUser])
 
     return (

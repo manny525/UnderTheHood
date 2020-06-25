@@ -4,12 +4,14 @@ import { Provider, useDispatch } from 'react-redux'
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import userReducer from './src/store/reducers/user'
+import inventoryReducer from './src/store/reducers/inventory'
 import AuthScreen from './src/screens/AuthScreen'
 import MerchantNavigator from './src/navigations/MerchantNavigator';
 import { setUser } from './src/store/actions/user';
 
 const rootReducer = combineReducers({
-  user: userReducer
+  user: userReducer,
+  inventory: inventoryReducer
 })
 
 const fetchFonts = () => {
