@@ -24,7 +24,18 @@ router.post('/user/login',async(req,res)=>{
     try{
         const user=await User.findUser(req.body.email,req.body.password)
         const token=await user.generateToken()
-        res.send({user,token})
+        await user.populate({
+            path:'Loyalty',
+        }).execPopulate()
+        await user.populate({
+            path:'Cards',
+        }).execPopulate()
+        res.send({
+            user,
+            Loyalty:user.Loyalty,
+            Cards:user.Cards,
+            token
+        })
     }catch(error){
         res.status(400).send({error})
     }

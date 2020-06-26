@@ -6,7 +6,6 @@ var payment_account_validation_api = new api(authCredentials);
 
 const validate = async(req,res,next)=>{
     try{
-        console.log(req.body);
         const payment = await payment_account_validation_api.cardvalidation(getParameters(req))
         next()
     }catch(e){
