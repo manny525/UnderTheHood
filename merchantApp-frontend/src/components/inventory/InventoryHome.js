@@ -8,6 +8,7 @@ import MainButton from '../MainButton';
 import inputStyle from '../../styles/input'
 import addCategoryInventory from '../../apiCalls/addCategoryInventory';
 import { setInventory } from '../../store/actions/inventory';
+import Header from '../Header';
 
 const InventoryHome = () => {
     const [addCategoryModalVisible, setAddCategoryModalVisible] = useState(false)
@@ -37,21 +38,22 @@ const InventoryHome = () => {
     }
 
     return (
-        <View style={styles.screen}>
+        <View style={styles.screen} >
+            <Header title='MY INVENTORY' />
             <TouchableOpacity style={styles.addItem} onPress={() => setAddCategoryModalVisible(true)} >
                 <Text>Add Category</Text>
                 <Text>+</Text>
             </TouchableOpacity>
-            {inventory && 
+            {inventory &&
                 <FlatList
-                data={inventory.categories}
-                renderItem={({ item }) => {
-                    return (
-                        <InventoryList category={item} />
-                    )
-                }}
-                keyExtractor={item => item._id}
-            />}
+                    data={inventory.categories}
+                    renderItem={({ item }) => {
+                        return (
+                            <InventoryList category={item} />
+                        )
+                    }}
+                    keyExtractor={item => item._id}
+                />}
             <Modal
                 animationType="slide"
                 visible={addCategoryModalVisible}

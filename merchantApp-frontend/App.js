@@ -9,16 +9,13 @@ import AuthScreen from './src/screens/AuthScreen'
 import MerchantNavigator from './src/navigations/MerchantNavigator';
 import AsyncStorage from '@react-native-community/async-storage'
 import getUserFromToken from './src/apiCalls/getUserFromToken';
+import ordersReducer from './src/store/reducers/orders';
 
 const rootReducer = combineReducers({
   user: userReducer,
-  inventory: inventoryReducer
+  inventory: inventoryReducer,
+  orders: ordersReducer
 })
-
-const fetchFonts = () => {
-  
-}
-
 const store = createStore(rootReducer)
 
 export default function App() {
