@@ -4,14 +4,12 @@ const router = new express.Router()
 //Search By PostalCode
 router.get('/search',async(req,res)=>{
     try{
-        console.log(req.body.postalCode)
-        
-        var merchants =await User.find({"location.postalCode":req.body.postalCode})
+        var merchants =await User.find({"location.postalCode":req.body.postalCode,typeOfMerchant:req.body.typeOfMerchant})
         var p ={}
         var i
         for (i=0;i<merchants.length;i++){
             const d =distance({lat:merchants[i].location.lat , lng:merchants[i].location.lon},{lat:req.body.lat , lng:req.body.lng})*1.609344
-            p[i]={ id:merchants[i]._id,shop:merchants[i].shopName , address:merchants[i].location,type:merchants[i].providerOf,distance:d+' Km'}
+            p[i]={ id:merchants[i]._id,shop:merchants[i].shopName , address:merchants[i].location,type:merchants[i].providerOf,distance:d}
         }
         res.send(p) 
     }catch(error){
