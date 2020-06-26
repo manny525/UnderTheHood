@@ -1,9 +1,9 @@
 require("./../db/mongoose");
 const mongoose = require("mongoose");
-// mongoose.connect("mongodb://127.0.0.1:27017/new_Hack", {
-//     useNewUrlParser: true,
-//     useCreateIndex: true,
-// });
+mongoose.connect("mongodb://127.0.0.1:27017/new_Hack", {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+});
 
 var Schema = mongoose.Schema;
 
@@ -14,22 +14,24 @@ var Schema = mongoose.Schema;
 
 //this schema was used for testing
 var cartElement = new mongoose.Schema({
-    item_id: { type: String, required: true },
+    item_id: { type: String, required: true, unique: true },
     quantity: {
         type: Number,
         min: 0,
         required: true,
         default: 0,
-        unique: true,
-        validator: (value) => {
-            if (value <= 0) console.log("value is les than 0");
-        },
+    },
+    cost: {
+        type: Number,
+        required: true,
+        min: 0,
     },
 });
 
 // _id should be customer_id + merchant_id
 var cart = new mongoose.Schema({
     _id: { type: String, required: true },
+    custID: { type: String, required: true },
     numberItems: { type: Number, min: 0, default: 0 },
     items: [{ type: Schema.Types.ObjectId, ref: "cartElement" }],
 });
@@ -96,10 +98,11 @@ cart.methods.addItem = async (item, cart) => {
         if (itemToAdd) {
             console.log("check2");
             itemToAdd.quantity += item.quantity;
+            console.log("check2.1");
             await itemToAdd.save();
         } else {
             console.log("check 3");
-            var newItem = new items({ item_id: item.item_id, quantity: item.quantity });
+            var newItem = new items({ item_id: item.item_id, quantity: item.quantity, cost: item.cost });
             await newItem.save();
             console.log("item saved succefully");
             cart.numberItems += 1;
@@ -108,7 +111,7 @@ cart.methods.addItem = async (item, cart) => {
             await cart.save();
         }
     } catch (e) {
-        console.log("error recieved");
+        console.log("error recieved: ", e);
         return new Promise((resolve, reject) => {
             reject(Error("Invalid Parameters"));
         });
@@ -119,7 +122,6 @@ cart.methods.emptyIt = async (cart) => {
     try {
         var items_array = cart.items;
         for (var i in items_array) {
-            console.log(i);
             await items.deleteOne({ _id: items_array[i] });
         }
         await carts.deleteOne(cart);
