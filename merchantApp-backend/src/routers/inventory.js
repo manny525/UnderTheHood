@@ -18,7 +18,7 @@ router.post('/inventory/new', auth, async (req, res) => {
 
 router.get('/inventory', auth, async (req, res) => {
     try {
-        const inventory = await Inventory.findOne({ owner: req.query.owner })
+        const inventory = await Inventory.findOne({ owner: req.user._id })
         if (!inventory) {
             return res.status(404).send()
         }
@@ -46,9 +46,9 @@ router.patch('/inventory/addCategory', auth, async (req, res) => {
 })
 
 router.delete('/inventory/deleteCategory', auth, async (req, res) => {
-    const { _id, owner } = req.body.category
+    const { _id } = req.body.category
     try {
-        const inventory = await Inventory.findOne({ owner })
+        const inventory = await Inventory.findOne({ owner: req.user._id })
         if (!inventory) {
             return res.status(404).send()
         }
@@ -65,9 +65,9 @@ router.delete('/inventory/deleteCategory', auth, async (req, res) => {
 })
 
 router.patch('/inventory/addItem', auth, async (req, res) => {
-    const { itemName, available, categoryId, sellingPrice, owner } = req.body.item
+    const { itemName, available, categoryId, sellingPrice } = req.body.item
     try {
-        const inventory = await Inventory.findOne({ owner })
+        const inventory = await Inventory.findOne({ owner: req.user._id })
         if (!inventory) {
             return res.status(404).send()
         }
@@ -84,7 +84,7 @@ router.patch('/inventory/addItem', auth, async (req, res) => {
 })
 
 router.patch('/inventory/updateItem', auth, async (req, res) => {
-    const { _id, itemName, available, categoryId, sellingPrice, owner } = req.body.item
+    const { _id, itemName, available, categoryId, sellingPrice } = req.body.item
 
     console.log(req.body.item.available)
 
@@ -93,7 +93,7 @@ router.patch('/inventory/updateItem', auth, async (req, res) => {
     }
 
     try {
-        const inventory = await Inventory.findOne({ owner })
+        const inventory = await Inventory.findOne({ owner: req.user._id })
         if (!inventory) {
             return res.status(404).send()
         }
@@ -115,10 +115,10 @@ router.patch('/inventory/updateItem', auth, async (req, res) => {
 
 router.delete('/inventory/deleteItem', auth, async (req, res) => {
 
-    const { _id, categoryId, owner } = req.body.item
+    const { _id, categoryId } = req.body.item
 
     try {
-        const inventory = await Inventory.findOne({ owner })
+        const inventory = await Inventory.findOne({ owner: req.user._id })
         if (!inventory) {
             return res.status(404).send({ error: 'Not found' })
         }
