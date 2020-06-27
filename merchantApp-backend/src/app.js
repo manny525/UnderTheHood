@@ -10,5 +10,7 @@ app.use(express.json())
 app.use(userRouter)
 app.use(itemRouter)
 app.use(inventoryRouter)
+app.use(require('./routers/search'))
+app.use(require('./routers/service'))
 
 module.exports = app

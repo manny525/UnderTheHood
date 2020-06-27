@@ -1,7 +1,6 @@
 {
   "name": "task-manager",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -19,6 +18,7 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.27.0",
     "mongodb": "^3.5.8",
     "mongoose": "^5.9.17",
     "multer": "^1.4.2",
@@ -30,5 +30,9 @@
     "jest": "^26.0.1",
     "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "description": ""
 }

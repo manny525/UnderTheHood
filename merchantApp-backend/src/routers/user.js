@@ -110,6 +110,15 @@ router.delete('/users/me', auth, async (req, res) => {
     }
 })
 
+
+
+
+
+
+
+
+
+
 //shop pic
 
 // const upload = multer({

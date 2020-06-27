@@ -13,7 +13,7 @@ router.post('/add/card',[auth,validate],async(req,res)=>{
             owner:req.user._id
         })
         await card.save()
-        res.send(req.card)
+        res.send()
     }catch(e){
         res.status(400).send(e)
     }

@@ -1,5 +1,5 @@
 require("./../db/mongoose");
-var cart = require("./../models/cart");
+var {cart} = require("./../models/cart");
 const auth = require("./../middleware/auth");
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -16,10 +16,10 @@ router.post("/merchant", [auth, urlencodedParser], async (req, res) => {
         if (currentCart) {
             res.status(201).json(currentCart);
         } else {
-            currentCart = new cart({ _id: cartID });
+            currentCart = new cart({ _id: cartID, custID: req.user._id });
             await currentCart.save();
+            res.status(201).json(currentCart);
         }
-        res.status(201).json(currentCart);
     } catch (e) {
         res.status(500).send("Internal Error");
     }
@@ -34,7 +34,7 @@ router.get("/user/cart", [auth, urlencodedParser], async (req, res) => {
         if (currentCart) res.status(200).json(currentCart);
         else res.status(400).send("Invalid Parameters");
     } catch (err) {
-        res.status(500).send("Internal Error");
+        res.status(500).send(err);
     }
 });
 
@@ -45,7 +45,7 @@ router.patch("/merchant/add", [auth, urlencodedParser], async (req, res) => {
         var cartID = req.body.merchantID.toString() + req.user._id.toString();
         var currentCart = await cart.findById(cartID);
         if (!currentCart) {
-            currentCart = new cart({ _id: cartID });
+            currentCart = new cart({ _id: cartID, custID: req.user._id });
             await currentCart.save();
         }
 
@@ -91,7 +91,7 @@ router.delete("/user/cart/empty", [auth, urlencodedParser], async (req, res) => 
         console.log("check1");
         if (currentCart) {
             await currentCart.emptyIt(currentCart);
-            currentCart = new cart({ _id: cartID });
+            currentCart = new cart({ _id: cartID, custID: req.user._id });
             await currentCart.save();
             res.status(201).send("success");
         } else res.status(400).send("Invalid Parameters");
@@ -100,4 +100,19 @@ router.delete("/user/cart/empty", [auth, urlencodedParser], async (req, res) => 
     }
 });
 
+router.get("/user/getAllCarts", [auth, urlencodedParser], async (req, res) => {
+    try {
+        var allCarts = await cart.find({ custID: req.user._id });
+        var allCarts_Q = [];
+        for (var i in allCarts) {
+            if (allCarts[i].numberItems != 0) {
+                allCarts_Q.push(allCarts[i]);
+            }
+        }
+        // return allCarts_Q;
+        res.status(201).json(allCarts);
+    } catch (e) {
+        res.status(500).send(e);
+    }
+});
 module.exports = router;

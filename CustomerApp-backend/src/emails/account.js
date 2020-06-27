@@ -1,6 +1,6 @@
 const sgMail=require('@sendgrid/mail')
 
-sgMail.setApiKey(process.env.sendgridapi)
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 const welcomemail=async(email,name,otp)=>{
