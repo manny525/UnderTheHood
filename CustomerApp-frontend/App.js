@@ -1,29 +1,31 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  StatusBar
-} from 'react-native';
-
+import React from 'react';
+import { StyleSheet,View,StatusBar} from 'react-native';
 import Routes from './src/routes/Routes';
-import VerificationCode from './src/pages/VerificationCode';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+import RootReducer from './src/reducer/RootReducer';
 
-export default class App extends Component   {
-  render() {
+
+const store=createStore(RootReducer);
+
+export default function App() {
+
     return (
-      <View style={styles.container}>
-        <StatusBar
-          backgroundColor="#002f6c" 
-          barStyle="light-content"
-        />
-        <Routes/>
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar
+            backgroundColor="#faaa13" 
+            barStyle="light-content"
+          />
+          <Routes/>
+        </View>
+      </Provider>
     );
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   }
 });
+

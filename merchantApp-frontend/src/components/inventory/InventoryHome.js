@@ -77,17 +77,6 @@ const InventoryHome = () => {
                     />
                     <MainButton style={{ marginTop: 5 }} onPress={addCategory} >Add</MainButton>
                 </View>
-                {/* <FlatList
-                    data={items}
-                    renderItem={({ item }) => {
-                        return (
-                            <View style={styles.itemsContainer}>
-                                <InventoryItem item={item} addItem={true} />
-                            </View>
-                        )
-                    }}
-                    keyExtractor={item => item.id}
-                /> */}
             </Modal>
         </View>
     )

@@ -1,33 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard ,Alert} from 'react-native';
-import Form from '../components/LoginForm';
 import { Actions } from 'react-native-router-flux';
+import { useDispatch, useSelector } from 'react-redux';
+import AllActions from '../actions/AllActions';
 
-export default class VerificationCode extends Component {
+const VerificationCode=(props)=>{
     
-    constructor(props)
-    {
-        super(props);
-        this.state = {  
-            vCode:''
-        };
-    }
     
-    validateCode=()=>{
+    const [vCode,setVcode]=useState('');
+    
+    const validateCode=()=>{
 
-       const {vCode}=this.state;
-    
-       if(vCode===this.props.vCode)
-       {
-           alert('Successful');
-           Actions.home({data:this.props.data});
-       }
-       else{
-           alert('Enter correct code');
-       }
+        if(vCode===props.vCode)
+        {
+            alert('Successful');
+            Actions.home({userData:props.userData});
+        }
+        else{
+            alert('Enter correct code');
+        }
     }
 
-    render() {
+    
         return(
             <View style={styles.container}>
                 
@@ -36,18 +30,19 @@ export default class VerificationCode extends Component {
                 </View>
 
                 <TextInput style={styles.inputBox}
-                onChangeText={(vCode)=>{this.setState({vCode:vCode})}}
+                onChangeText={(vCode)=>setVcode(vCode)}
                 underlineColorAndroid='rgba(0,0,0,0)' 
                 placeholder="Verification Code"
                 placeholderTextColor = "#002f6c"
+                keyboardType='number-pad'
                 />
     
                 <TouchableOpacity style={styles.button}> 
-                    <Text style={styles.buttonText} onPress={this.validateCode}>Verify</Text>
+                    <Text style={styles.buttonText} onPress={validateCode}>Verify</Text>
                 </TouchableOpacity>
             </View>  
         )
-    }
+    
 
 }
 const styles = StyleSheet.create({
@@ -91,3 +86,5 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     }
 });
+
+export default VerificationCode

@@ -141,6 +141,7 @@ const InventoryItem = ({ item, categoryId }) => {
 
 const styles = StyleSheet.create({
     itemContainer: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },

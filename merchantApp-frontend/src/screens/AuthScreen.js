@@ -13,6 +13,7 @@ const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
 
     const checkExistingUser = async (email) => {
+        console.log('called')
         const body = await JSON.stringify({
             email
         })
@@ -35,6 +36,7 @@ const AuthScreen = (props) => {
             setVerificationStage(<EnterVerificationCode vCode={vCode} email={email} onVerify={changeVerificationStage} />)
         }
         else if (number === 3) {
+            console.log(number)
             if (!existingUser) {
                 const userData = await checkExistingUser(email)
                 if (userData.existingUser) {

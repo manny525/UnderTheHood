@@ -1,21 +1,43 @@
 import React, { Component } from 'react';
-import {Text,StyleSheet} from 'react-native';
-import {Content} from 'native-base';
-import AppFooter from '../components/AppFooter'
+import {View,Text,StyleSheet,Dimensions} from 'react-native';
 
-export default class MyCart extends Component{
-    render(){
+import AppFooter from '../components/AppFooter';
+import { FooterTab } from 'native-base';
+
+export default function MyCart(){
         return(
-            <Content style={styles.container}>
-                <Text>MY CART</Text>
-                <AppFooter/>
-            </Content>            
+            <View style={styles.container}>
+                {/* <View style={styles.header}>
+                    <Text style={{color:'#fff',fontSize:20,paddingLeft:20,paddingTop:20}}>My Cart</Text>
+                </View> */}
+                <View style={styles.body}>
+                    <Text style={{fontSize:20}}>Body</Text>
+                </View>
+                <View style={styles.footer}>
+                    <AppFooter/>
+                </View>
+            </View>            
         )
     }
-}
+
 
 const styles=StyleSheet.create({
     container:{
-        marginTop:90
-    }
+        justifyContent:'center',
+        flex:1,
+        backgroundColor:'yellow'  
+    },
+    header:{
+        flex:1.3, 
+        backgroundColor:'#fdbb0a',
+        justifyContent:'center',
+        padding:5
+    },
+    body:{
+        flex:10,
+        backgroundColor:'#fff',
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    
 })

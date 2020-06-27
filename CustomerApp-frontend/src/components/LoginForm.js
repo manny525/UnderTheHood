@@ -1,48 +1,72 @@
-import React, { Component,useState } from 'react';
+import React, { Component,useState,useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import {useSelector, useDispatch} from 'react-redux';
+import AllActions from '../actions/AllActions'; 
 
+const LoginForm=(props)=>{
 
-export default class LoginForm extends Component {
-    constructor(props){        
-      super(props);        
-      this.state={            
-         email:'',
-         password: ''        
-      }   
-    }
-    checkExistingUser(email,password){
-        //check in DB if exist pass on all parameters to home page
-            return true;
-    }
-
-    validateData =async()=>{
-        const {email,password} = this.state;
     
-        let loginDetails={
-            email: email,
-            password: password
-        }
-        
+    const [user,setUser]=useState({email:'',password:'',data:undefined})
+    const [isLoaded,setLoaded]=useState(false);
 
-        if(this.props.type == 'Login')
+    
+    useEffect(()=>{
+
+        async function fetchProduct() {
+            const body = await JSON.stringify({
+                email: user.email,
+                password:user.password
+            })
+            
+            fetch('http://192.168.43.195:3000/user/login', {
+                method: "POST",
+                body,
+                headers: { 
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then((userdata)=>{
+                setUser({...user,data:userdata});
+                })
+            .catch(e => console.log(e)) 
+          }
+      
+          fetchProduct();
+            
+    },[isLoaded])
+
+    const validateData =async()=>{
+
+        if(props.type == 'Login')
         {
             try{
                 const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                if ((reg.test(this.state.email) === false)){
+                if ((reg.test(user.email) === false)){
                     alert('enter valid email');
                 }
-                else if(password.length<7){
+                else if(user.password.length<7){
                     alert('Password length should be more than 4.Try new Password');
                 }
                 else{
-                    if(this.checkExistingUser(email,password)=== false)
+
+                    await setLoaded(true); //wait till user.data changes
+                    if(isLoaded && user.data!==undefined)
                     {
-                        alert('user not found')
-                    }
+                        
+                        console.log(user.data);
+                        
+                        const loginDetails={
+                            token:user.data.token,
+                            user:user.data.user
+                        };
+                        
+                        Actions.home({userData:loginDetails});
+                    } 
                     else
                     {
-                        Actions.home({});
+                        alert('user not found');
                     }
                 }
             }catch(error)
@@ -52,36 +76,36 @@ export default class LoginForm extends Component {
         }
     }
     
-    render() {
+    
         return(
             <View style={styles.container}>
-                <TextInput style={styles.inputBox}
-                type='e'
-                onChangeText={(email) => this.setState({email})}
-                underlineColorAndroid='rgba(0,0,0,0)' 
-                placeholder="Email"
-                placeholderTextColor = "#002f6c"
-                selectionColor="#1a1f71"
-                keyboardType="email-address"
-                onSubmitEditing={()=> this.password.focus()}/>
+                <TextInput 
+                    style={styles.inputBox}
+                    onChangeText={(email) => setUser({...user,email:email})}
+                    underlineColorAndroid='rgba(0,0,0,0)' 
+                    placeholder="Email"
+                    placeholderTextColor = "#002f6c"
+                    selectionColor="#1a1f71"
+                    keyboardType="email-address"
+                />
                 
-                <TextInput style={styles.inputBox}
-                onChangeText={(password) => this.setState({password})} 
-                underlineColorAndroid='rgba(0,0,0,0)' 
-                placeholder="Password"
-                secureTextEntry={true}
-                placeholderTextColor = "#002f6c"
-                ref={(input) => this.password = input}
+                <TextInput 
+                    style={styles.inputBox}
+                    onChangeText={(password) => setUser({...user,password:password})} 
+                    underlineColorAndroid='rgba(0,0,0,0)' 
+                    placeholder="Password"
+                    secureTextEntry={true}
+                    placeholderTextColor = "#002f6c"
                 />
  
                 <TouchableOpacity style={styles.button}> 
-                    <Text style={styles.buttonText} onPress={this.validateData}>{this.props.type}</Text>
+                    <Text style={styles.buttonText} onPress={validateData}>{props.type}</Text>
                 </TouchableOpacity>
             </View>
             
         )
-    }
 }
+
 
 
 const styles = StyleSheet.create({
@@ -113,3 +137,5 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     }
 });
+
+export default LoginForm

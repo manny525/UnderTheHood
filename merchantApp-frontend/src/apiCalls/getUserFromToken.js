@@ -1,6 +1,8 @@
+import { LOCAL_HOST } from 'react-native-dotenv'
+
 const getUserFromToken = async (body) => {
     try {
-        const res = await fetch('http://192.168.1.6:3000/users/getUserFromToken', {
+        const res = await fetch(`http://${LOCAL_HOST}/users/getUserFromToken`, {
             method: "POST",
             body,
             headers: {

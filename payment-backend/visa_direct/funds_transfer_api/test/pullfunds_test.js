@@ -21,26 +21,17 @@ var funds_transfer_api = new api(authCredentials);
 // path invoked is '/visadirect/fundstransfer/v1/pullfundstransactions';
 funds_transfer_api.pullfunds(getParameters())
     .then(function(result) {
-        // Put your custom logic here
-        console.log('\n Response: ' + JSON.stringify(result.response));
+        console.log('\n Response: ' + JSON.stringify(result.response.body));
         console.log('\n Response Status: ' + JSON.stringify(result.response.statusCode));
-        console.log('\n--------------- Above product is Visa Direct ---------------');
-        console.log('\n--------------- API is Funds Transfer Api ---------------');
-        console.log('\n--------------- EndPoint is pullfunds ---------------');
-        console.log('\n\n');
     })
     .catch(function(error) {
-        console.log('\n Response: ' + JSON.stringify(error.response));
+        console.log('\n Response: ' + JSON.stringify(error.response.body));
         console.log('\n Response Status: ' + JSON.stringify(error.response.statusCode));
-        console.log('\n--------------- Above product is Visa Direct ---------------');
-        console.log('\n--------------- API is Funds Transfer Api ---------------');
-        console.log('\n--------------- EndPoint is pullfunds ---------------');
-        console.log('\n\n');
     });
 
 function getParameters() {
     var parameters = {
-        "x-client-transaction-id": "{enter appropriate value}",
+        "x-client-transaction-id": "gv123456tghyfrasdj123",
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
@@ -52,15 +43,14 @@ function getParameters() {
         "acquirerCountryCode": "840",
         "retrievalReferenceNumber": "330000550000",
         "cardAcceptor": {
-            "idCode": "ABCD1234ABCD123",
+            "name": "Acceptor 1",
+            "terminalId": "TID-9999",
+            "idCode": "CA-IDCode-77765",
             "address": {
-                "county": "081",
                 "country": "USA",
                 "state": "CA",
                 "zipCode": "94404"
             },
-            "terminalId": "ABCD1234",
-            "name": "Visa Inc. USA-Foster City"
         },
         "acquiringBin": "408999",
         "systemsTraceAuditNumber": "451001",
