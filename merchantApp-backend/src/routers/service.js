@@ -6,11 +6,10 @@ const moment = require('moment')
 
 router.post('/add',async(req,res)=>{
     try{
-        var service = await Service.findOne({merchant:req.body.merchant,date:new Date(req.body.date)})
-        if(service){
-            return res.status(400).send({message:'Merchant is not available.Try a different time.'})
-        }
-        service = new Service(req.body)
+        const service = new Service({
+            ...req.body,
+            status:'Pending'
+        })
         await service.save() 
         res.send(service)     
     }catch(error){
@@ -31,16 +30,24 @@ router.get('/service',auth,async(req,res)=>{
     }
 })
 
-router.patch('/date/:id',auth,async(req,res)=>{
-    try{
-        var service = await Service.findOne({merchant:req.user._id,date:new Date(req.body.date)})
-        if(service){
-            return res.status(400).send({message:'Merchant is not available.Try a different time.'})
-        }
-        await Service.findByIdAndUpdate({_id:req.params.id},{date:req.body.date})
-        res.send()
-    }catch(error){
-        res.status(500).send({error})
+router.patch('/update',auth,async(req,res)=>{
+    const updates = Object.keys(req.body)
+    
+    const allowedUpdates = ['time', 'status','date']
+    const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidUpdate) {
+        return res.status(400).send({ error: 'Invalid updates' })
+    }
+    try {
+        req.service= await Service.findOne({_id:req.query.id})
+        
+        updates.forEach((update) => req.service[update] = req.body[update])
+        
+        await req.service.save()
+        res.send(req.service)
+    } catch(e) {
+        res.status(400).send(e)
     }
 })
 
