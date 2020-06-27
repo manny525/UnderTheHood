@@ -78,6 +78,12 @@ userSchema.virtual('Loyalty',{
     foreignField:'customer'
 })
 
+userSchema.virtual('carts',{
+    ref:'carts',
+    localField:'_id',
+    foreignField:'custID'
+})
+
 userSchema.methods.toJSON = function(){
     const user=this
     const userobj=user.toObject()

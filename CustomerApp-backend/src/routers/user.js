@@ -3,6 +3,7 @@ const auth=require('./../middleware/auth')
 const check=require('../middleware/number_verification/number')
 const {welcomemail} = require('../emails/account')
 const  randomize = require('randomatic')
+const {items} = require('./../models/cart')
 
 const express=require('express')
 const router= new express.Router()
@@ -30,10 +31,20 @@ router.post('/user/login',async(req,res)=>{
         await user.populate({
             path:'Cards',
         }).execPopulate()
+        await user.populate({
+          path:'carts',  
+        }).execPopulate()
+        for(var i=0;i<user.carts.length;i++){
+            for(var j=0;j<user.carts[i].items.length;j++){
+                const item = await items.findById(user.carts[i].items[j])
+                user.carts[i].items[j]= item
+            }
+        }
         res.send({
             user,
             Loyalty:user.Loyalty,
             Cards:user.Cards,
+            Carts:user.carts,
             token
         })
     }catch(error){

@@ -1,9 +1,4 @@
-require("./../db/mongoose");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/new_Hack", {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-});
 
 var Schema = mongoose.Schema;
 
@@ -31,7 +26,7 @@ var cartElement = new mongoose.Schema({
 // _id should be customer_id + merchant_id
 var cart = new mongoose.Schema({
     _id: { type: String, required: true },
-    custID: { type: String, required: true },
+    custID: { type: String, required: true ,ref:'User'},
     numberItems: { type: Number, min: 0, default: 0 },
     items: [{ type: Schema.Types.ObjectId, ref: "cartElement" }],
 });
@@ -132,6 +127,9 @@ cart.methods.emptyIt = async (cart) => {
     }
 };
 
-var carts = mongoose.model("carts", cart);
+var cart = mongoose.model("carts", cart);
 
-module.exports = carts;
+module.exports = {
+    cart,
+    items
+}

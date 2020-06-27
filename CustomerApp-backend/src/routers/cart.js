@@ -1,5 +1,5 @@
 require("./../db/mongoose");
-var cart = require("./../models/cart");
+var {cart} = require("./../models/cart");
 const auth = require("./../middleware/auth");
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -109,7 +109,7 @@ router.get("/user/getAllCarts", [auth, urlencodedParser], async (req, res) => {
                 allCarts_Q.push(allCarts[i]);
             }
         }
-        return allCarts_Q;
+        // return allCarts_Q;
         res.status(201).json(allCarts);
     } catch (e) {
         res.status(500).send(e);
