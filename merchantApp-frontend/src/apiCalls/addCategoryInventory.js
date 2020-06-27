@@ -1,6 +1,8 @@
+import { LOCAL_HOST } from 'react-native-dotenv'
+
 const addCategoryInventory = async (body, token) => {
     try {
-        const res = await fetch('http://192.168.1.6:3000/inventory/addCategory', {
+        const res = await fetch(`http://${LOCAL_HOST}/inventory/addCategory`, {
             method: "PATCH",
             body,
             headers: {

@@ -2,6 +2,7 @@ const express = require('express')
 
 const api = require('../../visa_direct/funds_transfer_api/src/funds_transfer_api').funds_transfer_api;
 const authCredentials = require('../../visa_direct/funds_transfer_api/credentials.json');
+const { response } = require('express');
 
 const api_alias = require('../../visa_direct/visa_alias_directory_api/src/visa_alias_directory_api').visa_alias_directory_api;
 
@@ -15,7 +16,6 @@ const router = new express.Router()
 router.post('/pull', (req, res) => {
     funds_transfer_api.pullfunds(getParameters())
         .then(function (result) {
-            // Put your custom logic here
             res.status(result.response.statusCode).send(result.response)
         })
         .catch(function (error) {
@@ -24,37 +24,39 @@ router.post('/pull', (req, res) => {
 
     function getParameters() {
         var parameters = {
-            "x-client-transaction-id": "{enter appropriate value}",
+            "x-client-transaction-id": "gv123456tghyfrasdj123",
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
         parameters.payload = {
-            "systemsTraceAuditNumber": "451001",
-            "retrievalReferenceNumber": "330000550000",
-            "acquiringBin": "408999",
-            "acquirerCountryCode": "840",
-            "senderPrimaryAccountNumber": "4895142232120006",
+            "businessApplicationId": "AA",
+            "cpsAuthorizationCharacteristicsIndicator": "Y",
             "senderCardExpiryDate": "2015-10",
-            //card cvv2
             "amount": "124.02",
+            "acquirerCountryCode": "840",
+            "retrievalReferenceNumber": "330000550000",
             "cardAcceptor": {
-                "idCode": "ABCD1234ABCD123",
+                "name": "Acceptor 1",
+                "terminalId": "TID-9999",
+                "idCode": "CA-IDCode-77765",
                 "address": {
-                    "county": "081",
                     "country": "USA",
                     "state": "CA",
                     "zipCode": "94404"
                 },
-                "terminalId": "ABCD1234",
-                "name": "Visa Inc. USA-Foster City"
             },
-            "businessApplicationId": "AA",
+            "acquiringBin": "408999",
+            "systemsTraceAuditNumber": "451001",
+            "nationalReimbursementFee": "11.22",
             "senderCurrencyCode": "USD",
             "cavv": "0700100038238906000013405823891061668252",
+            "foreignExchangeFeeTransaction": "11.99",
             "addressVerificationData": {
                 "postalCode": "12345",
                 "street": "XYZ St"
-            }
+            },
+            "senderPrimaryAccountNumber": "4895142232120006",
+            "surcharge": "11.99"
         };
         parameters.payload.localTransactionDateTime = Date.now();
 
@@ -73,43 +75,45 @@ router.post('/push', (req, res) => {
 
     function getParameters() {
         var parameters = {
-            "x-client-transaction-id": "{enter appropriate value}",
+            "x-client-transaction-id": "gv123456tghyfrasdj123",
             "Accept": "application/json",
             "Content-Type": "application/json"
         };
         parameters.payload = {
-            "systemsTraceAuditNumber": "451018",
-            "retrievalReferenceNumber": "412770451018",
+            "systemsTraceAuditNumber": "451000",
+            "retrievalReferenceNumber": "330000550000",
             "acquiringBin": "408999",
             "acquirerCountryCode": "840",
+            "senderAccountNumber": "4895142232120006",
+            "senderCountryCode": "124",
             "transactionCurrencyCode": "USD",
-            "recipientPrimaryAccountNumber": "4957030420210496",
-            "amount": "124.05",
-            "businessApplicationId": "AA",
+            "senderName": "Mohammed Qasim",
+            "senderAddress": "901 Metro Center Blvd",
+            "senderCity": "Foster City",
+            "senderStateCode": "CA",
+            "recipientPrimaryAccountNumber": "4761360055652118",
+            "amount": "1200",
             "merchantCategoryCode": "6012",
-            "transactionIdentifier": "381228649430015",
+            "businessApplicationId": "AA",
+            "transactionIdentifier": "740379596591403",
             "sourceOfFundsCode": "05",
             "cardAcceptor": {
+                "name": "Acceptor 1",
+                "terminalId": "TID-9999",
                 "idCode": "CA-IDCode-77765",
                 "address": {
-                    "county": "San Mateo",
                     "country": "USA",
                     "state": "CA",
                     "zipCode": "94404"
                 },
-                "terminalId": "TID-9999",
-                "name": "Visa Inc. USA-Foster City"
             },
+            "recipientName": "rohan",
+            "senderReference": "",
             "pointOfServiceData": {
-                "posConditionCode": "00",
                 "panEntryMode": "90",
+                "posConditionCode": "0",
                 "motoECIIndicator": "0"
             },
-            "senderName": "Mohammed Qasim",
-            "senderStateCode": "CA",
-            "senderAccountNumber": "4653459515756154",
-            "senderCity": "Foster City",
-            "senderCountryCode": "124"
         };
         parameters.payload.localTransactionDateTime = Date.now();
 
@@ -156,12 +160,12 @@ router.post('/createAlias', (req, res) => {
 
 router.post('/getAlias', (req, res) => {
     visa_alias_directory_api.GetAlias(getParameters())
-    .then(function (result) {
-        res.status(result.response.statusCode).send(result.response.body)
-    })
-    .catch(function (error) {
-        res.status(error.response.statusCode).send(error.response.body)
-    });
+        .then(function (result) {
+            res.status(result.response.statusCode).send(result.response.body)
+        })
+        .catch(function (error) {
+            res.status(error.response.statusCode).send(error.response.body)
+        });
 
     function getParameters() {
         var parameters = {

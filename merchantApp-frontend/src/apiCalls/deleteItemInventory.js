@@ -1,6 +1,8 @@
+import { LOCAL_HOST } from 'react-native-dotenv'
+
 const deleteItemInventory = async (body, token) => {
     try {
-        const res = await fetch('http://192.168.1.6:3000/inventory/deleteItem', {
+        const res = await fetch(`http://${LOCAL_HOST}/inventory/deleteItem`, {
             method: "DELETE",
             body,
             headers: {

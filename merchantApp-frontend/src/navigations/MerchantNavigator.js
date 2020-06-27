@@ -6,6 +6,9 @@ import InventoryScreen from '../screens/InventoryScreen';
 import HomeScreen from '../screens/HomeScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import colors from '../constants/colors';
+import GoodsProviderHome from '../components/goodsProvider/GoodsProviderHome';
+import Orders from '../screens/Orders';
+import ServiceProviderHome from '../components/serviceProvider/ServiceProviderHome';
 
 const Tab = createBottomTabNavigator()
 
@@ -47,6 +50,14 @@ const MerchantNavigator = () => {
                 <Tab.Screen
                     name="Orders"
                     component={OrdersScreen}
+                />
+                <Tab.Screen
+                    name="Merchants"
+                    component={ServiceProviderHome}
+                />
+                <Tab.Screen
+                    name="Carts"
+                    component={Orders}
                 />
             </Tab.Navigator>
         </NavigationContainer>

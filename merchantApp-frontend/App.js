@@ -10,16 +10,19 @@ import MerchantNavigator from './src/navigations/MerchantNavigator';
 import AsyncStorage from '@react-native-community/async-storage'
 import getUserFromToken from './src/apiCalls/getUserFromToken';
 import ordersReducer from './src/store/reducers/orders';
+import merchantsReducer from './src/store/reducers/merchants';
+import cartReducer from './src/store/reducers/cart';
 
 const rootReducer = combineReducers({
   user: userReducer,
   inventory: inventoryReducer,
-  orders: ordersReducer
+  orders: ordersReducer,
+  merchants: merchantsReducer,
+  cart: cartReducer
 })
 const store = createStore(rootReducer)
 
 export default function App() {
-  const [dataLoaded, setDataLoaded] = useState(false)
   const [tokenLoaded, setTokenLoaded] = useState(false)
   const [login, setLogin] = useState(false)
   const [userData, setUserData] = useState(null)

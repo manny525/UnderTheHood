@@ -129,9 +129,9 @@ var funds_transfer_api = (function() {
             method: 'POST',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            // ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -215,9 +215,9 @@ var funds_transfer_api = (function() {
             method: 'POST',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -301,9 +301,9 @@ var funds_transfer_api = (function() {
             method: 'POST',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -392,9 +392,9 @@ var funds_transfer_api = (function() {
             method: 'POST',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -472,9 +472,9 @@ var funds_transfer_api = (function() {
             method: 'GET',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -552,9 +552,9 @@ var funds_transfer_api = (function() {
             method: 'GET',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -632,9 +632,9 @@ var funds_transfer_api = (function() {
             method: 'GET',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -718,9 +718,9 @@ var funds_transfer_api = (function() {
             method: 'POST',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -804,9 +804,9 @@ var funds_transfer_api = (function() {
             method: 'POST',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -884,9 +884,9 @@ var funds_transfer_api = (function() {
             method: 'GET',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -964,9 +964,9 @@ var funds_transfer_api = (function() {
             method: 'GET',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -1044,9 +1044,9 @@ var funds_transfer_api = (function() {
             method: 'GET',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile, "utf8"),
-            cert: fs.readFileSync(this.certificateFile, "utf8"),
-            //ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile),
+            cert: fs.readFileSync(this.certificateFile),
+            ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };

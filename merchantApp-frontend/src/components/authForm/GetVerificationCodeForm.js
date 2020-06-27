@@ -3,6 +3,7 @@ import { View, KeyboardAvoidingView, ScrollView, StyleSheet, TextInput, Text, Ke
 import inputStyles from '../../styles/input';
 import MainButton from '../MainButton';
 import validator from 'validator';
+import getVerificationCode from '../../apiCalls/getVerificationCode';
 
 const GetVerificationCodeForm = (props) => {
     const [emailText, setEmailText] = useState('')
@@ -12,16 +13,8 @@ const GetVerificationCodeForm = (props) => {
             setErrorText('')
             Keyboard.dismiss()
             const body = JSON.stringify( { email: emailText } )
-            // fetch('http://192.168.1.6:3000/users/verifyEmail', {
-            //     method: "POST",
-            //     body,
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     }
-            // })
-            //     .then(res => res.json())
-            //     .then(res => props.onVerify(2, emailText, res.vCode.toString()))
-            //     .catch(e => console.log(e))
+            // const vCode = await getVerificationCode(body)
+            // props.onVerify(2, emailText, vCode.toString())
             props.onVerify(2, emailText, '123456')
         }
         else {

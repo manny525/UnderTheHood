@@ -1,6 +1,8 @@
+import { LOCAL_HOST } from 'react-native-dotenv'
+
 const editItemInventory = async (body, token) => {
     try {
-        const res = await fetch('http://192.168.1.6:3000/inventory/updateItem', {
+        const res = await fetch(`http://${LOCAL_HOST}/inventory/updateItem`, {
             method: "PATCH",
             body,
             headers: {
