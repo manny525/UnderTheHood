@@ -23,6 +23,6 @@ CustomerApp-frontend/*.mobileprovision
 CustomerApp-frontend/*.orig.*
 CustomerApp-frontend/web-build/
 CustomerApp-frontend/web-report/
-
+CustomerApp-backend/node_modules/**/*
 # macOS
 .DS_Store

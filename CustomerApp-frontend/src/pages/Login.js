@@ -5,13 +5,12 @@ import LoginForm from '../components/LoginForm';
 import { Actions } from 'react-native-router-flux';
 
 
-export default class Login extends Component {
+const Login=()=>{
 
-    signup() {
+    const signup=()=>{
         Actions.signup();
     }
 
-    render() {
         return(
             <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}}>            
                 <View style={styles.container}>
@@ -21,12 +20,11 @@ export default class Login extends Component {
                 <LoginForm type='Login'/>
                 <View style={styles.signupTextCont}> 
                     <Text style={styles.signupText}>Dont have an account yet? </Text>
-                    <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}>Signup</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={signup}><Text style={styles.signupButton}>Signup</Text></TouchableOpacity>
                 </View>
             </View>
             </TouchableWithoutFeedback>
         )
-    }
 }
 
 
@@ -65,3 +63,5 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     }
 });
+
+export default Login

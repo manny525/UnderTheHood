@@ -3,13 +3,12 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, TouchableWithoutFe
 import SignupForm from '../components/SignupForm';
 import { Actions } from 'react-native-router-flux';
 
-export default class Signup extends Component {
+const  Signup=(props)=> {
 
-    signin() {
+    const signin=()=>{
         Actions.login();
     }
 
-    render() {
         return(
             <TouchableWithoutFeedback onPress={()=>{
                 Keyboard.dismiss();
@@ -22,13 +21,13 @@ export default class Signup extends Component {
                 <SignupForm type='Signup'/>
                 <View style={styles.signinTextCont}> 
                     <Text style={styles.signinText}>Already have an account? </Text>
-                    <TouchableOpacity onPress={this.signin}><Text style={styles.signinButton}>Sign in</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={signin}><Text style={styles.signinButton}>Sign in</Text></TouchableOpacity>
                 </View>
             </View>
             </TouchableWithoutFeedback>
         )
     }
-}
+
 
 const styles = StyleSheet.create({
     container: {
@@ -66,6 +65,6 @@ const styles = StyleSheet.create({
     }
 });
 
-
+export default Signup
 
 
