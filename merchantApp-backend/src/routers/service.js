@@ -2,15 +2,15 @@ const Service = require('./../models/service')
 const auth = require('./../middleware/auth')
 const express = require('express')
 const router = new express.Router()
-const moment = require('moment')
+// const moment = require('moment')
 
-router.post('/add',async(req,res)=>{
+router.post('/service/add',async(req,res)=>{
     try{
-        var service = await Service.findOne({merchant:req.body.merchant,date:new Date(req.body.date)})
-        if(service){
-            return res.status(400).send({message:'Merchant is not available.Try a different time.'})
-        }
-        service = new Service(req.body)
+        // var service = await Service.findOne({merchant:req.body.merchant,date:new Date(req.body.date)})
+        // if(service) {
+        //     return res.status(400).send({message:'Merchant is not available.Try a different time.'})
+        // }
+        const service = new Service(req.body)
         await service.save() 
         res.send(service)     
     }catch(error){
@@ -18,7 +18,7 @@ router.post('/add',async(req,res)=>{
     }
 })
 
-router.get('/service',auth,async(req,res)=>{
+router.get('/service', auth, async(req,res)=>{
     const sort = {'date':'asc'}
     try{
         await req.user.populate({
@@ -31,6 +31,7 @@ router.get('/service',auth,async(req,res)=>{
     }
 })
 
+//to be discussed and changes
 router.patch('/date/:id',auth,async(req,res)=>{
     try{
         var service = await Service.findOne({merchant:req.user._id,date:new Date(req.body.date)})

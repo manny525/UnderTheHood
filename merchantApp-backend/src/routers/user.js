@@ -6,6 +6,7 @@ const auth = require('../middleware/auth')
 const router = new express.Router()
 const { sendVerificationCode } = require('../emails/account')
 const Inventory = require('../models/inventory')
+const Order = require('../models/order')
 
 router.post('/users/verifyEmail', async (req, res) => {
     try {
@@ -24,12 +25,12 @@ router.post('/users/newUser', async (req, res) => {
         if (user.typeOfMerchant === 'goods') {
             const inventory = new Inventory({
                 categories: [],
-                owner: user._id    
+                owner: user._id
             })
             await inventory.save()
             return res.status(201).send({ user, token, inventory })
         }
-        else 
+        else
             return res.status(201).send({ user, token })
     } catch (e) {
         res.status(400).send(e)
@@ -41,15 +42,15 @@ router.post('/users/findUser', async (req, res) => {
         const user = await User.findOne({ email: req.body.email })
         if (user) {
             const token = await user.generateAuthToken()
-            if (user.typeOfMerchant === 'goods')
-            {
+            if (user.typeOfMerchant === 'goods') {
                 const inventory = await Inventory.findOne({ owner: user._id })
-                return res.send({ user, token, existingUser: true, inventory })
+                const orders = await Order.find({ merchantId: user._id })
+                return res.send({ user, token: req.body.token, inventory, orders})
             }
             return res.send({ user, token, existingUser: true })
         }
         return res.status(404).send({ existingUser: false })
-    } catch(e) {
+    } catch (e) {
         res.send(e)
     }
 })
@@ -57,17 +58,16 @@ router.post('/users/findUser', async (req, res) => {
 router.post('/users/getUserFromToken', async (req, res) => {
     try {
         const user = await User.findByToken(req.body)
-        console.log(user)
         if (user) {
-            if (user.typeOfMerchant === 'goods')
-            {
+            if (user.typeOfMerchant === 'goods') {
                 const inventory = await Inventory.findOne({ owner: user._id })
-                return res.send({ user, token: req.body.token, inventory })
+                const orders = await Order.find({ merchantId: user._id })
+                return res.send({ user, token: req.body.token, inventory, orders})
             }
-            return res.send({ user, token: req.body.token})
+            return res.send({ user, token: req.body.token })
         }
-        return res.status(404).send({error: 'User not found'})
-    } catch(e) {
+        return res.status(404).send({ error: 'User not found' })
+    } catch (e) {
         res.send(e)
     }
 })
@@ -96,7 +96,7 @@ router.patch('/users/update', auth, async (req, res) => {
         updates.forEach((update) => req.user[update] = req.body[update])
         await req.user.save()
         res.send(req.user)
-    } catch(e) {
+    } catch (e) {
         res.status(400).send(e)
     }
 })
@@ -105,7 +105,7 @@ router.delete('/users/me', auth, async (req, res) => {
     try {
         await req.user.remove()
         res.send(req.user)
-    } catch(e) {
+    } catch (e) {
         res.status(500).send()
     }
 })

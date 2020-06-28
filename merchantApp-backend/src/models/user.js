@@ -78,7 +78,6 @@ userSchema.statics.findByToken = async ({ token, _id }) => {
     const user = await User.findById(_id)
     let returnUser = null
     user.tokens.forEach(userToken => {
-        console.log(userToken)
         if (userToken.token === token) {
             returnUser = user
         }
