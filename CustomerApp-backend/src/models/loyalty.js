@@ -10,7 +10,7 @@ const loyaltySchema = new mongoose.Schema({
     customer:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
-        ref:'User',
+        ref:'Customer',
     },
     merchant:{
         type:mongoose.Schema.Types.ObjectId,

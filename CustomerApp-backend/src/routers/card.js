@@ -1,7 +1,7 @@
 const express=require('express')
 const router= new express.Router()
 const Cards= require('./../models/card')
-const auth=require('./../middleware/auth')
+const auth=require('./../middleware/auth_customer')
 const cardvalidator = require('./../middleware/card_validation/card')
 const validate = require('./../middleware/card_validation_visa_api/validator')
 require('./../db/mongoose')

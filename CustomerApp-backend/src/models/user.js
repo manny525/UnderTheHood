@@ -1,141 +1,125 @@
-const mongoose=require('mongoose')
-const validator=require('validator')
-const bcrypt=require('bcryptjs')
-const jwt=require('jsonwebtoken')
-const  randomize = require('randomatic')
-const Cards =require('./card')
-const Loyalty = require('./loyalty') 
+const mongoose = require('mongoose')
+const validator = require('validator')
+const jwt = require('jsonwebtoken')
+const Inventory = require('./inventory')
 
 const userSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
-        trim:true,
-        minlength:2
-    },
-    contact:{
-        type:String,
-        required:true,
-        unique:true,
-        trim:true,
-        validate(value){
-            if(!validator.isMobilePhone(value,'any')){
-                throw new Error('Not a Phone Number')
+    email: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true,
+        lowercase: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error('Invalid email')
             }
         }
     },
-    email:{
-        type:String,
-        unique:true,
-        required:true,
-        trim:true,
-        validate(value){
-            if(!validator.isEmail(value)){
-                throw new Error('invalid email')
-            }
-        }
+    merchantName: {
+        type: String,
+        required: true,
+        trim: true
     },
-    address:{
-        latitude:{
-            type:Number
+    shopName: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    typeOfMerchant: {
+        type: String,
+        required: true
+    },
+    providerOf: {
+        type: String,
+        required: true
+    },
+    pan: {
+        type: String,
+        required: true,
+    },
+    location: {
+        lat: {
+            type: String,
+            required: true
         },
-        longitude:{
-            type:Number
+        lon: {
+            type: String,
+            required: true
+        },
+        postalCode: {
+            type: String,
+            required: true
         }
     },
-    password:{
-        type:String,
-        required:true,
-        trim:true,
-        minlength:7,
-        validate(value){
-            if(value.toLowerCase().includes('password')){
-                throw new Error('password in password')
-            }
+    tokens: [{
+        token: {
+            type: String,
+            required: true
         }
-    },
-    referral:{
-        type:String,
-        trim:true
-    },
-    tokens:[{
-        token:{
-            type:String,
-            required:true
-        }
-    }],
+    }]
 })
 
-userSchema.virtual('Cards',{
-    ref:'Cards',
+userSchema.virtual('service',{
+    ref:'service',
     localField:'_id',
-    foreignField:'owner'
+    foreignField:'merchant'
 })
 
-userSchema.virtual('Loyalty',{
-    ref:'Loyalty',
+userSchema.virtual('PlaceOrder',{
+    ref:'PlaceOrder',
     localField:'_id',
-    foreignField:'customer'
+    foreignField:'merchantID'
 })
 
-userSchema.virtual('carts',{
-    ref:'carts',
-    localField:'_id',
-    foreignField:'custID'
-})
-
-userSchema.methods.toJSON = function(){
-    const user=this
-    const userobj=user.toObject()
-    delete userobj.password
-    delete userobj.tokens
-    return userobj
-}
-
-userSchema.methods.generateToken = async function(){
+userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token=jwt.sign({_id:user._id.toString()},process.env.JWT_SECRET)
-    user.tokens=user.tokens.concat({token})
+    const token = jwt.sign({ _id: user._id.toString()},process.env.JWT_SECRET)
+    user.tokens = user.tokens.concat({token})
     await user.save()
-    return  token
+    return token
 }
 
-userSchema.statics.findUser = async(email,password)=>{
-    const user= await User.findOne({email})
-    if(!user){
-        throw new Error('Invalid email')
-    }
-    const match=await bcrypt.compare(password,user.password)
-    if(!match){
-        throw new Error('Invalid Password')
-    }
-    return user
-}
-
-userSchema.pre('save',async function(next){
-    const user = this
-    if(user.isModified('password')){
-        user.password=await bcrypt.hash(user.password,8)
-    }
-    if(user.isModified('referral')){
-        var referral=randomize('*',5)
-        var ser= await User.findOne({referral})
-        while(ser){
-            referral=randomize('*',5)
-            ser= await User.findOne({referral})
+userSchema.statics.findByToken = async ({ token, _id }) => {
+    const user = await User.findById(_id)
+    let returnUser = null
+    user.tokens.forEach(userToken => {
+        console.log(userToken)
+        if (userToken.token === token) {
+            returnUser = user
         }
-        user.referral=referral
-    }
-    next()
-})
+    })
+    return returnUser
+}
 
-userSchema.pre('remove',async function(next){
+userSchema.methods.toJSON = function () {
     const user = this
-    await Cards.deleteMany({owner:user._id})
-    await Loyalty.deleteMany({customer:user._id})
+    const userObject = user.toObject()
+
+    delete userObject.tokens
+
+    return userObject
+}
+
+//hash the plain text password before saving
+// userSchema.pre('save', async function (next) {
+//     const user = this
+
+//     if (user.isModified('password')) {
+//         user.password = await bcrypt.hash(user.password, 8)
+//     }
+
+//     next()
+// })
+
+//delete user inventory when user is removed
+
+userSchema.pre('remove', async function (next) {
+    const user = this
+    await Inventory.deleteOne({ owner: user._id })
     next()
 })
 
-const User=mongoose.model('User',userSchema)
-module.exports=User
+const User = mongoose.model('User', userSchema)
 
+module.exports = User
