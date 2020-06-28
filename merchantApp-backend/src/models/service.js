@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const { Timestamp } = require('mongodb')
-
 
 const serviceSchema = new mongoose.Schema({
     merchantId: {
@@ -48,5 +46,6 @@ const serviceSchema = new mongoose.Schema({
         trim: true
     }
 })
+
 const Service = mongoose.model('Service', serviceSchema)
 module.exports = Service
