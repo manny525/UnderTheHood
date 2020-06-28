@@ -4,13 +4,13 @@ require('./db/mongoose')
 const app=express()
 
 const userRouter = require('./routers/user')
-const itemRouter = require('./routers/item')
+// const itemRouter = require('./routers/item')
 const inventoryRouter = require('./routers/inventory')
 const orderRouter = require('./routers/order')
 
 app.use(express.json())
 app.use(userRouter)
-app.use(itemRouter)
+// app.use(itemRouter)
 app.use(inventoryRouter)
 app.use(orderRouter)
 app.use(require('./routers/search'))
@@ -22,7 +22,7 @@ app.use(require('./routers/card'))
 app.use(require('./routers/loyalty'))
 app.use(require('./routers/cart'))
 app.use(require('./routers/payment'))
-app.use(require('./routers/visa'))
+app.use(require('./routers/visa').router)
 
 module.exports=app
 

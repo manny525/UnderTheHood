@@ -26,9 +26,8 @@ const paymentSchema = new mongoose.Schema({
         required:true,
     },
     senderAccountNumber:{
-        type:Number,
+        type:String,
         trim:true,
-        required:true,
     }
 })
 
