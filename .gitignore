@@ -12,6 +12,17 @@ merchantApp-frontend/web-build/
 merchantApp-frontend/web-report/
 merchantApp-backend/node_modules
 merchantApp-backend/config
+customer-frontend/node_modules/**/*
+customer-frontend/.expo/*
+customer-frontend/npm-debug.*
+customer-frontend/*.jks
+customer-frontend/*.p8
+customer-frontend/*.key
+customer-frontend/*.mobileprovision
+customer-frontend/*.orig.*
+customer-frontend/*.p12
+customer-frontend/web-build/
+customer-frontend/web-report/
 CustomerApp-frontend/node_modules/**/*
 CustomerApp-frontend/.expo/*
 CustomerApp-frontend/npm-debug.*

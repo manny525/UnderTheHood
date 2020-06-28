@@ -10,15 +10,13 @@ import MerchantNavigator from './src/navigations/MerchantNavigator';
 import AsyncStorage from '@react-native-community/async-storage'
 import getUserFromToken from './src/apiCalls/getUserFromToken';
 import ordersReducer from './src/store/reducers/orders';
-import merchantsReducer from './src/store/reducers/merchants';
-import cartReducer from './src/store/reducers/cart';
+import serviceRequestReducer from './src/store/reducers/serviceRequest';
 
 const rootReducer = combineReducers({
   user: userReducer,
   inventory: inventoryReducer,
   orders: ordersReducer,
-  merchants: merchantsReducer,
-  cart: cartReducer
+  serviceRequest: serviceRequestReducer
 })
 const store = createStore(rootReducer)
 
@@ -48,7 +46,6 @@ export default function App() {
       'open-sans': require('./assets/fonts/OpenSans-Regular.ttf')
     })
   }
-
   if (!tokenLoaded) {
     return <AppLoading
       startAsync={loadToken}
@@ -56,10 +53,9 @@ export default function App() {
       onError={(err) => console.log(err)}
     />
   }
-
   return (
     <Provider store={store}>
-      {login ? <MerchantNavigator /> : <AuthScreen setLogin={setLogin} userData={userData} />}
+      {login ? <MerchantNavigator merchantType={userData.user.typeOfMerchant} /> : <AuthScreen setLogin={setLogin} userData={userData} />}
     </Provider>
   )
 }

@@ -111,9 +111,6 @@ const GoodsProviderValidation = (props) => {
           try {
             await AsyncStorage.setItem('token', existingUser.token);
             await AsyncStorage.setItem('owner', existingUser.user._id);
-            if (token !== null) {
-              console.log(token);
-            }
           } catch (error) {
             console.log(error)
           }

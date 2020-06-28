@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
+const valid = require('is-my-date-valid')
+const validate = valid({ format: 'DD/MM/YYYY' })
 
 const serviceSchema = new mongoose.Schema({
     merchantId: {
@@ -35,11 +38,21 @@ const serviceSchema = new mongoose.Schema({
         type: String, //Date
         required: true,
         trim: true,
+        validate(value) {
+            if (!validate(value)) {
+                throw new Error('Invalid Date')
+            }
+        }
     },
     time: {
         type: String, //Date
         required: false,
         trim: true,
+        validate(value) {
+            if (!validate(value)) {
+                throw new Error('Invalid Date')
+            }
+        }
     },
     description: {
         type: String,

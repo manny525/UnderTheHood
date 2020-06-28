@@ -1,13 +1,48 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions } from 'react-native';
-import Card from '../Card'
+import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions, TextInput } from 'react-native';
+import { useDispatch } from 'react-redux';
+import Card from '../Card';
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import OrderItemList from './OrderItemList';
+import inputStyle from '../../styles/input';
+import { updateOrders } from '../../store/actions/orders';
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
+    const [vCode, setVcode] = useState('')
+
+    const dispatch = useDispatch()
+
+    const orderStatusChange = async () => {
+        let status
+        if (order.status === 'pending') {
+            status = 'ready'
+        }
+        else if (order.status === 'ready') {
+            status = 'completed'
+            //receive payment if vCode right
+        }
+        //api call by passing status
+        dispatch(updateOrders({
+            ...order,
+            status
+        }))
+        setOrderModalVisible(false)
+        if (status === 'ready') {
+            setTab(2)
+        }
+        else if (status === 'completed') {
+            setTab(3)
+        }
+    }
+
+    const vCodeChange = (text) => {
+        if (text.length === '6') {
+            setVCode(text)
+        }
+    }
 
     return (
         <View>
@@ -35,7 +70,7 @@ const OrderItem = ({ order }) => {
                     <TitleText>Customer: {order.customerName}</TitleText>
                 </View>
                 <View style={styles.itemModalContainer}>
-                    <Text style={{fontFamily: 'open-sans-bold', fontSize: 22}}>Items</Text>
+                    <Text style={{ fontFamily: 'open-sans-bold', fontSize: 22 }}>Items</Text>
                     <FlatList
                         data={order.items}
                         renderItem={({ item }) => {
@@ -47,8 +82,16 @@ const OrderItem = ({ order }) => {
                     />
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
                         <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹400</Text>
-                        {order.status !== 'Completed' && <MainButton style={{ marginTop: 5 }}>
-                        {order.status === 'Pending' ? 'Accept' : 'Complete'}</MainButton>}
+                        {order.status === 'ready' &&
+                            <TextInput 
+                                style={inputStyle.input} 
+                                placeholder="Verification Code"
+                                onChangeText={vCodeChange}
+                                keyboardType='number-pad'     
+                                maxLength={6}
+                            />}
+                        {order.status !== 'completed' && <MainButton onPress={orderStatusChange} style={{ marginTop: 5 }}>
+                            {order.status === 'pending' ? 'Ready' : 'Complete'}</MainButton>}
                     </View>
                 </View>
             </Modal>

@@ -4,42 +4,61 @@ const valid = require('is-my-date-valid')
 const validate = valid({ format: 'DD/MM/YYYY' })
 
 const serviceSchema = new mongoose.Schema({
-    merchant:{
-        type:mongoose.Schema.Types.ObjectId,
-        required:true,
-        trim:true,
-        ref:'User'
+    merchantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        trim: true
     },
-    customer:{
-        type:mongoose.Schema.Types.ObjectId,
-        required:true,
-        trim:true,
-        ref:'Customer'
+    customerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        trim: true
     },
-    //Format 'DD/MM/YYYY'
-    date:{
-        type:String,
-        required:true,
-        trim:true,
+    merchantName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    customerName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    customerId: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    status: {
+        type: String,
+        required: true,
+        default: 'new'
+    },
+    date: {
+        type: String, //Date
+        required: true,
+        trim: true,
         validate(value) {
             if (!validate(value)) {
                 throw new Error('Invalid Date')
             }
         }
     },
-    time:{
-        type:String,
-        trim:true,
+    time: {
+        type: String, //Date
+        required: false,
+        trim: true,
+        validate(value) {
+            if (!validate(value)) {
+                throw new Error('Invalid Date')
+            }
+        }
     },
-    status:{
-        type:String,
-        required:true,
-        trim:true
-    },
-    detail:{
-        type:String,
-        trim:true
+    description: {
+        type: String,
+        trim: true
     }
 })
-const service = mongoose.model('service',serviceSchema)
-module.exports = service
+
+const Service = mongoose.model('Service', serviceSchema)
+module.exports = Service

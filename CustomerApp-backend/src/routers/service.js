@@ -1,17 +1,16 @@
 const Service = require('./../models/service')
 const auth = require('./../middleware/auth')
-const auth_customer = require('./../middleware/auth_customer')
 const express = require('express')
 const router = new express.Router()
-const moment = require('moment')
+// const moment = require('moment')
 
-router.post('/add/service',auth_customer,async(req,res)=>{
+router.post('/service/add',async(req,res)=>{
     try{
-        const service = new Service({
-            ...req.body,
-            customer:req.user._id,
-            status:'Pending'
-        })
+        // var service = await Service.findOne({merchant:req.body.merchant,date:new Date(req.body.date)})
+        // if(service) {
+        //     return res.status(400).send({message:'Merchant is not available.Try a different time.'})
+        // }
+        const service = new Service(req.body)
         await service.save() 
         res.send(service)     
     }catch(error){
@@ -19,7 +18,7 @@ router.post('/add/service',auth_customer,async(req,res)=>{
     }
 })
 
-router.get('/service',auth,async(req,res)=>{
+router.get('/service', auth, async(req,res)=>{
     const sort = {'date':'asc'}
     try{
         await req.user.populate({
@@ -32,31 +31,23 @@ router.get('/service',auth,async(req,res)=>{
     }
 })
 
-router.patch('/update//service',auth,async(req,res)=>{
-    const updates = Object.keys(req.body)
-    
-    const allowedUpdates = ['time', 'status','date']
-    const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
-
-    if (!isValidUpdate) {
-        return res.status(400).send({ error: 'Invalid updates' })
-    }
-    try {
-        req.service= await Service.findOne({_id:req.query.id})
-        
-        updates.forEach((update) => req.service[update] = req.body[update])
-        
-        await req.service.save()
-        res.send(req.service)
-    } catch(e) {
-        res.status(400).send(e)
+//to be discussed and changes
+router.patch('/date/:id',auth,async(req,res)=>{
+    try{
+        var service = await Service.findOne({merchant:req.user._id,date:new Date(req.body.date)})
+        if(service){
+            return res.status(400).send({message:'Merchant is not available.Try a different time.'})
+        }
+        await Service.findByIdAndUpdate({_id:req.params.id},{date:req.body.date})
+        res.send()
+    }catch(error){
+        res.status(500).send({error})
     }
 })
 
-//id of service to dekete
-router.delete('/delete/service',auth_customer,async(req,res)=>{
+router.delete('/delete',async(req,res)=>{
     try{
-        await Service.findByIdAndRemove(req.query.id)
+        await Service.findOneAndRemove(req.body)
         res.send()
     }catch(error){
         res.status(400).send({error})

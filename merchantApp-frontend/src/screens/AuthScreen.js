@@ -7,13 +7,13 @@ import Header from '../components/Header';
 import { setUser } from '../store/actions/user';
 import { useDispatch } from 'react-redux';
 import { setInventory } from '../store/actions/inventory';
+import { setOrders } from '../store/actions/orders';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
 
     const checkExistingUser = async (email) => {
-        console.log('called')
         const body = await JSON.stringify({
             email
         })
@@ -36,11 +36,23 @@ const AuthScreen = (props) => {
             setVerificationStage(<EnterVerificationCode vCode={vCode} email={email} onVerify={changeVerificationStage} />)
         }
         else if (number === 3) {
-            console.log(number)
             if (!existingUser) {
                 const userData = await checkExistingUser(email)
                 if (userData.existingUser) {
-                    setExistingUser({ token: userData.token, user: userData.user, inventory: userData.inventory })
+                    if (userData.user.typeOfMerchant === "goods") {
+                        setExistingUser({
+                            token: userData.token,
+                            user: userData.user,
+                            inventory: userData.inventory,
+                            orders: userData.orders
+                        })
+                    } else if (userData.user.typeOfMerchant === "service") {
+                        setExistingUser({
+                            token: userData.token,
+                            user: userData.user,
+                            requests: userData.requests
+                        })
+                    }
                 }
                 else {
                     setVerificationStage(<SignUpForm email={email} setLogin={props.setLogin} />)
@@ -60,6 +72,10 @@ const AuthScreen = (props) => {
                 if (existingUser.inventory) {
                     await dispatch(setInventory(existingUser.inventory))
                 }
+                if (existingUser.orders) {
+                    console.log(existingUser.orders)
+                    await dispatch(setOrders(existingUser.orders))
+                }
                 props.setLogin(true)
             }
         }
@@ -67,15 +83,24 @@ const AuthScreen = (props) => {
     }, [existingUser])
 
     useEffect(() => {
-        console.log(existingUser)
-        if (existingUser) {
-            dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
-            if (existingUser.inventory) {
-                dispatch(setInventory(existingUser.inventory))
+        async function login() {
+            if (existingUser) {
+                await dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
+                if (existingUser.inventory) {
+                    await dispatch(setInventory(existingUser.inventory))
+                }
+                if (existingUser.orders) {
+                    console.log(existingUser.orders)
+                    await dispatch(setOrders(existingUser.orders))
+                }
+                // if (existingUser.requests) {
+                //     console.log(existingUser.requests)
+                //     await dispatch(setOrders(existingUser.orders))
+                // }
+                props.setLogin(true)
             }
-            console.log(true)
-            props.setLogin(true)
         }
+        login()
     }, [])
 
     useEffect(() => {
@@ -83,7 +108,6 @@ const AuthScreen = (props) => {
             try {
                 await AsyncStorage.setItem('token', existingUser.token);
                 await AsyncStorage.setItem('owner', existingUser.user._id);
-                console.log('saved')
             } catch (error) {
                 console.log(error)
             }

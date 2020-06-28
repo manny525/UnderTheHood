@@ -6,13 +6,11 @@ import InventoryScreen from '../screens/InventoryScreen';
 import HomeScreen from '../screens/HomeScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import colors from '../constants/colors';
-import GoodsProviderHome from '../components/goodsProvider/GoodsProviderHome';
-import Orders from '../screens/Orders';
-import ServiceProviderHome from '../components/serviceProvider/ServiceProviderHome';
+import RequestsScreen from '../screens/RequestsScreen';
 
 const Tab = createBottomTabNavigator()
 
-const MerchantNavigator = () => {
+const MerchantNavigator = ({ merchantType }) => {
 
     return (
         <NavigationContainer>
@@ -26,7 +24,7 @@ const MerchantNavigator = () => {
                             iconName = 'ios-home'
                         } else if (route.name === 'Inventory') {
                             iconName = 'ios-menu';
-                        } else if (route.name === 'Orders') {
+                        } else if (route.name === 'Orders' || 'Requests') {
                             iconName = 'ios-paper';
                         }
                         return <Ionicons name={iconName} size={size} color={!focused ? colors.opaque : colors.primary} />;
@@ -47,18 +45,14 @@ const MerchantNavigator = () => {
                     name="Inventory"
                     component={InventoryScreen}
                 />
+                {!merchantType === 'goods' ? <Tab.Screen
+                    name="Requests"
+                    component={RequestsScreen}
+                /> :
                 <Tab.Screen
                     name="Orders"
                     component={OrdersScreen}
-                />
-                <Tab.Screen
-                    name="Merchants"
-                    component={ServiceProviderHome}
-                />
-                <Tab.Screen
-                    name="Carts"
-                    component={Orders}
-                />
+                />}
             </Tab.Navigator>
         </NavigationContainer>
     )
