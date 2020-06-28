@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Keyboard ,Alert} from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import AllActions from '../actions/AllActions';
 
 const VerificationCode=(props)=>{
     
     
     const [vCode,setVcode]=useState('');
+    const [loginUpdate,setLoginUpdate]=useState(false);
     
-    const validateCode=()=>{
+    const dispatch=useDispatch();
+
+    useEffect(()=>{
+        
+        dispatch(AllActions.Login_Logout_Action.setUser(props.userData));
+            
+    },[loginUpdate])
+
+    const validateCode=async()=>{
 
         if(vCode===props.vCode)
         {
             alert('Successful');
-            Actions.home({userData:props.userData});
+            await setLoginUpdate(true);
+
+            Actions.home();
         }
         else{
             alert('Enter correct code');

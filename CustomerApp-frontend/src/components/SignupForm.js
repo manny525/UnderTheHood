@@ -89,7 +89,10 @@ const SignupForm=(props)=>{
                         
                         const loginDetails={
                             token:user.data.token,
-                            user:user.data.user
+                            user:user.data.user,
+                            Cards:[],
+                            Carts:[],
+                            Loyalty:[]
                         };
                         console.log(loginDetails);
                         Actions.verificationCode({vCode:OTP,userData:loginDetails});

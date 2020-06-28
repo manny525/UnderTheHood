@@ -10,6 +10,7 @@ const LoginForm=(props)=>{
     const [user,setUser]=useState({email:'',password:'',data:undefined})
     const [isLoaded,setLoaded]=useState(false);
 
+    const dispatch=useDispatch();
     
     useEffect(()=>{
 
@@ -54,15 +55,9 @@ const LoginForm=(props)=>{
                     await setLoaded(true); //wait till user.data changes
                     if(isLoaded && user.data!==undefined)
                     {
-                        
                         console.log(user.data);
-                        
-                        const loginDetails={
-                            token:user.data.token,
-                            user:user.data.user
-                        };
-                        
-                        Actions.home({userData:loginDetails});
+                        dispatch(AllActions.Login_Logout_Action.setUser(user.data));                        
+                        Actions.home();
                     } 
                     else
                     {

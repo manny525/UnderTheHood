@@ -17,29 +17,41 @@ export default function AddNewCard(){
      })
     
      const dispatch=useDispatch();
+     const token=useSelector(state=>state.loginReducer.token);
      
      const getCardVerificationStatus=()=>{
           
           return new Promise(async function(resolve, reject) {
-               // const body = await JSON.stringify({
-               //      number : state.number,
-               //      date:state.expiry,
-               //      cvv: state.cvc
-               //  })
-               //  fetch('http://192.168.43.195:3000/add/card', {
-               //      method: "POST",
-               //      body,
-               //      headers: { 
-               //          'Content-Type': 'application/json'
-               //      }
-               //  })
-               //  .then(res => res.json())
-               //  .then((userdata)=>{
-                         
-               //      })
-               //  .catch(e => console.log(e))
-                dispatch(AllActions.CardActions.addCard(state));
-               resolve(true);
+               var cardNumber=(state.number).split(' ').join('');
+               const body = await JSON.stringify({
+                    number : cardNumber,
+                    date:state.expiry,
+                    cvv: state.cvc
+                })
+                fetch('http://192.168.43.195:3000/add/card', {
+                    method: "POST",
+                    body,
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                .then(res => res.json())
+                .then((userdata)=>{
+                    console.log(userdata);
+                    if(userdata.error)
+                         resolve(false);
+                    else{
+                         dispatch(AllActions.CardActions.addCard(state));
+                         resolve(true);
+                    }
+                })
+                .catch(e => {
+                     console.log(e);
+                     console.log("error occured!!");
+                     resolve(false);
+                })
+               
           })
           
      }
@@ -85,20 +97,7 @@ export default function AddNewCard(){
             
           <View style={styles.container}>
           <ScrollView>
-               {/* <View style={styles.card}>
-                    <CreditCard
-                         type={this.state.type}
-                         imageFront={require('./images/card-front.png')}
-                         imageBack={require('./images/card-back.png')}
-                         shiny={false}
-                         bar={true}
-                         focused={this.state.focused}
-                         number={this.state.number}
-                         name={this.state.name}
-                         expiry={this.state.expiry}
-                         cvc={this.state.cvc}
-                    />
-               </View> */}
+               
           <TextInput
              keyboardType='number-pad'
              type="tel"

@@ -1,41 +1,36 @@
-import React, { Component } from 'react';
+import React, {  } from 'react';
 import {View,Text,StyleSheet,Dimensions} from 'react-native';
-
 import AppFooter from '../components/AppFooter';
 import { ScrollView, TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import { Actions } from 'react-native-router-flux';
 import { useSelector, useDispatch } from 'react-redux';
 import AllActions from '../actions/AllActions';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 export default function MyCard(){
 
         const cards=useSelector(state=>state.cardReducer.cardList);
         const dispatch=useDispatch();
-
+        
         console.log(cards);
 
         const myCards=cards.map(item=>{
             return (
                 <View style={styles.cardsLayout} key={item.number}>
                     
-                    <View style={{flexDirection:'row'}}>
-                        <View style={{marginRight:10,marginTop:2}}>
-                            <Text>
-                                <Icon name="credit-card" size={15}  />
-                            </Text>
-                        </View>
                         <View>
                             <Text>{item.number}</Text>
                             <Text>{item.name}</Text>
+                            <Text>Valid till: {item.expiry}</Text>
                         </View>
                         
-                    </View>
+                    
                     <View>
                         <TouchableOpacity  onPress={()=>dispatch(AllActions.CardActions.deleteCard(item.number))}>
-                                {/* <Text style={{color:'#fff'}}>delete</Text> */}
                                 <Text>
-                                <Icon name="remove" size={30} color="#900" />
+                                    <Ionicons name="ios-trash" size={32}/>
                                 </Text>
                         </TouchableOpacity>
                         
@@ -47,26 +42,12 @@ export default function MyCard(){
 
         return(
             <View style={styles.container}>
+                <Header title='My Cards'/>
                 <ScrollView>
                     <View style={styles.body}>
                         
                         <View style={styles.cards}>
-                            {myCards}
-                            {/* <FlatList style={styles.listContainer}
-                                data={this.props.foods}
-                                keyExtractor={(item, index) => item.key.toString()}
-                                renderItem={
-                                (data) =>
-                                    <ListItem
-                                    title={data.item.name}
-                                    bottomDivider
-                                    rightIcon={<Icon
-                                        name='delete'
-                                        size={36}
-                                        onPress={() => this.props.delete(data.item.key)} />
-                                    }
-                             /> */}
-
+                            {myCards}    
                         </View>
                         <View style={styles.buttonView}>
                             <TouchableOpacity style={styles.button}>
@@ -102,7 +83,7 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-around',
         backgroundColor:'#D4CFCF',
-        padding:10,
+        paddingVertical:20,
         borderRadius:10,
         borderColor:'black',
         borderWidth:1

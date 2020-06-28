@@ -1,36 +1,28 @@
 import React, { Component } from 'react';
 import {View,Text,StyleSheet,Dimensions} from 'react-native';
-
 import AppFooter from '../components/AppFooter';
-import { FooterTab } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import AllActions from '../actions/AllActions';
+import Header from '../components/Header';
 
  const Home=(props)=>{ 
 
+    const token=useSelector(state=>state.loginReducer.token);
+    const cards=useSelector(state=>state.loginReducer.Cards);
     
-    const dispatch=useDispatch();
-    dispatch(AllActions.Login_Logout_Action.setUser(props.userData));
-    const userDetails=useSelector(state=>state.loginReducer.user);
-    const gettoken=useSelector(state=>state.loginReducer.token);
-    const isloggedin=useSelector(state=>state.loginReducer.loggedIn);
-
-    
-
-        return(
+    return(
             <View style={styles.container}>
-                
+                <Header title='Home Page'/>
                 <View style={styles.body}>
                     <Text style={{fontSize:20}}>Body</Text>
-                    <Text>{props.userData.token}</Text>
-                    <Text>this is user token</Text>
+                    <Text>{cards}</Text>
                 </View>
                 <View style={styles.footer}>
                     <AppFooter/>
                 </View>
             </View>            
-        )
-    }
+    )
+}
 
 
 const styles=StyleSheet.create({

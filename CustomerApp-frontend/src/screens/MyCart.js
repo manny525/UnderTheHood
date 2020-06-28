@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, {  } from 'react';
 import {View,Text,StyleSheet,Dimensions} from 'react-native';
 
 import AppFooter from '../components/AppFooter';
 import { FooterTab } from 'native-base';
+import Header from '../components/Header';
 
 export default function MyCart(){
         return(
@@ -10,6 +11,7 @@ export default function MyCart(){
                 {/* <View style={styles.header}>
                     <Text style={{color:'#fff',fontSize:20,paddingLeft:20,paddingTop:20}}>My Cart</Text>
                 </View> */}
+                <Header title='My Cart'/>
                 <View style={styles.body}>
                     <Text style={{fontSize:20}}>Body</Text>
                 </View>
