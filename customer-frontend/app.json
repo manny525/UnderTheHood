@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "merchantApp-frontend",
-    "slug": "merchantApp-frontend",
+    "name": "customerApp-froneend",
+    "slug": "customerApp-frontend",
     "platforms": [
       "ios",
       "android",

@@ -9,7 +9,7 @@ const SignUpForm = (props) => {
     return (
         <View style={styles.formContainer}>
             <Text>Merchant Registration</Text>
-            <CustomerSignUp email={props.email} setLogin={setLogin} />
+            <CustomerSignUp email={props.email} setLogin={props.setLogin} />
         </View>
     )
 }

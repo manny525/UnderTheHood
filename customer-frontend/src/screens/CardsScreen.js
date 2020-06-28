@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import OrderHome from '../components/customerOrders/OrderHome';
-
-const OrdersScreen = () => {
+import Header from '../components/Header';
+const CardsScreen = () => {
     return (
         <View style={styles.screen}>
-            <OrderHome />
+            <Header title="MY CARDS" />
         </View>
     )
 }
@@ -17,4 +16,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default OrdersScreen
+export default CardsScreen

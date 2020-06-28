@@ -12,7 +12,7 @@ const HomePage = ({ navigation }) => {
     const user = userData.user
     return (
         <View>
-            <Header title='HOME' />
+            <Header title='MERCHANTS' />
             <GoodsProviderHome />
             <ServiceProviderHome />
         </View>

@@ -23,7 +23,9 @@ const GoodsProviderHome = () => {
 
     return (
         <View style={styles.screen} >
-            <Header title='GOODS PROVIDERS' />
+            <View style={{...styles.header2, marginTop: 8}}>
+                <TitleText>GOODS PROVIDERS</TitleText>
+            </View>
             <FlatList
                 data={goodsProviders}
                 renderItem={({ item }) => {
@@ -41,7 +43,15 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         alignItems: 'center'
-    }
+    },
+    header2: {
+        width: Dimensions.get('window').width,
+        height: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.primary,
+        fontSize: 18
+    },
 })
 
 export default GoodsProviderHome

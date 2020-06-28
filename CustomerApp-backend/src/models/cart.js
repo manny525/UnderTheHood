@@ -26,7 +26,7 @@ var cartElement = new mongoose.Schema({
 // _id should be customer_id + merchant_id
 var cart = new mongoose.Schema({
     _id: { type: String, required: true },
-    custID: { type: String, required: true ,ref:'User'},
+    custID: { type: String, required: true, ref: 'User' },
     numberItems: { type: Number, min: 0, default: 0 },
     items: [{ type: Schema.Types.ObjectId, ref: "cartElement" }],
 });

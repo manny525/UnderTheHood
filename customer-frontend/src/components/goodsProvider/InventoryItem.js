@@ -4,14 +4,11 @@ import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import inputStyle from '../../styles/input'
 import MainButton from '../MainButton';
-import deleteItemInventory from '../../apiCalls/deleteItemInventory';
 import { useSelector, useDispatch } from 'react-redux';
-import { setInventory } from '../../store/actions/inventory';
-import editItemInventory from '../../apiCalls/editItemInventory';
-import addItemInventory from '../../apiCalls/addItemInventory';
 
 const InventoryItem = ({ item }) => {
     const [error, setError] = useState('')
+    const [quantity, setQuantity] = useState(0)
 
     const token = useSelector(state => state.user.user.token)
     const owner = useSelector(state => state.user.user.user._id)
@@ -21,18 +18,37 @@ const InventoryItem = ({ item }) => {
     return (
         <View style={styles.itemContainer} >
             <Text style={styles.itemName} >{item.itemName}</Text>
+            <Text style={styles.itemName} >₹{item.sellingPrice}</Text>
+            <View style={{ flexDirection: 'row' }} >
+                <TouchableOpacity onPress={() => {
+                    if (quantity > 0) {
+                        setQuantity(quantity - 1)
+                    }
+                }}
+                >
+                    <Text style={styles.itemName} >-  </Text>
+                </TouchableOpacity>
+                <Text style={styles.itemName} >{quantity}</Text>
+                <TouchableOpacity onPress={() => {
+                    setQuantity(quantity + 1)
+                }}
+                >
+                    <Text style={styles.itemName} >  +</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     itemContainer: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 25
     },
     tinyLogo: {
         height: 40,

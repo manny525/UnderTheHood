@@ -44,7 +44,9 @@ function getParameters() {
         "Accept": "application/json",
         "Content-Type": "application/json"
     };
-    parameters.payload = {};
+    parameters.payload = {
+        "guid": "574f4b6a4c2b70472f306f300099515a789092348832455975343637a4d3170"
+    };
 
     return parameters;
 }

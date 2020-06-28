@@ -6,9 +6,9 @@ import EnterVerificationCode from '../components/authForm/EnterVerificationCode'
 import Header from '../components/Header';
 import { setUser } from '../store/actions/user';
 import { useDispatch } from 'react-redux';
-import { setInventory } from '../store/actions/inventory';
 import { setOrders } from '../store/actions/orders';
 import AsyncStorage from '@react-native-community/async-storage';
+import loginUser from '../apiCalls/loginUser';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
@@ -17,7 +17,7 @@ const AuthScreen = (props) => {
         const body = await JSON.stringify({
             email
         })
-        const user = await findUser(body)
+        const user = await loginUser(body)
         return user
     }
 
@@ -30,18 +30,23 @@ const AuthScreen = (props) => {
         }
         else if (number === 3) {
             if (!existingUser) {
+                console.log(email)
                 const userData = await checkExistingUser(email)
+                console.log(userData.existingUser)
                 if (userData.existingUser) {
                     setExistingUser({
                         token: userData.token,
                         user: userData.user,
                         orders: userData.orders,
-                        requests: userData.requests
+                        requests: userData.services,
+                        carts: userData.carts, 
+                        cards: userData.cards,
+                        loyalty: userData.loyalty 
                     })
                 }
-                else {
-                    setVerificationStage(<SignUpForm email={email} setLogin={props.setLogin} />)
-                }
+                // else {
+                //     setVerificationStage(<SignUpForm email={email} setLogin={props.setLogin} />)
+                // }
             }
         }
     }
@@ -53,13 +58,26 @@ const AuthScreen = (props) => {
     useEffect(() => {
         async function login() {
             if (existingUser) {
+                console.log(existingUser)
                 await dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
-                if (existingUser.requests) {
-                    await dispatch(setRequests(existingUser.requests))
-                }
-                if (existingUser.orders) {
-                    await dispatch(setOrders(existingUser.orders))
-                }
+                // if (existingUser.requests) {
+                //     await dispatch(setRequests(existingUser.requests))
+                // }
+                // if (existingUser.orders) {
+                //     await dispatch(setOrders(existingUser.orders))
+                // }
+                // if (existingUser.requests) {
+                //     await dispatch(setOrders(existingUser.orders))
+                // }
+                // if (existingUser.cards) {
+                //     await dispatch(setOrders(existingUser.orders))
+                // }
+                // if (existingUser.carts) {
+                //     await dispatch(setOrders(existingUser.orders))
+                // }
+                // if (existingUser.loyalty) {
+                //     await dispatch(setOrders(existingUser.orders))
+                // }
                 props.setLogin(true)
             }
         }
@@ -69,13 +87,14 @@ const AuthScreen = (props) => {
     useEffect(() => {
         async function login() {
             if (existingUser) {
+                console.log(existingUser)
                 await dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
-                if (existingUser.requests) {
-                    await dispatch(setRequests(existingUser.requests))
-                }
-                if (existingUser.orders) {
-                    await dispatch(setOrders(existingUser.orders))
-                }
+                // if (existingUser.requests) {
+                //     await dispatch(setRequests(existingUser.requests))
+                // }
+                // if (existingUser.orders) {
+                //     await dispatch(setOrders(existingUser.orders))
+                // }
                 props.setLogin(true)
             }
         }

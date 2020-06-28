@@ -14,6 +14,7 @@ const ServiceProviderItem = ({ item }) => {
     const [timeVisible, setTimeVisible] = useState(false)
     const [date, setDate] = useState(Date.now());
     const [time, setTime] = useState(Date.now());
+    const [description, setDescription] = useState('')
 
     const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -55,19 +56,11 @@ const ServiceProviderItem = ({ item }) => {
                             Date: {moment(date).format("DD MMM YYYY")}
                         </Text>
                     </TouchableOpacity>
-                    {item.status !== 'new' &&
-                        <TouchableOpacity onPress={() => {
-                            setTimeVisible(true)
-                        }} >
-                            <Text style={{ ...styles.itemName, color: colors.primary }} >
-                                Time: {moment(time).format("hh mm A")}
-                            </Text>
-                        </TouchableOpacity>}
                     <TextInput
                         multiline={true}
                         style={{ ...inputStyle.input, height: Dimensions.get('window').height / 3, width: Dimensions.get('window').width * 0.8 }}
                         placeholder='Description'
-                        selection={{ start: 0, end: 0 }}
+                        onChangeText={(text) => setDescription(text)}
                     />
                     <MainButton style={{ marginTop: 5 }}>Request Service</MainButton>
                 </View>

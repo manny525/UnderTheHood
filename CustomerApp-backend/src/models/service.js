@@ -12,7 +12,8 @@ const serviceSchema = new mongoose.Schema({
     customerId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        trim: true
+        trim: true,
+        ref: 'Customer'
     },
     merchantName: {
         type: String,
@@ -20,11 +21,6 @@ const serviceSchema = new mongoose.Schema({
         trim: true
     },
     customerName: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    customerId: {
         type: String,
         required: true,
         trim: true
@@ -47,12 +43,7 @@ const serviceSchema = new mongoose.Schema({
     time: {
         type: String, //Date
         required: false,
-        trim: true,
-        validate(value) {
-            if (!validate(value)) {
-                throw new Error('Invalid Date')
-            }
-        }
+        trim: true //tp be validated
     },
     description: {
         type: String,

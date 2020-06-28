@@ -7,7 +7,7 @@ const InventoryList = ({ category }) => {
     const [imgSrc, setImgSrc] = useState(require('../../../assets/dropdown.png'))
     const [openList, setOpenList] = useState(false)
     return (
-        <View>
+        <View style={{ flex: 1, alignItems: 'center' }} >
             <TouchableOpacity activeOpacity={0.4} onPress={() => {
                 if (openList) {
                     setImgSrc(require('../../../assets/dropdown.png'))
@@ -23,9 +23,8 @@ const InventoryList = ({ category }) => {
                 </View>
             </TouchableOpacity>
             {openList &&
-                <InventoryItems 
-                    items={category.items} 
-                    category={{categoryName: category.categoryName, _id: category._id}} 
+                <InventoryItems
+                    items={category.items}
                 />
             }
         </View>

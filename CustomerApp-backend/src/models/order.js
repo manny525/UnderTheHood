@@ -9,7 +9,8 @@ const orderSchema = new mongoose.Schema({
     customerId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        trim: true
+        trim: true,
+        ref: 'Customer'
     },
     shopName: {
         type: String,
@@ -23,6 +24,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        required: true,
         default: 'pending'
     },
     items: [{

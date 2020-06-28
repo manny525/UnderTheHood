@@ -1,14 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import inputStyle from '../../styles/input'
 import MainButton from '../MainButton';
-import { useSelector, useDispatch } from 'react-redux';
 import InventoryHome from './InventoryHome';
 
 const GoodsProviderItem = ({ item }) => {
     const [merchantModalVisible, setMerchantModalVisible] = useState(false)
+    const inventory = { //fetch inventort call
+        categories: [{
+            categoryName: "Biscuits",
+            _id: 'c1',
+            items: [{
+                itemId: '4564',
+                itemName: "A",
+                available: true,
+                sellingPrice: '20'
+            },
+            {
+                itemId: "4563",
+                itemName: "B",
+                available: true,
+                sellingPrice: '20'
+            },
+            {
+                itemId: "4561",
+                itemName: "C",
+                available: false,
+                sellingPrice: '20'
+            }
+            ]
+        }, {
+            categoryName: "Cold Drinks",
+            _id: 'c2',
+            items: [{
+                itemId: "4564",
+                itemName: "D",
+                available: true,
+                sellingPrice: '20'
+            },
+            {
+                itemId: "4563",
+                itemName: "E",
+                available: true,
+                sellingPrice: '20'
+            },
+            {
+                itemId: "4561",
+                itemName: "F",
+                available: false,
+                sellingPrice: '20'
+            }
+            ]
+        }]
+    }
+
+    const addCart = () => {
+
+    }
 
     return (
         <View>
@@ -29,10 +80,11 @@ const GoodsProviderItem = ({ item }) => {
                     </TouchableOpacity>
                     <TitleText>{item.shopName}</TitleText>
                 </View>
-                <Text>Inventory</Text>
-                {/* <View style={styles.itemModalContainer}>
-                    <InventoryHome inventory={item.inventory} />
-                </View> */}
+                <View style={styles.itemModalContainer} >
+                    <TitleText style={{ color: 'black' }} >Inventory</TitleText>
+                    <InventoryHome inventory={inventory} />
+                    <MainButton onPress={addCart} style={{ marginBottom: 100 }}>Add Cart</MainButton>
+                </View>
             </Modal>
         </View>
     )
@@ -64,6 +116,7 @@ const styles = StyleSheet.create({
         width: 40
     },
     itemModalContainer: {
+        flex: 1,
         alignItems: 'center'
     }
 })

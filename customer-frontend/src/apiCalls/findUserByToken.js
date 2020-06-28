@@ -1,10 +1,9 @@
 import { LOCAL_HOST } from 'react-native-dotenv'
 
-const deleteItemInventory = async (body, token) => {
+const findUserByToken = async (token) => {
     try {
-        const res = await fetch(`http://${LOCAL_HOST}/inventory/deleteItem`, {
-            method: "DELETE",
-            body,
+        const res = await fetch(`http://${LOCAL_HOST}/customer/loginByToken`, {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -16,4 +15,4 @@ const deleteItemInventory = async (body, token) => {
     }
 }
 
-export default deleteItemInventory
+export default findUserByToken

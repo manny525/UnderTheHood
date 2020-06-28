@@ -6,10 +6,8 @@ import colors from '../../constants/colors';
 import { useSelector, useDispatch } from 'react-redux';
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
-import addItemInventory from '../../apiCalls/addItemInventory';
-import { setInventory } from '../../store/actions/inventory';
 
-const InventoryItems = ({ items, category }) => {
+const InventoryItems = ({ items }) => {
     const token = useSelector(state => state.user.user.token)
     const owner = useSelector(state => state.user.user.user._id)
 
@@ -21,10 +19,10 @@ const InventoryItems = ({ items, category }) => {
                 data={items}
                 renderItem={({ item }) => {
                     return (
-                        <InventoryItem item={item} categoryId={category._id} />
+                        <InventoryItem item={item} />
                     )
                 }}
-                keyExtractor={item => item._id}
+                keyExtractor={item => item.itemId}
             />
         </View>
     )

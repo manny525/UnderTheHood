@@ -1,22 +1,33 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions, TextInput } from 'react-native';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import Card from '../Card'
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
-import OrderItemList from './OrderItemList';
+import inputStyle from '../../styles/input';
+import moment from 'moment'
 
 const OrderItem = ({ order }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
+    const [timeVisible, setTimeVisible] = useState(false)
+    const [time, setTime] = useState(Date.now());
+
+    const onChangeTime = (event, selectedTime) => {
+        const currentTime = selectedTime || time;
+        setTime(currentTime);
+        setTimeVisible(false)
+    };
 
     return (
         <View>
             <Card style={{ marginTop: 10, flex: 1, borderColor: colors.secondary, borderWidth: 1 }} >
                 <View style={styles.itemContainer}>
                     <View>
-                        <Text style={styles.text} >{order.shopName}</Text>
-                        <Text style={styles.text} >{order.pickUpTime.date}</Text>
-                        <Text style={styles.text} >{order.pickUpTime.start} - {order.pickUpTime.end}</Text>
+                        <Text style={styles.text} >{order.merchantName}</Text>
+                        <Text style={styles.text} >{order.date}</Text>
+                        {order.status === 'upcoming' &&
+                            <Text style={styles.text} >{order.time}</Text>}
                     </View>
                     <MainButton style={{ width: 95 }} onPress={() => setOrderModalVisible(true)} >Check</MainButton>
                 </View>
@@ -32,24 +43,25 @@ const OrderItem = ({ order }) => {
                     <TouchableOpacity onPress={() => setOrderModalVisible(false)} style={styles.modalHeader} >
                         <Image source={require('../../../assets/dropdown.png')} style={styles.tinyLogo} />
                     </TouchableOpacity>
-                    <TitleText>{order.shopName}</TitleText>
+                    <TitleText>{order.merchantName}</TitleText>
                 </View>
                 <View style={styles.itemModalContainer}>
-                    <Text style={{ fontFamily: 'open-sans-bold', fontSize: 22 }}>Items</Text>
-                    <FlatList
-                        data={order.items}
-                        renderItem={({ item }) => {
-                            return (
-                                <OrderItemList item={item} orderType={order.status} />
-                            )
-                        }}
-                        keyExtractor={item => item.itemId}
+                    <TitleText style={{ color: 'black' }} >Date: {order.date}</TitleText>
+                    {order.status === 'new' &&
+                        <TouchableOpacity onPress={() => {
+                            setTimeVisible(true)
+                        }} >
+                            <Text style={{ ...styles.itemName, color: colors.primary }} >Time: {order.time}</Text>
+                        </TouchableOpacity>}
+                    <TextInput
+                        editable={false}
+                        multiline={true}
+                        style={{ ...inputStyle.input, height: Dimensions.get('window').height / 3, width: Dimensions.get('window').width * 0.8 }}
+                        placeholder='Description'
+                        selection={{ start: 0, end: 0 }}
+                        value={order.description}
                     />
-                    <View style={{ marginTop: 20, alignItems: 'center' }} >
-                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹400</Text>
-                        {order.status === 'ready' &&
-                            <MainButton style={{ marginTop: 5 }}>Pay</MainButton>}
-                    </View>
+                    {order.status === 'upcoming' && <MainButton style={{ marginTop: 5 }}>Pay</MainButton>}
                 </View>
             </Modal>
         </View>

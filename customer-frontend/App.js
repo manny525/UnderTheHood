@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import getUserFromToken from './src/apiCalls/getUserFromToken';
 import ordersReducer from './src/store/reducers/orders';
 import serviceRequestReducer from './src/store/reducers/serviceRequest';
+import findUserByToken from './src/apiCalls/findUserByToken';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -31,13 +32,9 @@ export default function App() {
     try {
       // await AsyncStorage.clear()
       const token = await AsyncStorage.getItem('token');
-      const _id = await AsyncStorage.getItem('owner');
       if (token !== null) {
-        const body = await JSON.stringify({
-          _id,
-          token
-        })
-        const user = await getUserFromToken(body)
+        console.log(token)
+        const user = await findUserByToken(token)
         await setUserData(user)
       }
     } catch (error) {

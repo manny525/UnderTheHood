@@ -1,8 +1,9 @@
 import { LOCAL_HOST } from 'react-native-dotenv'
 
-const findUser = async (body, token) => {
+const loginUser = async (body) => {
+    console.log(body)
     try {
-        const res = await fetch('http://192.168.1.6:3000/users/findUser', {
+        const res = await fetch(`http://${LOCAL_HOST}/customer/login`, {
             method: "POST",
             body,
             headers: {
@@ -15,4 +16,4 @@ const findUser = async (body, token) => {
     }
 }
 
-export default findUser
+export default loginUser

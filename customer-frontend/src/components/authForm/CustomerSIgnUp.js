@@ -4,7 +4,6 @@ import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
 import colors from '../../constants/colors';
 import { setUser } from '../../store/actions/user';
-import { setInventory } from '../../store/actions/inventory';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -48,7 +47,6 @@ const CustomerSignUp = (props) => {
     useEffect(() => {
         if (existingUser) {
             dispatch(setUser(existingUser))
-            dispatch(setInventory(inventory))
             props.setLogin(true)
         }
     }, [existingUser])

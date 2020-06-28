@@ -277,7 +277,7 @@ var visa_alias_directory_api = (function() {
         var deferred = Q.defer();
 
         var domain = this.domain;
-        var path = '/visaaliasdirectory/v1/manage/{guid}';
+        var path = `/visaaliasdirectory/v1/manage/${parameters.payload.guid}`;
 
         var body;
         var queryParameters = {};
