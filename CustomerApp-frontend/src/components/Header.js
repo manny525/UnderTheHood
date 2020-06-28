@@ -16,14 +16,14 @@ const Header = (props) => {
 const styles = StyleSheet.create({
     header1: {
         width: Dimensions.get('window').width,
-        height: 100,
+        height: 70,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.secondary
     },
     header2: {
         width: Dimensions.get('window').width,
-        marginTop: 30,
+        //marginTop: 30,
         height: 70,
         justifyContent: 'center',
         alignItems: 'center',

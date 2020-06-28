@@ -1,6 +1,6 @@
 require("./../db/mongoose");
 var {cart} = require("./../models/cart");
-const auth = require("./../middleware/auth");
+const auth = require("./../middleware/auth_customer");
 var express = require("express");
 var bodyParser = require("body-parser");
 var urlencodedParser = bodyParser.urlencoded({ extended: false });

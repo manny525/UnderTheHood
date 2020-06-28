@@ -2,7 +2,7 @@ const express = require('express')
 const Loyalty = require('./../models/loyalty')
 require('./../db/mongoose')
 const router = new express.Router()
-const auth = require('./../middleware/auth')
+const auth = require('./../middleware/auth_customer')
 const  randomize = require('randomatic')
 const mongoose = require('mongoose')
 
