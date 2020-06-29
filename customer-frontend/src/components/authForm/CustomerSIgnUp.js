@@ -6,39 +6,32 @@ import colors from '../../constants/colors';
 import { setUser } from '../../store/actions/user';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import registerUser from '../../apiCalls/registerUser';
 
 const CustomerSignUp = (props) => {
     const [existingUser, setExistingUser] = useState(null)
-    const [customerName, setcustomerName] = useState('')
-    const [mobileNumber, setmobileNumber] = useState('')
-    const [referral, setReferral] = useState('')
+    const [customerName, setCustomerName] = useState('')
+    const [mobileNumber, setMobileNumber] = useState('')
     const [imgSrc, setImgSrc] = useState(null)
     const [error, setError] = useState('')
 
     const onSubmit = async () => {
-        if (!location || !merchantPAN || !goodsProviderType || !shopName) {
+        if (!customerName || !mobileNumber) {
             setError('*Please provide all the details to register')
         }
         else {
             setError('')
-            const body = await JSON.stringify({
-                email: props.email,
-                customerName,
-                mobileNumber
-            })
-            fetch('http://192.168.1.6:3000/users/newUser', {
-                method: "POST",
-                body,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(userData => {
-                    setUserInventory(userData.inventory)
-                    setExistingUser({ user: userData.user, token: userData.token })
+            try {
+                const body = await JSON.stringify({
+                    email: props.email,
+                    name: customerName,
+                    contact: mobileNumber
                 })
-                .catch(e => console.log(e))
+                const userData = await registerUser(body)
+                setExistingUser({ user: userData.user, token: userData.token })
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
 
@@ -55,7 +48,6 @@ const CustomerSignUp = (props) => {
         async function setToken() {
             try {
                 await AsyncStorage.setItem('token', existingUser.token);
-                await AsyncStorage.setItem('owner', existingUser.user._id);
             } catch (error) {
                 console.log(error)
             }
@@ -71,13 +63,13 @@ const CustomerSignUp = (props) => {
                 <TextInput
                     style={inputStyle.input}
                     placeholder='Customer Name'
-                    onChangeText={(text) => { setMerchantName(text) }}
-                    value={merchantName}
+                    onChangeText={(text) => { setCustomerName(text) }}
+                    value={customerName}
                 />
                 <TextInput
                     style={inputStyle.input}
                     placeholder='Mobile Number'
-                    onChangeText={(text) => { setmobileNumber(text) }}
+                    onChangeText={(text) => { setMobileNumber(text) }}
                     value={mobileNumber}
                     keyboardType='number-pad'
                 />

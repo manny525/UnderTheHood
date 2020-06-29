@@ -8,7 +8,7 @@ import { setUser } from '../store/actions/user';
 import { useDispatch } from 'react-redux';
 import { setOrders } from '../store/actions/orders';
 import AsyncStorage from '@react-native-community/async-storage';
-import loginUser from '../apiCalls/loginUser';
+import findUser from '../apiCalls/findUser';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
@@ -17,7 +17,8 @@ const AuthScreen = (props) => {
         const body = await JSON.stringify({
             email
         })
-        const user = await loginUser(body)
+        const user = await findUser(body)
+        console.log(user)
         return user
     }
 
@@ -30,7 +31,6 @@ const AuthScreen = (props) => {
         }
         else if (number === 3) {
             if (!existingUser) {
-                console.log(email)
                 const userData = await checkExistingUser(email)
                 console.log(userData.existingUser)
                 if (userData.existingUser) {
@@ -39,14 +39,15 @@ const AuthScreen = (props) => {
                         user: userData.user,
                         orders: userData.orders,
                         requests: userData.services,
-                        carts: userData.carts, 
+                        carts: userData.carts,
                         cards: userData.cards,
-                        loyalty: userData.loyalty 
+                        loyalty: userData.loyalty
                     })
                 }
-                // else {
-                //     setVerificationStage(<SignUpForm email={email} setLogin={props.setLogin} />)
-                // }
+                else {
+                    console.log('sign up')
+                    setVerificationStage(<SignUpForm email={email} setLogin={props.setLogin} />)
+                }
             }
         }
     }

@@ -45,7 +45,7 @@ const initalState = {
         merchantName: 'Ashutosh',
         customerId: '_id11',
         merchantId: 'm_id1',
-        status: 'ready',
+        status: 'upcoming',
         date: '26/06',
         time: '5:30 PM',
         description: 'Broski need help'
@@ -58,6 +58,13 @@ const serviceRequestReducer = (state = initalState, action) => {
             return {
                 requests: action.requests
             }
+        case 'UPDATE_SERVICE_REQUEST': {
+            const requests = state.requests.filter((request) => request._id !== action.request._id)
+            requests.push(action.request)
+            return {
+                requests
+            }
+        }
         default:
             return state
     }

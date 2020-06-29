@@ -50,12 +50,15 @@ const initalState = {
     }]
 }
 
-const ordersReducer = (state = initalState, action) => {
+const ordersReducer = (state = { carts: [] }, action) => {
     switch (action.type) {
-        case 'SET_ORDERS':
+        case 'SET_CARTS':
             return {
-                orders: action.orders
+                carts: action.carts
             }
+        case 'ADD_CART':
+            return {
+                carts: state.carts.concat(action.cart)            }
         default:
             return state
     }

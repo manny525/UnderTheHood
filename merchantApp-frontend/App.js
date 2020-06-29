@@ -36,7 +36,8 @@ export default function App() {
           token
         })
         const user = await getUserFromToken(body)
-        await setUserData(user)
+        if (user.user)
+          await setUserData(user)
       }
     } catch (error) {
       console.log(error)
@@ -53,9 +54,14 @@ export default function App() {
       onError={(err) => console.log(err)}
     />
   }
+  const onLogin = (action, userInfo) => {
+    if (action === true)
+      setUserData(userInfo)
+    setLogin(action)
+  }
   return (
     <Provider store={store}>
-      {login ? <MerchantNavigator merchantType={userData.user.typeOfMerchant} /> : <AuthScreen setLogin={setLogin} userData={userData} />}
+      {login ? <MerchantNavigator merchantType={userData.user.typeOfMerchant} /> : <AuthScreen setLogin={onLogin} userData={userData} />}
     </Provider>
   )
 }

@@ -11,7 +11,7 @@ import RequestsScreen from '../screens/RequestsScreen';
 const Tab = createBottomTabNavigator()
 
 const MerchantNavigator = ({ merchantType }) => {
-
+    console.log(merchantType)
     return (
         <NavigationContainer>
             <Tab.Navigator
@@ -41,15 +41,15 @@ const MerchantNavigator = ({ merchantType }) => {
                     name="Home"
                     component={HomeScreen}
                 />
-                <Tab.Screen
+               {merchantType === 'goods' && <Tab.Screen
                     name="Inventory"
                     component={InventoryScreen}
-                />
-                {!merchantType === 'goods' ? <Tab.Screen
+                />}
+                {merchantType === 'service' && <Tab.Screen
                     name="Requests"
                     component={RequestsScreen}
-                /> :
-                <Tab.Screen
+                />}
+                {merchantType === 'goods' &&<Tab.Screen
                     name="Orders"
                     component={OrdersScreen}
                 />}

@@ -12,7 +12,7 @@ const OrderHome = () => {
 
     return (
         <View style={styles.screen} >
-            <Header title='MY ORDERS' />
+            <Header title='MY SERVICE REQUESTS' />
             <View style={styles.tabContainer} >
                 <TouchableOpacity onPress={() => setTab(1)}>
                     {tab === 1 ? <Text style={styles.tabTextBold}>Upcoming</Text> : <Text style={styles.tabText}>Upcoming</Text>}
@@ -25,9 +25,9 @@ const OrderHome = () => {
                 </TouchableOpacity>
             </View>
             <View style={{ alignItems: 'center' }} >
-                {tab === 1 && <ReadyOrders />}
-                {tab === 2 && <PendingOrders />}
-                {tab === 3 && <CompletedOrders />}
+                {tab === 1 && <ReadyOrders setTab={setTab} />}
+                {tab === 2 && <PendingOrders setTab={setTab} />}
+                {tab === 3 && <CompletedOrders setTab={setTab} />}
             </View>
         </View>
     )

@@ -8,18 +8,19 @@ import cartReducer from './src/store/reducers/cart'
 import merchantsReducer from './src/store/reducers/merchants'
 import AuthScreen from './src/screens/AuthScreen'
 import MerchantNavigator from './src/navigations/MerchantNavigator';
-import AsyncStorage from '@react-native-community/async-storage'
-import getUserFromToken from './src/apiCalls/getUserFromToken';
+import AsyncStorage from '@react-native-community/async-storage';
 import ordersReducer from './src/store/reducers/orders';
 import serviceRequestReducer from './src/store/reducers/serviceRequest';
 import findUserByToken from './src/apiCalls/findUserByToken';
+import cartItmesReducer from './src/components/store/reducers/cartItems';
 
 const rootReducer = combineReducers({
   user: userReducer,
   cart: cartReducer,
   merchants: merchantsReducer,
   orders: ordersReducer,
-  serviceRequest: serviceRequestReducer
+  serviceRequest: serviceRequestReducer,
+  cartItems: cartItmesReducer
 })
 const store = createStore(rootReducer)
 
@@ -33,7 +34,6 @@ export default function App() {
       // await AsyncStorage.clear()
       const token = await AsyncStorage.getItem('token');
       if (token !== null) {
-        console.log(token)
         const user = await findUserByToken(token)
         await setUserData(user)
       }

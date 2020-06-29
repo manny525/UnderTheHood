@@ -7,21 +7,18 @@ const CartItemList = ({ item }) => {
     const [available, setAvailable] = useState(true)
     const [quantity, setQuantity] = useState(item.quantity.toString())
 
-    const checkQuantity = (text) => {
-        if (parseInt(text) <= item.quantity && parseInt(text) > 0 || text==='') {
-            setQuantity(text)
-        }
-    }
-
     return (
         <View>
-            <Text style={styles.itemName} >{item.itemName}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
+                <Text style={styles.itemName} >{item.itemName}</Text>
+                <Text style={styles.itemName} >₹{item.sellingPrice}</Text>
+            </View>
             <View style={styles.itemContainer}>
-                <TextInput 
-                    keyboardType="number-pad" 
-                    style={{...inputStyles.input, width: 35}} 
-                    onChangeText={checkQuantity} 
-                    value={quantity.toString()} 
+                <TextInput
+                    keyboardType="number-pad"
+                    style={{ ...inputStyles.input, width: 35 }}
+                    onChangeText={setQuantity}
+                    value={quantity.toString()}
                 />
             </View>
         </View>

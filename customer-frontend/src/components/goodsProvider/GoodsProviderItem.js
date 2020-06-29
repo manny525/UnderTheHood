@@ -6,21 +6,31 @@ import TitleText from '../TitleText';
 import inputStyle from '../../styles/input'
 import MainButton from '../MainButton';
 import InventoryHome from './InventoryHome';
+import { addCart } from '../../store/actions/cart'
+import { resetItems } from '../store/actions/cartItems';
 
 const GoodsProviderItem = ({ item }) => {
     const [merchantModalVisible, setMerchantModalVisible] = useState(false)
+    const [addToCart, setAddtoCart] = useState(false)
+    const userData = useSelector(state => state.user.user)
+    // const [items, setItems] = useState(null)
+
+    const items = useSelector(state => state.cartItems.items)
+    const dispatch = useDispatch()
+
     const inventory = { //fetch inventort call
+        owner: 'm1',
         categories: [{
             categoryName: "Biscuits",
             _id: 'c1',
             items: [{
-                itemId: '4564',
+                itemId: '45641',
                 itemName: "A",
                 available: true,
                 sellingPrice: '20'
             },
             {
-                itemId: "4563",
+                itemId: "45631",
                 itemName: "B",
                 available: true,
                 sellingPrice: '20'
@@ -42,13 +52,13 @@ const GoodsProviderItem = ({ item }) => {
                 sellingPrice: '20'
             },
             {
-                itemId: "4563",
+                itemId: "456344",
                 itemName: "E",
                 available: true,
                 sellingPrice: '20'
             },
             {
-                itemId: "4561",
+                itemId: "45611",
                 itemName: "F",
                 available: false,
                 sellingPrice: '20'
@@ -57,8 +67,19 @@ const GoodsProviderItem = ({ item }) => {
         }]
     }
 
-    const addCart = () => {
-
+    const addCustomerCart = () => {
+        const cart = {
+            id: 'c_1',
+            customerName: userData.user.name,
+            shopName: item.shopName,
+            customerId: userData.user._id,
+            merchantId: inventory.owner,
+            items
+        }
+        // add cart to database
+        dispatch(addCart(cart))
+        dispatch(resetItems())
+        setMerchantModalVisible(false)
     }
 
     return (
@@ -72,6 +93,7 @@ const GoodsProviderItem = ({ item }) => {
                 visible={merchantModalVisible}
                 onRequestClose={() => {
                     setMerchantModalVisible(false)
+                    resetItems()
                 }}
             >
                 <View style={styles.header2}>
@@ -83,7 +105,7 @@ const GoodsProviderItem = ({ item }) => {
                 <View style={styles.itemModalContainer} >
                     <TitleText style={{ color: 'black' }} >Inventory</TitleText>
                     <InventoryHome inventory={inventory} />
-                    <MainButton onPress={addCart} style={{ marginBottom: 100 }}>Add Cart</MainButton>
+                    <MainButton onPress={addCustomerCart} style={{ marginBottom: 100 }}>Add Cart</MainButton>
                 </View>
             </Modal>
         </View>

@@ -5,7 +5,7 @@ import CartItem from './CartItem'
 
 const CartItems = () => {
     const carts = useSelector(state => state.cart.carts)
-
+    console.log(carts)
     return (
         <View style={styles.itemsContainer} >
             <FlatList

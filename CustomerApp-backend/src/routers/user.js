@@ -40,12 +40,15 @@ router.post('/users/newUser', async (req, res) => {
 router.post('/users/findUser', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email })
+        console.log(user)
         if (user) {
             const token = await user.generateAuthToken()
             if (user.typeOfMerchant === 'goods') {
                 const inventory = await Inventory.findOne({ owner: user._id })
                 const orders = await Order.find({ merchantId: user._id })
-                return res.send({ user, token: req.body.token, inventory, orders})
+                console.log(inventory)
+                console.log(orders)
+                return res.send({ user, token: req.body.token, inventory, orders, existingUser: true})
             }
             return res.send({ user, token, existingUser: true })
         }

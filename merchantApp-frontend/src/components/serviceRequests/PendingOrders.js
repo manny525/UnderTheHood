@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import OrderItem from './OrderItem'
 import orderTypeSelector from '../selectors/orderTypeSelector'
 
-const PendingOrders = () => {
+const PendingOrders = ({ setTab }) => {
     const token = useSelector(state => state.user.user.token)
     const owner = useSelector(state => state.user.user.user._id)
     const orders = useSelector(state => state.serviceRequest.requests)
@@ -19,7 +19,7 @@ const PendingOrders = () => {
                 data={pendingOrders}
                 renderItem={({ item }) => {
                     return (
-                        <OrderItem order={item} />
+                        <OrderItem order={item} setTab={setTab} />
                     )
                 }}
                 keyExtractor={item => item._id}
