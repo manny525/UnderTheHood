@@ -102,7 +102,7 @@ const GoodsProviderValidation = (props) => {
         if (existingUser) {
             dispatch(setUser(existingUser))
             dispatch(setInventory(inventory))
-            props.setLogin(true)
+            props.setLogin(true, existingUser)
         }
     }, [existingUser])
 

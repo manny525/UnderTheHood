@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import colors from '../constant/colors';
+import colors from '../constants/colors'
 import TitleText from './TitleText';
 
 const Header = (props) => {
@@ -16,14 +16,14 @@ const Header = (props) => {
 const styles = StyleSheet.create({
     header1: {
         width: Dimensions.get('window').width,
-        height: 70,
+        height: 100,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.secondary
     },
     header2: {
         width: Dimensions.get('window').width,
-        //marginTop: 30,
+        marginTop: 30,
         height: 70,
         justifyContent: 'center',
         alignItems: 'center',

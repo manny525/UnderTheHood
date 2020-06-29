@@ -7,8 +7,10 @@ import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import inputStyle from '../../styles/input';
 import moment from 'moment'
+import { updateRequest } from '../../store/actions/serviceRequest';
+import { useDispatch } from 'react-redux';
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
     const [timeVisible, setTimeVisible] = useState(false)
     const [time, setTime] = useState(Date.now());
@@ -18,6 +20,31 @@ const OrderItem = ({ order }) => {
         setTime(currentTime);
         setTimeVisible(false)
     };
+
+    const dispatch = useDispatch()
+
+    const orderStatusChange = async () => {
+        let status
+        if (order.status === 'new') {
+            status = 'upcoming'
+        }
+        else if (order.status === 'upcoming') {
+            status = 'completed'
+            //receive payment if vCode right
+        }
+        // api call by passing status
+        dispatch(updateRequest({
+            ...order,
+            status
+        }))
+        setOrderModalVisible(false)
+        if (status === 'upcoming') {
+            setTab(1)
+        }
+        else if (status === 'completed') {
+            setTab(3)
+        }
+    }
 
     return (
         <View>
@@ -63,7 +90,10 @@ const OrderItem = ({ order }) => {
                         selection={{ start: 0, end: 0 }}
                         value={order.description}
                     />
-                    {order.status === 'new' && <MainButton style={{ marginTop: 5 }}>Accept</MainButton>}
+                    {order.status !== 'completed' &&
+                        <MainButton style={{ marginTop: 5 }} onPress={orderStatusChange}>
+                            {order.status === 'new' ? 'Accept' : 'Complete'}
+                        </MainButton>}
                 </View>
             </Modal>
         </View>

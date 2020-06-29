@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import OrderHome from '../components/serviceRequests/OrderHome';
+import OrderHome from '../components/serviceRequests/RequestHome';
 
 const RequestsScreen = () => {
     return (

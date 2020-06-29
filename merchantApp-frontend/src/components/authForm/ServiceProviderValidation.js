@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
@@ -16,20 +17,31 @@ const ServiceProviderValidation = (props) => {
     const [error, setError] = useState('')
     const [serviceProviderType, setServiceProviderType] = useState('')
     const [existingUser, setExistingUser] = useState(null)
+    const [pinCode, setPinCode] = useState(null)
 
     const [typeOfServiceProviders, setTypeofServiceProviders] = useState(['Barber', 'Electrician', 'Mechanic', 'Car Washer', 'Plumber', ])
 
     const onGetLocation = async () => {
         let { status } = await Location.requestPermissionsAsync();
         if (status !== 'granted') {
-            return setLocationError('Permission to access location was denied');
+            setLocationError('Permission to access location was denied');
         }
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location)
+        const lat = location.coords.latitude
+        const log = location.coords.longitude
+        try {
+            const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=6ed4de0702acb6&lat=${lat}&lon=${log}&format=json`)
+            const data = await res.json()
+            setPinCode(data.address.postcode)
+        } catch (error) {
+
+        }
+
     }
 
     const onSubmit = async () => {
-        if (!location || !merchantPAN || !goodsProviderType || !shopName) {
+        if (!location || !merchantPAN || !serviceProviderType) {
             setError('*Please provide all the details to register')
         }
         else {
@@ -38,8 +50,7 @@ const ServiceProviderValidation = (props) => {
                 email: props.data.email,
                 merchantName: props.data.merchantName,
                 typeOfMerchant: props.data.merchantType,
-                aadhar: props.data.aadhar,
-                providerOf: goodsProviderType,
+                providerOf: serviceProviderType,
                 pan: merchantPAN,
                 location: {
                     lat: location.coords.latitude,
@@ -56,8 +67,7 @@ const ServiceProviderValidation = (props) => {
             })
             .then(res => res.json())
             .then(user =>  {
-                setExistingUser(user)
-                props.setLogin(true) 
+                setExistingUser(user) 
             })
             .catch(e => console.log(e))
         }
@@ -82,9 +92,10 @@ const ServiceProviderValidation = (props) => {
 
     const dispatch = useDispatch()
     
-    useCallback(() => {
+    useEffect(() => {
         if (existingUser) {
             dispatch(setUser(existingUser))
+            props.setLogin(true, existingUser)
         }
     }, [existingUser])
 
@@ -116,7 +127,13 @@ const ServiceProviderValidation = (props) => {
                 }
             </Picker>
             <View style={styles.panContiner}>
-                <TextInput style={{ ...inputStyle.input, width: 200, marginTop: 1 }} placeholder="Merchant PAN" onChangeText={veriftPANLength} maxLength={16} />
+                <TextInput 
+                    style={{ ...inputStyle.input, width: 200, marginTop: 1 }} 
+                    placeholder="Merchant PAN" 
+                    onChangeText={veriftPANLength} 
+                    maxLength={16}
+                    keyboardType='number-pad'
+                />
                 {imgSrc ? <Image style={styles.tinyLogo} source={imgSrc} /> : <></>}
             </View>
             {location ?

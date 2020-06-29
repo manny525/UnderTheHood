@@ -18,18 +18,33 @@ router.post('/customer/verifyEmail', async (req, res) => {
 router.post('/customer/register', check, async (req, res) => {
     const user = new User(req.body)
     try {
-        await user.save()
-        const token = await user.generateToken()
+        console.log('user saved')
+        const token = await user.generateAuthToken()
+        console.log(token)
         res.status(201).send({ user, token })
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
+router.post('/customer/findUser', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email })
+        if (user) {
+            const token = await user.generateAuthToken()
+            console.log(token)
+            return res.send({ user, token, existingUser: true })
+        }
+        return res.status(404).send({ existingUser: false })
+    } catch (e) {
+        res.send(e)
+    }
+})
+
 router.post('/customer/login', async (req, res) => {
     try {
         const user = await User.findUser(req.body.email)
-        const token = await user.generateToken()
+        const token = await user.generateAuthToken()
         await user.populate({
             path: 'Loyalty',
         }).execPopulate()

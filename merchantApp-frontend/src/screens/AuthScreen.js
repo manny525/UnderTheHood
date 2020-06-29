@@ -76,7 +76,7 @@ const AuthScreen = (props) => {
                     console.log(existingUser.orders)
                     await dispatch(setOrders(existingUser.orders))
                 }
-                props.setLogin(true)
+                props.setLogin(true, existingUser)
             }
         }
         login()
@@ -97,7 +97,7 @@ const AuthScreen = (props) => {
                 //     console.log(existingUser.requests)
                 //     await dispatch(setOrders(existingUser.orders))
                 // }
-                props.setLogin(true)
+                props.setLogin(true, existingUser)
             }
         }
         login()
