@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "customerApp-froneend",
+    "name": "customerApp-frontend",
     "slug": "customerApp-frontend",
     "platforms": [
       "ios",

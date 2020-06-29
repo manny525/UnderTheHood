@@ -1,7 +1,6 @@
 const typeSelector = (merchants, type) => {
-    return merchants.filter((merchant) => {
-        return merchant.type === type
-    })
+    console.log(merchants)
+    return merchants.filter((merchant) => merchant.type === type)
 }
 
 export default typeSelector

@@ -13,12 +13,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 const GoodsProviderValidation = (props) => {
     const [merchantPAN, setMerchantPAN] = useState('')
     const [location, setLocation] = useState(null)
+    const [pinCode, setPinCode] = useState('')
     const [imgSrc, setImgSrc] = useState(null)
     const [shopName, setShopName] = useState('')
     const [locationError, setLocationError] = useState('')
     const [error, setError] = useState('')
     const [goodsProviderType, setGoodsProviderType] = useState('')
-    const [pinCode, setPinCode] = useState('')
     const [existingUser, setExistingUser] = useState(null)
     const [inventory, setUserInventory] = useState(null)
 

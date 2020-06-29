@@ -13,11 +13,12 @@ const ServiceProviderHome = () => {
     const merchants = useSelector(state => state.merchants)
     const [serviceProviders, setServiceProvider] = useState([{
         type: 'barber',
-        merchants: typeSelector(merchants.serviceProviders, 'barber')
-    }, {
-        type: 'electrician',
-        merchants: typeSelector(merchants.serviceProviders, 'electrician')
+        merchants: merchants.serviceProviders
     }])
+    // , {
+    //     type: 'electrician',
+    //     merchants: typeSelector(merchants.serviceProviders, 'electrician')
+    // }])
 
     return (
         <View style={styles.screen} >

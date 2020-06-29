@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { setInventory } from '../store/actions/inventory';
 import { setOrders } from '../store/actions/orders';
 import AsyncStorage from '@react-native-community/async-storage';
+import { setRequests } from '../store/actions/serviceRequest';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
@@ -93,10 +94,10 @@ const AuthScreen = (props) => {
                     console.log(existingUser.orders)
                     await dispatch(setOrders(existingUser.orders))
                 }
-                // if (existingUser.requests) {
-                //     console.log(existingUser.requests)
-                //     await dispatch(setOrders(existingUser.orders))
-                // }
+                if (existingUser.requests) {
+                    console.log(existingUser.requests)
+                    await dispatch(setRequests(existingUser.requests))
+                }
                 props.setLogin(true, existingUser)
             }
         }

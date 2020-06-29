@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Header from '../components/Header';
+import MyCard from '../components/card/MyCard';
 const CardsScreen = () => {
     return (
         <View style={styles.screen}>
-            <Header title="MY CARDS" />
+            <MyCard />
         </View>
     )
 }

@@ -1,17 +1,18 @@
 const Service = require('./../models/service')
-const auth = require('./../middleware/auth')
+const auth = require('./../middleware/auth_customer')
 const express = require('express')
 const router = new express.Router()
 // const moment = require('moment')
 
-router.post('/services/add',async(req,res)=>{
+router.post('/services/new', auth ,async(req,res)=>{
     try{
-        // var service = await Service.findOne({merchant:req.body.merchant,date:new Date(req.body.date)})
-        // if(service) {
-        //     return res.status(400).send({message:'Merchant is not available.Try a different time.'})
-        // }
-        const service = new Service(req.body)
+        const service = new Service({
+            ...req.body,
+            customerName: req.user.name,
+            customerId: req.user._id
+        })
         await service.save() 
+        console.log(service)
         res.send(service)     
     }catch(error){
         res.status(400).send({error})

@@ -5,7 +5,7 @@ import TitleText from '../TitleText';
 import inputStyle from '../../styles/input'
 import MainButton from '../MainButton';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem } from '../store/actions/cartItems';
+import { addItem } from '../../store/actions/cartItems';
 
 const InventoryItem = ({ item }) => {
     const [error, setError] = useState('')
@@ -16,7 +16,7 @@ const InventoryItem = ({ item }) => {
 
     const onAddCart = () => {
         dispatch(addItem({
-            itemId: item.itemId,
+            itemId: item._id,
             itemName: item.itemName,
             sellingPrice: item.sellingPrice,
             quantity: 0

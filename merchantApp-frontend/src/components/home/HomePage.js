@@ -22,7 +22,6 @@ const HomePage = ({ navigation }) => {
     const [newRequests] = useState(orderTypeSelector(requests, 'new'))
     const [upcomingRequests] = useState(orderTypeSelector(requests, 'upcoming'))
 
-
     const onLogout = () => {
         AsyncStorage.clear()
     }
@@ -65,7 +64,6 @@ const HomePage = ({ navigation }) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                {/* <MainButton onPress={onLogout} >Logout</MainButton> */}
             </View>
         </View>
     )

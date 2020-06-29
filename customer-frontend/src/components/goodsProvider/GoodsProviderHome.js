@@ -15,11 +15,12 @@ const GoodsProviderHome = () => {
     const merchants = useSelector(state => state.merchants)
     const [goodsProviders, setGoodsProvider] = useState([{
         type: 'grocery',
-        merchants: typeSelector(merchants.goodsProviders, 'grocery')
-    }, {
-        type: 'medical',
-        merchants: typeSelector(merchants.goodsProviders, 'medical')
+        merchants: merchants.goodsProviders
     }])
+    // , {
+    //     type: 'medical',
+    //     merchants: typeSelector(merchants.goodsProviders, 'medical')
+    // }])
 
     return (
         <View style={styles.screen} >

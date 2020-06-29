@@ -3,81 +3,48 @@ import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensi
 import { useSelector, useDispatch } from 'react-redux';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
-import inputStyle from '../../styles/input'
+import inputStyle from '../../styles/input';
 import MainButton from '../MainButton';
 import InventoryHome from './InventoryHome';
 import { addCart } from '../../store/actions/cart'
-import { resetItems } from '../store/actions/cartItems';
+import { resetItems } from '../../store/actions/cartItems';
+import addCartToDB from '../../apiCalls/addCart';
+import getInventory from '../../apiCalls/getInventory';
 
 const GoodsProviderItem = ({ item }) => {
+    console.log(item)
     const [merchantModalVisible, setMerchantModalVisible] = useState(false)
-    const [addToCart, setAddtoCart] = useState(false)
     const userData = useSelector(state => state.user.user)
-    // const [items, setItems] = useState(null)
+
+    const token = userData.token
 
     const items = useSelector(state => state.cartItems.items)
     const dispatch = useDispatch()
 
-    const inventory = { //fetch inventort call
-        owner: 'm1',
-        categories: [{
-            categoryName: "Biscuits",
-            _id: 'c1',
-            items: [{
-                itemId: '45641',
-                itemName: "A",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "45631",
-                itemName: "B",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "4561",
-                itemName: "C",
-                available: false,
-                sellingPrice: '20'
-            }
-            ]
-        }, {
-            categoryName: "Cold Drinks",
-            _id: 'c2',
-            items: [{
-                itemId: "4564",
-                itemName: "D",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "456344",
-                itemName: "E",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "45611",
-                itemName: "F",
-                available: false,
-                sellingPrice: '20'
-            }
-            ]
-        }]
+    const [inventory, setInventory] = useState()
+
+    const getMerchantInventory = async () => {
+        setInventory(await getInventory(token, item._id))
     }
 
-    const addCustomerCart = () => {
-        const cart = {
-            _id: 'c_1',
+    useEffect(() => {
+        getMerchantInventory()
+    }, [])
+    
+    console.log(inventory)
+
+    const addCustomerCart = async () => {
+        const body = await JSON.stringify({
             customerName: userData.user.name,
             shopName: item.shopName,
             customerId: userData.user._id,
-            merchantId: inventory.owner,
+            merchantId: item._id,
             items
-        }
-        // add cart to database
-        dispatch(addCart(cart))
+        })
+        const newCart = await addCartToDB(body, token)
+        console.log('new cart')
+        console.log(newCart)
+        dispatch(addCart(newCart))
         dispatch(resetItems())
         setMerchantModalVisible(false)
     }
@@ -93,7 +60,7 @@ const GoodsProviderItem = ({ item }) => {
                 visible={merchantModalVisible}
                 onRequestClose={() => {
                     setMerchantModalVisible(false)
-                    resetItems()
+                    dispatch(resetItems())
                 }}
             >
                 <View style={styles.header2}>

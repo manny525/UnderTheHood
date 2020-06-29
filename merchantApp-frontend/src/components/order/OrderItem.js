@@ -32,6 +32,7 @@ const OrderItem = ({ order, setTab }) => {
             status
         })
         const updatedOrder = await updateOrderStatus (body, token)
+        console.log(updatedOrder)
         dispatch(updateOrders(updatedOrder))
         setOrderModalVisible(false)
         if (status === 'ready') {

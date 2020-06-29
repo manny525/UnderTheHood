@@ -1,6 +1,7 @@
 const express = require('express')
 const Inventory = require('../models/inventory')
 const auth = require('../middleware/auth')
+const auth_customer = require('../middleware/auth_customer')
 const router = new express.Router()
 
 router.post('/inventory/new', auth, async (req, res) => {
@@ -16,9 +17,22 @@ router.post('/inventory/new', auth, async (req, res) => {
     }
 })
 
-router.get('/inventory', auth, async (req, res) => {
+router.get('/inventory/merchant', auth , async (req, res) => {
     try {
         const inventory = await Inventory.findOne({ owner: req.user._id })
+        if (!inventory) {
+            return res.status(404).send()
+        }
+        console.log(inventory)
+        res.send(inventory)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.get('/inventory/customer', auth_customer , async (req, res) => {
+    try {
+        const inventory = await Inventory.findOne({ owner: req.query.merchantId })
         if (!inventory) {
             return res.status(404).send()
         }

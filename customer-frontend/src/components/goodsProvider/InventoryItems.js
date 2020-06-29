@@ -22,7 +22,7 @@ const InventoryItems = ({ items }) => {
                         <InventoryItem item={item} />
                     )
                 }}
-                keyExtractor={item => item.itemId}
+                keyExtractor={item => item._id}
             />
         </View>
     )

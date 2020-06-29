@@ -1,4 +1,8 @@
 const User = require('../models/customer')
+const Cart = require('../models/cart')
+const Card = require('../models/card')
+const Service = require('../models/service')
+const Order = require('../models/order')
 const auth = require('../middleware/auth_customer')
 const check = require('../middleware/number_verification/number')
 const { sendVerificationCode } = require('../emails/account')
@@ -18,8 +22,9 @@ router.post('/customer/verifyEmail', async (req, res) => {
 router.post('/customer/register', check, async (req, res) => {
     const user = new User(req.body)
     try {
-        console.log('user saved')
         const token = await user.generateAuthToken()
+        await user.save()
+        console.log(user)
         console.log(token)
         res.status(201).send({ user, token })
     } catch (e) {
@@ -30,10 +35,21 @@ router.post('/customer/register', check, async (req, res) => {
 router.post('/customer/findUser', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email })
+        console.log(user)
         if (user) {
             const token = await user.generateAuthToken()
             console.log(token)
-            return res.send({ user, token, existingUser: true })
+            const userData = {
+                user,
+                carts: await Cart.find({ customerId: user._id }),
+                cards: await Card.find({ owner: user._id }),
+                services: await Service.find({ customerId: user._id }),
+                orders: await Order.find({ customerId: user._id }),
+                token,
+                existingUser: true
+            }
+            console.log(userData)
+            return res.send(userData)
         }
         return res.status(404).send({ existingUser: false })
     } catch (e) {
@@ -41,79 +57,20 @@ router.post('/customer/findUser', async (req, res) => {
     }
 })
 
-router.post('/customer/login', async (req, res) => {
-    try {
-        const user = await User.findUser(req.body.email)
-        const token = await user.generateAuthToken()
-        await user.populate({
-            path: 'Loyalty',
-        }).execPopulate()
-        await user.populate({
-            path: 'Cards',
-        }).execPopulate()
-        await user.populate({
-            path: 'carts',
-        }).execPopulate()
-        await user.populate({
-            path: 'Order',
-        }).execPopulate()
-        await user.populate({
-            path: 'Service',
-        }).execPopulate()
-        for (var i = 0; i < user.carts.length; i++) {
-            for (var j = 0; j < user.carts[i].items.length; j++) {
-                const item = await items.findById(user.carts[i].items[j])
-                user.carts[i].items[j] = item
-            }
-        }
-        res.send({
-            user,
-            loyalty: user.Loyalty,
-            cards: user.Cards,
-            carts: user.carts,
-            orders: user.Order,
-            service: user.Service,
-            token,
-            existingUser: true
-        })
-    } catch (error) {
-        res.status(400).send({ error })
-    }
-})
-
 router.post('/customer/loginByToken', auth, async (req, res) => {
+    console.log(req.body)
     try {
         const user = req.user
-        await user.populate({
-            path: 'Loyalty',
-        }).execPopulate()
-        await user.populate({
-            path: 'Cards',
-        }).execPopulate()
-        await user.populate({
-            path: 'carts',
-        }).execPopulate()
-        await user.populate({
-            path: 'Order',
-        }).execPopulate()
-        await user.populate({
-            path: 'Service',
-        }).execPopulate()
-        for (var i = 0; i < user.carts.length; i++) {
-            for (var j = 0; j < user.carts[i].items.length; j++) {
-                const item = await items.findById(user.carts[i].items[j])
-                user.carts[i].items[j] = item
-            }
-        }
-        res.send({
+        const userData = {
             user,
-            loyalty: user.Loyalty,
-            cards: user.Cards,
-            carts: user.carts,
-            orders: user.Order,
-            service: user.Service,
+            carts: await Cart.find({ customerId: req.user._id }),
+            cards: await Card.find({ owner: req.user._id }),
+            orders: await Order.find({ customerId: req.user._id }),
+            services: await Service.find({ customerId: req.user._id }),
             token: req.header('Authorization').replace('Bearer ', '')
-        })
+        }
+        console.log(userData)
+        res.send(userData)
     } catch (error) {
         res.status(400).send({ error })
     }
@@ -131,33 +88,6 @@ router.post('/customer/logout', auth, async (req, res) => {
     }
 })
 
-//Update User Info
-router.patch('/customer/me', auth, async (req, res) => {
-    const allow = ['name']
-    const up = Object.keys(req.body)
-    const isValid = up.every((up) => {
-        return allow.includes(up)
-    })
-    if (isValid === false) {
-        return res.status(400).send({ error: 'invalid updates' })
-    }
-    try {
-        up.forEach((up) => {
-            req.user[up] = req.body[up]
-        })
-        await req.user.save()
-        res.send()
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-
-//Get User Profie Info
-router.get('/customer/me', auth, async (req, res) => {
-    res.send(req.user)
-})
-
 //Delete User Account
 router.delete('/customer/me', auth, async (req, res) => {
     const _id = req.user._id
@@ -168,5 +98,33 @@ router.delete('/customer/me', auth, async (req, res) => {
         res.status(500).send(e)
     }
 })
+
+// //Update User Info
+// router.patch('/customer/me', auth, async (req, res) => {
+//     const allow = ['name']
+//     const up = Object.keys(req.body)
+//     const isValid = up.every((up) => {
+//         return allow.includes(up)
+//     })
+//     if (isValid === false) {
+//         return res.status(400).send({ error: 'invalid updates' })
+//     }
+//     try {
+//         up.forEach((up) => {
+//             req.user[up] = req.body[up]
+//         })
+//         await req.user.save()
+//         res.send()
+//     } catch (e) {
+//         res.status(400).send(e)
+//     }
+// })
+
+
+// //Get User Profie Info
+// router.get('/customer/me', auth, async (req, res) => {
+//     res.send(req.user)
+// })
+
 
 module.exports = router

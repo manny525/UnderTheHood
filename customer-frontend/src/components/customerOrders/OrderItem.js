@@ -46,7 +46,7 @@ const OrderItem = ({ order }) => {
                         keyExtractor={item => item.itemId}
                     />
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
-                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹400</Text>
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹{order.totalCost}</Text>
                         {order.status === 'ready' &&
                             <MainButton style={{ marginTop: 5 }}>Pay</MainButton>}
                     </View>

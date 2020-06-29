@@ -1,9 +1,9 @@
 const express = require('express')
 const Order = require('../models/order')
 const User = require('../models/user')
-const Item = require('../models/item')
 const router = new express.Router()
-const auth = require('../middleware/auth')
+const auth = require('../middleware/auth_customer')
+const auth_merchant = require('../middleware/auth')
 
 router.post('/orders/new', auth, async (req, res) => {
     console.log(req.body)
@@ -11,14 +11,16 @@ router.post('/orders/new', auth, async (req, res) => {
         ...req.body
     })
     try {
+        console.log(order)
         await order.save()
+        console.log('saved')
         res.status(201).send(order)
     } catch (e) {
-        res.status(400).send()
+        res.status(400).send(e)
     }
 })
 
-router.get('/orders/merchant', auth, async (req, res) => {
+router.get('/orders/merchant', auth_merchant, async (req, res) => {
     try {
         var orders= new Array();
         orders = await Order.find({ merchantId: req.user._id })
@@ -44,13 +46,14 @@ router.get('/orders/customer', auth, async (req, res) => {
     }
 })
 
-router.patch('/orders/status', auth, async (req, res) => {
+router.patch('/orders/status', auth_merchant, async (req, res) => {
     try {
         const order = await Order.findOne({_id: req.body._id})
         if (!order) {
             res.status(404).send({message: 'Not found'})
         }
         order.status = req.body.status
+        console.log(order)
         await order.save()
         res.send(order)
     } catch(e) {

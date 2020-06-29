@@ -1,5 +1,5 @@
 require("./../db/mongoose");
-var {cart} = require("./../models/cart");
+var cart = require("./../models/cart");
 const auth = require("./../middleware/auth_customer");
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -9,17 +9,36 @@ router.use(urlencodedParser);
 router.use(bodyParser.json());
 
 //when a customer visits a merchant. the frontend should return custId and merchantId.
-router.post("/merchant", [auth, urlencodedParser], async (req, res) => {
+router.post("/carts/create", auth, async (req, res) => {
+    console.log(req.body)
     try {
-        var cartID = req.body.merchantID.toString() + req.user._id.toString();
-        var currentCart = await cart.findOne({ _id: cartID });
-        if (currentCart) {
-            res.status(201).json(currentCart);
-        } else {
-            currentCart = new cart({ _id: cartID, custID: req.user._id });
-            await currentCart.save();
-            res.status(201).json(currentCart);
-        }
+        var currentCart = new cart(req.body);
+        await currentCart.save();
+        console.log(currentCart)
+        res.status(201).send(currentCart);
+    } catch (e) {
+        res.status(500).send("Internal Error");
+    }
+});
+
+router.patch("/carts/update", auth, async (req, res) => {
+    try {
+        var currentCart = await cart.findById(req.body._id);
+        currentCart.items = req.body.items
+        currentCart.totalCost = req.body.totalCost
+        await currentCart.save();
+        res.status(200).send(currentCart);
+    } catch (e) {
+        res.status(500).send("Internal Error");
+    }
+});
+
+router.delete("/carts/delete", auth, async (req, res) => {
+    try {
+        var currentCart = await cart.findOne({  });
+        await currentCart.remove();
+        console.log(currentCart)
+        res.status(200).send(currentCart);
     } catch (e) {
         res.status(500).send("Internal Error");
     }

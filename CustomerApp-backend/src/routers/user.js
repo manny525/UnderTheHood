@@ -7,6 +7,7 @@ const router = new express.Router()
 const { sendVerificationCode } = require('../emails/account')
 const Inventory = require('../models/inventory')
 const Order = require('../models/order')
+const Service = require('../models/service')
 
 router.post('/users/verifyEmail', async (req, res) => {
     try {
@@ -49,6 +50,10 @@ router.post('/users/findUser', async (req, res) => {
                 console.log(inventory)
                 console.log(orders)
                 return res.send({ user, token: req.body.token, inventory, orders, existingUser: true})
+            } else if (user.typeOfMerchant === 'service') {
+                const requests = await Service.findOne({ merchantId: user._id })
+                console.log(requests)
+                return res.send({ user, token: req.body.token, requests, existingUser: true})
             }
             return res.send({ user, token, existingUser: true })
         }
@@ -66,6 +71,10 @@ router.post('/users/getUserFromToken', async (req, res) => {
                 const inventory = await Inventory.findOne({ owner: user._id })
                 const orders = await Order.find({ merchantId: user._id })
                 return res.send({ user, token: req.body.token, inventory, orders})
+            } else if (user.typeOfMerchant === 'service') {
+                const requests = await Service.findOne({ merchantId: user._id })
+                console.log(requests)
+                return res.send({ user, token: req.body.token, requests, existingUser: true})
             }
             return res.send({ user, token: req.body.token })
         }

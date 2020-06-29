@@ -24,8 +24,8 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: true,
-        default: 'pending'
+        default: 'pending',
+        required: true
     },
     items: [{
         itemId: {
@@ -46,6 +46,10 @@ const orderSchema = new mongoose.Schema({
             required: true
         }
     }],
+    totalCost: {
+        type: Number,
+        required: true,
+    },
     pickUpTime: {
         date: {
             type: String,
