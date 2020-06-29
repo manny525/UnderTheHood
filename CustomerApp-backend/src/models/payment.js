@@ -14,7 +14,6 @@ const paymentSchema = new mongoose.Schema({
     otp:{
         type:String,
         trim:true,
-        required:true,
     },
     transactionIdentifier:{
         type:Number,
@@ -27,6 +26,11 @@ const paymentSchema = new mongoose.Schema({
     },
     senderAccountNumber:{
         type:String,
+        trim:true,
+    },
+    status:{
+        type:String,
+        default:'Pending',
         trim:true,
     }
 })

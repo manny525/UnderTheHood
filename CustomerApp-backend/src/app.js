@@ -19,6 +19,8 @@ app.use(require('./routers/customer'))
 app.use(require('./routers/card'))
 app.use(require('./routers/loyalty'))
 app.use(require('./routers/cart'))
+app.use(require('./routers/payment'))
+app.use(require('./routers/visa').router)
 
 
 module.exports=app
