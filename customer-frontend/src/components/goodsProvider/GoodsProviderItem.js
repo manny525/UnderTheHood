@@ -69,7 +69,7 @@ const GoodsProviderItem = ({ item }) => {
 
     const addCustomerCart = () => {
         const cart = {
-            id: 'c_1',
+            _id: 'c_1',
             customerName: userData.user.name,
             shopName: item.shopName,
             customerId: userData.user._id,

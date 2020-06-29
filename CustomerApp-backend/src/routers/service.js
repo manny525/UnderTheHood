@@ -4,7 +4,7 @@ const express = require('express')
 const router = new express.Router()
 // const moment = require('moment')
 
-router.post('/service/add',async(req,res)=>{
+router.post('/services/add',async(req,res)=>{
     try{
         // var service = await Service.findOne({merchant:req.body.merchant,date:new Date(req.body.date)})
         // if(service) {
@@ -18,7 +18,7 @@ router.post('/service/add',async(req,res)=>{
     }
 })
 
-router.get('/service', auth, async(req,res)=>{
+router.get('/services/customer', auth, async(req,res)=>{
     const sort = {'date':'asc'}
     try{
         await req.user.populate({
@@ -32,7 +32,7 @@ router.get('/service', auth, async(req,res)=>{
 })
 
 //to be discussed and changes
-router.patch('/date/:id',auth,async(req,res)=>{
+router.patch('/services/date/:id',auth,async(req,res)=>{
     try{
         var service = await Service.findOne({merchant:req.user._id,date:new Date(req.body.date)})
         if(service){
@@ -45,7 +45,21 @@ router.patch('/date/:id',auth,async(req,res)=>{
     }
 })
 
-router.delete('/delete',async(req,res)=>{
+router.patch('/service/status', auth, async (req, res) => {
+    try {
+        const service = await Service.findOne({_id: req.body._id})
+        if (!order) {
+            res.status(404).send({message: 'Not found'})
+        }
+        service.status = req.body.status
+        await service.save()
+        res.send(service)
+    } catch(e) {
+        res.status(400).send(e)
+    }
+})
+
+router.delete('/services/delete',async(req,res)=>{
     try{
         await Service.findOneAndRemove(req.body)
         res.send()

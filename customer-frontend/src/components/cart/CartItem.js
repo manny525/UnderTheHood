@@ -8,6 +8,16 @@ import CartItemList from './CartItemList';
 
 const CartItem = ({ cart }) => {
     const [cartModalVisible, setCartModalVisible] = useState(false)
+    const [totalCost, setTotalCost] = useState(0)
+
+    const changeTotal = () => {
+        let total = 0
+        cart.items.map(item => {
+            total = total + item.quantity*item.sellingPrice
+        })
+        if (total >= 0)
+            setTotalCost(total)
+    }
 
     return (
         <View>
@@ -15,7 +25,7 @@ const CartItem = ({ cart }) => {
                 <View style={styles.itemContainer}>
                     <View>
                         <Text style={styles.text} >{cart.shopName}</Text>
-                        <Text style={styles.text} >Total: ₹400</Text>
+                        <Text style={styles.text} >Total: ₹{totalCost}</Text>
                     </View>
                     <MainButton style={{ width: 95 }} onPress={() => setCartModalVisible(true)} >Check</MainButton>
                 </View>
@@ -39,13 +49,13 @@ const CartItem = ({ cart }) => {
                         data={cart.items}
                         renderItem={({ item }) => {
                             return (
-                                <CartItemList item={item}/>
+                                <CartItemList item={item} changeTotal={changeTotal} />
                             )
                         }}
                         keyExtractor={item => item.itemId}
                     />
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
-                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹400</Text>
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹{totalCost}</Text>
                         <MainButton style={{ marginTop: 5 }}>Order</MainButton>
                     </View>
                 </View>

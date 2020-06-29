@@ -9,6 +9,7 @@ import inputStyle from '../../styles/input';
 import moment from 'moment'
 import { updateRequest } from '../../store/actions/serviceRequest';
 import { useDispatch } from 'react-redux';
+import updateServiceStatus from '../../apiCalls/updateServiceStatus'
 
 const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
@@ -32,11 +33,12 @@ const OrderItem = ({ order, setTab }) => {
             status = 'completed'
             //receive payment if vCode right
         }
-        // api call by passing status
-        dispatch(updateRequest({
-            ...order,
+        const body = JSON.stringify({
+            _id: order._id,
             status
-        }))
+        })
+        const updatedService = await updateServiceStatus(body, token)
+        dispatch(updateRequest(updatedService))
         setOrderModalVisible(false)
         if (status === 'upcoming') {
             setTab(1)
@@ -75,13 +77,15 @@ const OrderItem = ({ order, setTab }) => {
                     <TitleText>{order.customerName}</TitleText>
                 </View>
                 <View style={styles.itemModalContainer}>
-                    <TitleText style={{ color: 'black' }} >Date: {order.date}</TitleText>
-                    {order.status === 'new' &&
+                    <Text style={styles.itemName} >Date: {order.date}</Text>
+                    {order.status === 'new' ?
                         <TouchableOpacity onPress={() => {
                             setTimeVisible(true)
                         }} >
                             <Text style={{ ...styles.itemName, color: colors.primary }} >Time: {moment(time).format("hh:mm A")}</Text>
-                        </TouchableOpacity>}
+                        </TouchableOpacity> :
+                        <Text style={{ ...styles.itemName }} >Time: {moment(time).format("hh:mm A")}</Text>
+                    }
                     <TextInput
                         editable={false}
                         multiline={true}

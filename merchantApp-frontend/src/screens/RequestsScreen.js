@@ -2,10 +2,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import OrderHome from '../components/serviceRequests/RequestHome';
 
-const RequestsScreen = () => {
+const RequestsScreen = ({ tab = 2 }) => {
     return (
         <View style={styles.screen}>
-            <OrderHome />
+            <OrderHome defaultTab={tab} />
         </View>
     )
 }

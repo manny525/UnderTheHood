@@ -19,7 +19,7 @@ const InventoryItem = ({ item }) => {
             itemId: item.itemId,
             itemName: item.itemName,
             sellingPrice: item.sellingPrice,
-            quantity: 1
+            quantity: 0
         }))
         setInCart(true)
     }

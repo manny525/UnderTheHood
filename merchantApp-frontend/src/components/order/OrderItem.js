@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions, TextInput } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Card from '../Card';
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
@@ -8,10 +8,13 @@ import TitleText from '../TitleText';
 import OrderItemList from './OrderItemList';
 import inputStyle from '../../styles/input';
 import { updateOrders } from '../../store/actions/orders';
+import updateOrderStatus from '../../apiCalls/updateOrderStatus';
 
 const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
     const [vCode, setVcode] = useState('')
+
+    const token = useSelector(state => state.user.user.token)
 
     const dispatch = useDispatch()
 
@@ -24,11 +27,12 @@ const OrderItem = ({ order, setTab }) => {
             status = 'completed'
             //receive payment if vCode right
         }
-        //api call by passing status
-        dispatch(updateOrders({
-            ...order,
+        const body = JSON.stringify({
+            _id: order._id,
             status
-        }))
+        })
+        const updatedOrder = await updateOrderStatus (body, token)
+        dispatch(updateOrders(updatedOrder))
         setOrderModalVisible(false)
         if (status === 'ready') {
             setTab(2)

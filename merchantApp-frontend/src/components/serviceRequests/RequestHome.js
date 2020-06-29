@@ -7,8 +7,8 @@ import ReadyOrders from './ReadyOrders';
 import CompletedOrders from './CompletedOrders';
 import Header from '../Header';
 
-const OrderHome = () => {
-    const [tab, setTab] = useState(1)
+const OrderHome = ({ defaultTab }) => {
+    const [tab, setTab] = useState(defaultTab||1)
 
     return (
         <View style={styles.screen} >

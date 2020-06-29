@@ -45,7 +45,6 @@ router.get('/orders/customer', auth, async (req, res) => {
 })
 
 router.patch('/orders/status', auth, async (req, res) => {
-    console.log(req.body._id)
     try {
         const order = await Order.findOne({_id: req.body._id})
         if (!order) {

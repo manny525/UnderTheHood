@@ -9,14 +9,15 @@ const CompletedOrders = ({ setTab }) => {
     const owner = useSelector(state => state.user.user.user._id)
     const orders = useSelector(state => state.orders.orders)
 
-    const [completingOrders] = useState(orderTypeSelector(orders, 'completed'))
+    const [completedOrders] = useState(orderTypeSelector(orders, 'completed'))
+
 
     // const dispatch = useDispatch()
 
     return (
         <View style={styles.itemsContainer} >
             <FlatList
-                data={completingOrders}
+                data={completedOrders}
                 renderItem={({ item }) => {
                     return (
                         <OrderItem order={item} setTab={setTab} />
