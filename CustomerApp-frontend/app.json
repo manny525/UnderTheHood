@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "signup_login",
-    "slug": "signup_login",
+    "name": "customerApp-frontend",
+    "slug": "customerApp-frontend",
     "platforms": [
       "ios",
       "android",

@@ -1,83 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Image, Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
-import inputStyle from '../../styles/input'
 import MainButton from '../MainButton';
 import InventoryHome from './InventoryHome';
 import { addCart } from '../../store/actions/cart'
-import { resetItems } from '../store/actions/cartItems';
+import { resetItems } from '../../store/actions/cartItems';
+import addCartToDB from '../../apiCalls/addCart';
+import getInventory from '../../apiCalls/getInventory';
 
 const GoodsProviderItem = ({ item }) => {
+    // console.log(item)
     const [merchantModalVisible, setMerchantModalVisible] = useState(false)
-    const [addToCart, setAddtoCart] = useState(false)
     const userData = useSelector(state => state.user.user)
-    // const [items, setItems] = useState(null)
+
+    const token = userData.token
 
     const items = useSelector(state => state.cartItems.items)
     const dispatch = useDispatch()
 
-    const inventory = { //fetch inventort call
-        owner: 'm1',
-        categories: [{
-            categoryName: "Biscuits",
-            _id: 'c1',
-            items: [{
-                itemId: '45641',
-                itemName: "A",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "45631",
-                itemName: "B",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "4561",
-                itemName: "C",
-                available: false,
-                sellingPrice: '20'
-            }
-            ]
-        }, {
-            categoryName: "Cold Drinks",
-            _id: 'c2',
-            items: [{
-                itemId: "4564",
-                itemName: "D",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "456344",
-                itemName: "E",
-                available: true,
-                sellingPrice: '20'
-            },
-            {
-                itemId: "45611",
-                itemName: "F",
-                available: false,
-                sellingPrice: '20'
-            }
-            ]
-        }]
+    const [inventory, setInventory] = useState()
+
+    const getMerchantInventory = async () => {
+        setInventory(await getInventory(token, item._id))
     }
 
-    const addCustomerCart = () => {
-        const cart = {
-            id: 'c_1',
+    useEffect(() => {
+        getMerchantInventory()
+    }, [])
+
+    useEffect(() => {
+        if (!merchantModalVisible) {
+            dispatch(resetItems())
+        }
+    }, [merchantModalVisible])
+
+    const addCustomerCart = async () => {
+        const body = await JSON.stringify({
             customerName: userData.user.name,
             shopName: item.shopName,
             customerId: userData.user._id,
-            merchantId: inventory.owner,
+            merchantId: item._id,
             items
-        }
-        // add cart to database
-        dispatch(addCart(cart))
+        })
+        const newCart = await addCartToDB(body, token)
+        dispatch(addCart(newCart))
         dispatch(resetItems())
         setMerchantModalVisible(false)
     }
@@ -86,14 +54,13 @@ const GoodsProviderItem = ({ item }) => {
         <View>
             <TouchableOpacity style={styles.itemContainer} onPress={() => setMerchantModalVisible(true)}>
                 <Text style={styles.itemName} >{item.shopName}</Text>
-                <Text style={{ marginTop: 3 }} >{item.distance}</Text>
+                <Text style={styles.itemName} >{Math.ceil(item.distance)} km</Text>
             </TouchableOpacity>
             <Modal
                 animationType="slide"
                 visible={merchantModalVisible}
                 onRequestClose={() => {
                     setMerchantModalVisible(false)
-                    resetItems()
                 }}
             >
                 <View style={styles.header2}>
@@ -120,7 +87,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 14
     },
     header2: {
         width: Dimensions.get('window').width,

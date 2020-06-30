@@ -8,30 +8,15 @@ const OrderItemList = ({ item, orderType }) => {
     const [quantity, setQuantity] = useState(item.quantity.toString())
 
     const checkQuantity = (text) => {
-        if (parseInt(text) <= item.quantity && parseInt(text) > 0 || text==='') {
+        if (parseInt(text) <= item.quantity && parseInt(text) > 0 || text === '') {
             setQuantity(text)
         }
     }
 
     return (
-        <View>
+        <View style={styles.itemContainer}>
             <Text style={styles.itemName} >{item.itemName}</Text>
-            <View style={styles.itemContainer}>
-                {orderType === 'pending' ? <TextInput 
-                    keyboardType="number-pad" 
-                    style={{...inputStyles.input, width: 35}} 
-                    onChangeText={checkQuantity} 
-                    value={quantity.toString()} 
-                /> : <Text style={styles.itemName} >{quantity}</Text> }
-                {orderType === 'pending' && <Switch
-                    trackColor={{ true: colors.primary, false: colors.opaque }}
-                    thumbColor={"#f4f3f4"}
-                    onValueChange={() => {
-                        setAvailable(!available)
-                    }}
-                    value={available}
-                />}
-            </View>
+            <Text style={styles.itemName} >{quantity}</Text>
         </View>
     )
 }

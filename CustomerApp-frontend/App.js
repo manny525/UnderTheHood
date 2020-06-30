@@ -12,7 +12,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ordersReducer from './src/store/reducers/orders';
 import serviceRequestReducer from './src/store/reducers/serviceRequest';
 import findUserByToken from './src/apiCalls/findUserByToken';
-import cartItmesReducer from './src/components/store/reducers/cartItems';
+import cartItmesReducer from './src/store/reducers/cartItems';
+import cardReducer from './src/store/reducers/card';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   merchants: merchantsReducer,
   orders: ordersReducer,
   serviceRequest: serviceRequestReducer,
-  cartItems: cartItmesReducer
+  cartItems: cartItmesReducer,
+  cards: cardReducer
 })
 const store = createStore(rootReducer)
 
@@ -28,6 +30,7 @@ export default function App() {
   const [tokenLoaded, setTokenLoaded] = useState(false)
   const [login, setLogin] = useState(false)
   const [userData, setUserData] = useState(null)
+
 
   async function loadToken() {
     try {

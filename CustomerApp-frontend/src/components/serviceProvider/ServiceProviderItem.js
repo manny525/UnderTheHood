@@ -1,38 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import moment from 'moment';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import inputStyle from '../../styles/input'
 import MainButton from '../MainButton';
+import newRequest from '../../apiCalls/requestService';
+import { addRequest } from '../../store/actions/serviceRequest';
 
 const ServiceProviderItem = ({ item }) => {
     const [merchantModalVisible, setMerchantModalVisible] = useState(false)
-    const [dateVisible, setDateVisible] = useState(false)
-    const [timeVisible, setTimeVisible] = useState(false)
-    const [date, setDate] = useState(Date.now());
-    const [time, setTime] = useState(Date.now());
+    const [date, setDate] = useState();
     const [description, setDescription] = useState('')
 
-    const onChangeDate = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setDate(currentDate);
-        setDateVisible(false)
-    };
+    const dispatch = useDispatch()
 
-    const onChangeTime = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        setTime(currentTime);
-        setTimeVisible(false)
-    };
+    const token = useSelector(state => state.user.user.token)
+
+    const onRequest = async () => {
+        const body = await JSON.stringify({
+            merchantId: item._id,
+            merchantName: item.merchantName,
+            date,
+            description
+        })
+        const request = await newRequest(body, token)
+        dispatch(addRequest(request))
+        setMerchantModalVisible(false)
+    }
 
     return (
         <View>
             <TouchableOpacity style={styles.itemContainer} onPress={() => setMerchantModalVisible(true)}>
                 <Text style={styles.itemName} >{item.merchantName}</Text>
-                <Text style={{ marginTop: 3 }} >{item.distance}</Text>
+                <Text style={styles.itemName} >{Math.ceil(item.distance)} km</Text>
             </TouchableOpacity>
             <Modal
                 animationType="slide"
@@ -49,22 +50,20 @@ const ServiceProviderItem = ({ item }) => {
                 </View>
                 <View style={styles.itemModalContainer} >
                     <TitleText style={{ color: 'black', marginBottom: 5 }} >{item.type.toUpperCase()}</TitleText>
-                    <TouchableOpacity onPress={() => {
-                        setDateVisible(true)
-                    }} >
-                        <Text style={{ ...styles.itemName, color: colors.primary }} >
-                            Date: {moment(date).format("DD MMM YYYY")}
-                        </Text>
-                    </TouchableOpacity>
+                    <TextInput
+                        multiline={true}
+                        style={inputStyle.input}
+                        placeholder='Date: dd/mm'
+                        onChangeText={setDate}
+                    />
                     <TextInput
                         multiline={true}
                         style={{ ...inputStyle.input, height: Dimensions.get('window').height / 3, width: Dimensions.get('window').width * 0.8 }}
                         placeholder='Description'
                         onChangeText={(text) => setDescription(text)}
                     />
-                    <MainButton style={{ marginTop: 5 }}>Request Service</MainButton>
+                    <MainButton style={{ marginTop: 5 }} onPress={onRequest}>Request Service</MainButton>
                 </View>
-                {dateVisible && <RNDateTimePicker mode="date" onChange={onChangeDate} value={date} />}
             </Modal>
         </View>
     )
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 14
     },
     header2: {
         width: Dimensions.get('window').width,

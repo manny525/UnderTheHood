@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
+import * as Location from 'expo-location';
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 import GetVerificationCodeForm from '../components/authForm/GetVerificationCodeForm';
 import SignUpForm from '../components/authForm/SignUpForm';
 import EnterVerificationCode from '../components/authForm/EnterVerificationCode';
 import Header from '../components/Header';
 import { setUser } from '../store/actions/user';
-import { useDispatch } from 'react-redux';
 import { setOrders } from '../store/actions/orders';
-import AsyncStorage from '@react-native-community/async-storage';
 import findUser from '../apiCalls/findUser';
+import { setCarts } from '../store/actions/cart';
+import { setRequests } from '../store/actions/serviceRequest';
+import getMerchant from '../apiCalls/getMerchants';
+import { setGoodsProviders, setServiceProviders } from '../store/actions/merchants';
+import { setCustomerCards } from '../store/actions/card';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
@@ -18,8 +24,39 @@ const AuthScreen = (props) => {
             email
         })
         const user = await findUser(body)
-        console.log(user)
         return user
+    }
+
+    const onGetMerchants = async () => {
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+            setLocationError('Permission to access location was denied');
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        let pincode = ''
+        const lat = location.coords.latitude
+        const lon = location.coords.longitude
+        try {
+            const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=6ed4de0702acb6&lat=${lat}&lon=${lon}&format=json`)
+            const data = await res.json()
+            pincode = data.address.postcode
+            let body = ({
+                postalCode: pincode,
+                lat,
+                lon,
+                token: existingUser.token,
+                typeOfMerchant: 'goods'
+            })
+            const goodsProviders = await getMerchant(body)
+            body.typeOfMerchant = 'service'
+            const serviceProviders = await getMerchant(body)
+            return {
+                goodsProviders,
+                serviceProviders
+            }
+        } catch (error) {
+            return error
+        }
     }
 
     const changeVerificationStage = async (number, email = '', vCode = '') => {
@@ -38,10 +75,10 @@ const AuthScreen = (props) => {
                         token: userData.token,
                         user: userData.user,
                         orders: userData.orders,
-                        requests: userData.services,
+                        services: userData.services,
                         carts: userData.carts,
-                        cards: userData.cards,
-                        loyalty: userData.loyalty
+                        cards: userData.cards
+                        // loyalty: userData.loyalty
                     })
                 }
                 else {
@@ -58,49 +95,35 @@ const AuthScreen = (props) => {
 
     useEffect(() => {
         async function login() {
+            await dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
+            if (existingUser.services) {
+                await dispatch(setRequests(existingUser.services))
+            }
+            if (existingUser.orders) {
+                await dispatch(setOrders(existingUser.orders))
+            }
+            if (existingUser.carts) {
+                await dispatch(setCarts(existingUser.carts))
+            }
+            if (existingUser.cards) {
+                await dispatch(setCustomerCards(existingUser.cards))
+            }
+            // if (existingUser.loyalty) {
+            //     await dispatch(setOrders(existingUser.orders))
+            // }
+            props.setLogin(true)
+        }
+        async function populateMerchants() {
             if (existingUser) {
-                console.log(existingUser)
-                await dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
-                // if (existingUser.requests) {
-                //     await dispatch(setRequests(existingUser.requests))
-                // }
-                // if (existingUser.orders) {
-                //     await dispatch(setOrders(existingUser.orders))
-                // }
-                // if (existingUser.requests) {
-                //     await dispatch(setOrders(existingUser.orders))
-                // }
-                // if (existingUser.cards) {
-                //     await dispatch(setOrders(existingUser.orders))
-                // }
-                // if (existingUser.carts) {
-                //     await dispatch(setOrders(existingUser.orders))
-                // }
-                // if (existingUser.loyalty) {
-                //     await dispatch(setOrders(existingUser.orders))
-                // }
-                props.setLogin(true)
+                const merchants = await onGetMerchants()
+                console.log(merchants)
+                await dispatch(setGoodsProviders(merchants.goodsProviders))
+                await dispatch(setServiceProviders(merchants.serviceProviders))
+                login()
             }
         }
-        login()
+        populateMerchants()
     }, [existingUser])
-
-    useEffect(() => {
-        async function login() {
-            if (existingUser) {
-                console.log(existingUser)
-                await dispatch(setUser({ user: existingUser.user, token: existingUser.token }))
-                // if (existingUser.requests) {
-                //     await dispatch(setRequests(existingUser.requests))
-                // }
-                // if (existingUser.orders) {
-                //     await dispatch(setOrders(existingUser.orders))
-                // }
-                props.setLogin(true)
-            }
-        }
-        login()
-    }, [])
 
     useEffect(() => {
         async function setToken() {

@@ -6,6 +6,7 @@ import colors from '../../constants/colors';
 import ReadyOrders from './ReadyOrders';
 import CompletedOrders from './CompletedOrders';
 import Header from '../Header';
+import PaidOrders from './PaidOrders';
 
 const OrderHome = () => {
     const [tab, setTab] = useState(1)
@@ -23,11 +24,15 @@ const OrderHome = () => {
                 <TouchableOpacity onPress={() => setTab(3)}>
                     {tab === 3 ? <Text style={styles.tabTextBold}>Completed</Text> : <Text style={styles.tabText}>Completed</Text>}
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => setTab(4)}>
+                    {tab === 4 ? <Text style={styles.tabTextBold}>Paid</Text> : <Text style={styles.tabText}>Paid</Text>}
+                </TouchableOpacity>
             </View>
             <View style={{ alignItems: 'center' }} >
-                {tab === 1 && <PendingOrders />}
-                {tab === 2 && <ReadyOrders />}
-                {tab === 3 && <CompletedOrders />}
+                {tab === 1 && <PendingOrders setTab={setTab} />}
+                {tab === 2 && <ReadyOrders setTab={setTab} />}
+                {tab === 3 && <CompletedOrders setTab={setTab} />}
+                {tab === 4 && <PaidOrders setTab={setTab} />}
             </View>
         </View>
     )
@@ -45,12 +50,12 @@ const styles = StyleSheet.create({
     },
     tabText: {
         fontFamily: 'open-sans',
-        fontSize: 20,
+        fontSize: 18,
         color: 'white'
     },
     tabTextBold: {
         fontFamily: 'open-sans-bold',
-        fontSize: 20,
+        fontSize: 18,
         color: 'white'
     }
 })

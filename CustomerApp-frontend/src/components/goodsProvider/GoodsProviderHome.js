@@ -15,7 +15,7 @@ const GoodsProviderHome = () => {
     const merchants = useSelector(state => state.merchants)
     const [goodsProviders, setGoodsProvider] = useState([{
         type: 'grocery',
-        merchants: typeSelector(merchants.goodsProviders, 'grocery')
+        merchants: merchants.goodsProviders
     }, {
         type: 'medical',
         merchants: typeSelector(merchants.goodsProviders, 'medical')
@@ -24,7 +24,7 @@ const GoodsProviderHome = () => {
     return (
         <View style={styles.screen} >
             <View style={{...styles.header2, marginTop: 8}}>
-                <TitleText>GOODS PROVIDERS</TitleText>
+                <TitleText style={{fontSize: 15}} >GOODS PROVIDERS</TitleText>
             </View>
             <FlatList
                 data={goodsProviders}
@@ -46,11 +46,10 @@ const styles = StyleSheet.create({
     },
     header2: {
         width: Dimensions.get('window').width,
-        height: 70,
+        height: Dimensions.get('window').height / 10,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.primary,
-        fontSize: 18
+        backgroundColor: colors.primary
     },
 })
 

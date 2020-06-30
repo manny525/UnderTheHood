@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
 import CartItem from './CartItem'
 
 const CartItems = () => {
     const carts = useSelector(state => state.cart.carts)
-    console.log(carts)
+    // console.log(carts)
     return (
         <View style={styles.itemsContainer} >
             <FlatList
@@ -25,14 +25,6 @@ const styles = StyleSheet.create({
     itemsContainer: {
         flex: 1,
         alignSelf: 'center'
-    },
-    tinyLogo: {
-        height: 40,
-        width: 40
-    },
-    itemName: {
-        fontFamily: 'open-sans',
-        fontSize: 20
     }
 })
 

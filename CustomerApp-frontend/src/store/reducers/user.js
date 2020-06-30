@@ -1,9 +1,4 @@
-const initalState = {
-    id: '',
-    token: ''
-}
-
-const userReducer = (state = initalState, action) => {
+const userReducer = (state = {user: {}}, action) => {
     switch(action.type) {
         case 'SET_USER': 
             return {

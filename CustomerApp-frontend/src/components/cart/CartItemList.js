@@ -3,9 +3,17 @@ import { View, Text, StyleSheet, Switch, Dimensions, TextInput } from 'react-nat
 import colors from '../../constants/colors';
 import inputStyles from '../../styles/input';
 
-const CartItemList = ({ item }) => {
-    const [available, setAvailable] = useState(true)
+const CartItemList = ({ item, changeTotal }) => {
     const [quantity, setQuantity] = useState(item.quantity.toString())
+
+    const changeQuantity = (text) => {
+        setQuantity(text)
+        if (parseInt(text) > 0)
+            item.quantity = parseInt(text)
+        else
+            item.quantity = 0
+        changeTotal()
+    }
 
     return (
         <View>
@@ -17,8 +25,8 @@ const CartItemList = ({ item }) => {
                 <TextInput
                     keyboardType="number-pad"
                     style={{ ...inputStyles.input, width: 35 }}
-                    onChangeText={setQuantity}
-                    value={quantity.toString()}
+                    onChangeText={changeQuantity}
+                    value={quantity}
                 />
             </View>
         </View>
@@ -33,7 +41,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 16
     }
 })
 

@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
-import colors from '../../constants/colors';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import Header from '../Header';
 import CartItems from './CartItems';
 
 const CartHome = () => {
-    const [tab, setTab] = useState(1)
-
     return (
         <View style={styles.screen} >
             <Header title='MY CARTS' />

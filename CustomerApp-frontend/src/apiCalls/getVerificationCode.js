@@ -2,7 +2,7 @@ import { LOCAL_HOST } from 'react-native-dotenv'
 
 const getVerificationCode = async (body) => {
     try {
-        const res = fetch(`http://${LOCAL_HOST}/users/verifyEmail`, {
+        const res = await fetch(`http://${LOCAL_HOST}/users/verifyEmail`, {
                 method: "POST",
                 body,
                 headers: {
