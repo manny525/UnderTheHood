@@ -8,6 +8,7 @@ const { sendVerificationCode } = require('../emails/account')
 const Inventory = require('../models/inventory')
 const Order = require('../models/order')
 const Service = require('../models/service')
+const {createAlias} = require('./../routers/visa')
 
 router.post('/users/verifyEmail', async (req, res) => {
     try {
@@ -29,10 +30,16 @@ router.post('/users/newUser', async (req, res) => {
                 owner: user._id
             })
             await inventory.save()
-            return res.status(201).send({ user, token, inventory })
+            createAlias(req,res,function(){
+                return res.status(201).send({ user, token, inventory })
+            })
         }
         else
-            return res.status(201).send({ user, token })
+        {
+            createAlias(req,res,function(){
+                return res.status(201).send({ user, token })
+            })
+        }
     } catch (e) {
         res.status(400).send(e)
     }

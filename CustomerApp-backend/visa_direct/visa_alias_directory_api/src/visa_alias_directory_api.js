@@ -471,9 +471,9 @@ var visa_alias_directory_api = (function() {
             method: 'POST',
             uri: domain + path,
             qs: queryParameters,
-            key: fs.readFileSync(this.keyFile),
-            cert: fs.readFileSync(this.certificateFile),
-            ca: fs.readFileSync(this.caFile),
+            key: fs.readFileSync(this.keyFile,'utf8'),
+            cert: fs.readFileSync(this.certificateFile,'utf8'),
+            // ca: fs.readFileSync(this.caFile),
             headers: headers,
             body: body
         };
@@ -543,7 +543,7 @@ var visa_alias_directory_api = (function() {
         }
 
         headers['User-Agent'] = 'VDP_SampleCode_Nodejs';
-        headers['Authorization'] = 'Basic ' + new Buffer(this.userId + ':' + this.password).toString('base64');
+        headers['Authorization'] = 'Basic ' + new Buffer.from(this.userId + ':' + this.password).toString('base64');
         headers['x-correlation-id'] = randomstring.generate({
             length: 12,
             charset: 'alphanumeric'
@@ -630,7 +630,7 @@ var visa_alias_directory_api = (function() {
         }
 
         headers['User-Agent'] = 'VDP_SampleCode_Nodejs';
-        headers['Authorization'] = 'Basic ' + new Buffer(this.userId + ':' + this.password).toString('base64');
+        headers['Authorization'] = 'Basic ' + new Buffer.from(this.userId + ':' + this.password).toString('base64');
         headers['x-correlation-id'] = randomstring.generate({
             length: 12,
             charset: 'alphanumeric'

@@ -13,33 +13,13 @@
 ---------------------------------------------------------------------------------------------------------------------- */
 
 'use strict';
-var api = require('../src/visa_alias_directory_api').visa_alias_directory_api;
-var authCredentials = require('../credentials.json');
 
-var visa_alias_directory_api = new api(authCredentials);
-
-// path invoked is '/visaaliasdirectory/v1/resolve';
-const resolve = function(req,cb){
-    visa_alias_directory_api.Resolve(getParameters())
-    .then(function(result) {
-        cb(result.response,undefined)
-    })
-    .catch(function(error) {
-        cb(undefined,error.response)
-    });
-
-    function getParameters() {
-        var parameters = {
-            "x-client-transaction-id": "{enter appropriate value}",
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        };
-        parameters.payload = {
-            "alias": req.email,
-            "businessApplicationId": "PP"
-        }
-        return parameters;
-    }
+var crypto = require('crypto');
+module.exports.getXPayToken = function getXPayToken(resourcePath, apiKey, postBody, sharedSecret) {
+    var queryParams = 'apikey=' + apiKey;
+    var timestamp = Math.floor(Date.now() / 1000);
+    var preHashString = timestamp + resourcePath + queryParams + postBody;
+    var hashString = crypto.createHmac('SHA256', sharedSecret).update(preHashString).digest('hex');
+    var xPayToken = 'xv2:' + timestamp + ':' + hashString;
+    return xPayToken;
 }
-
-module.exports = resolve
