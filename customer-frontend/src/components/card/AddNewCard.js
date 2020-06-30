@@ -89,7 +89,7 @@ export default function AddNewCard({ setCardModalVisible }) {
                     <TextInput
                          type="text"
                          name="name"
-                         placeholder="name"
+                         placeholder="Name on Card"
                          value={state.name}
                          onChangeText={(name) => setState({ ...state, name: name })}
                          style={styles.input}
@@ -108,7 +108,7 @@ export default function AddNewCard({ setCardModalVisible }) {
                     <TextInput
                          type="tel"
                          name="cvv"
-                         placeholder="CVV "
+                         placeholder="CVV"
                          keyboardType='number-pad'
                          value={state.cvv}
                          onChangeText={(cvv) => setState({ ...state, cvv: cvv })}

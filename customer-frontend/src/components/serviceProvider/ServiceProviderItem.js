@@ -34,7 +34,7 @@ const ServiceProviderItem = ({ item }) => {
         <View>
             <TouchableOpacity style={styles.itemContainer} onPress={() => setMerchantModalVisible(true)}>
                 <Text style={styles.itemName} >{item.merchantName}</Text>
-                <Text style={{ marginTop: 3 }} >{item.distance}</Text>
+                <Text style={styles.itemName} >{Math.ceil(item.distance)} km</Text>
             </TouchableOpacity>
             <Modal
                 animationType="slide"
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 14
     },
     header2: {
         width: Dimensions.get('window').width,

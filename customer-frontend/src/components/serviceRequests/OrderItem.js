@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions, TextInput } from 'react-native';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
-import Card from '../Card'
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions, TextInput } from 'react-native';
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import inputStyle from '../../styles/input';
-import moment from 'moment'
+import MyCard from '../card/MyCard';
+import Card from '../Card';
 
 const OrderItem = ({ order }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
-    const [timeVisible, setTimeVisible] = useState(false)
-    const [time, setTime] = useState(Date.now());
+    const [cardModalVisible, setCardModalVisible] = useState(false)
 
-    const onChangeTime = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        setTime(currentTime);
-        setTimeVisible(false)
-    };
-
+    const onPay = async () => {
+        setCardModalVisible(true)
+    }
     return (
         <View>
             <Card style={{ marginTop: 10, flex: 1, borderColor: colors.secondary, borderWidth: 1 }} >
@@ -29,7 +24,12 @@ const OrderItem = ({ order }) => {
                         {order.status === 'upcoming' &&
                             <Text style={styles.text} >{order.time}</Text>}
                     </View>
-                    <MainButton style={{ width: 95 }} onPress={() => setOrderModalVisible(true)} >Check</MainButton>
+                    <MainButton
+                        style={{ width: 90 }}
+                        textStyle={{ fontSize: 14 }}
+                        onPress={() => setOrderModalVisible(true)}>
+                        Check
+                    </MainButton>
                 </View>
             </Card>
             <Modal
@@ -61,8 +61,25 @@ const OrderItem = ({ order }) => {
                         selection={{ start: 0, end: 0 }}
                         value={order.description}
                     />
-                    {order.status === 'upcoming' && <MainButton style={{ marginTop: 5 }}>Pay</MainButton>}
+                    {order.status === 'upcoming' &&
+                        
+                        <MainButton style={{ marginTop: 5 }} onPress={onPay} >Pay</MainButton>}
                 </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                visible={cardModalVisible}
+                onRequestClose={() => {
+                    setCardModalVisible(false)
+                }}
+            >
+                <View style={styles.header2}>
+                    <TouchableOpacity onPress={() => setCardModalVisible(false)} style={styles.modalHeader} >
+                        <Image source={require('../../../assets/dropdown.png')} style={styles.tinyLogo} />
+                    </TouchableOpacity>
+                    <TitleText>MY CARDS</TitleText>
+                </View>
+                <MyCard orderDetails={{...order, totalCost}} setPayModalVisible={setCardModalVisible} />
             </Modal>
         </View>
     )

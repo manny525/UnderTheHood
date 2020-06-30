@@ -14,16 +14,15 @@ const ServiceProviderHome = () => {
     const [serviceProviders, setServiceProvider] = useState([{
         type: 'barber',
         merchants: merchants.serviceProviders
+    }, {
+        type: 'electrician',
+        merchants: typeSelector(merchants.serviceProviders, 'electrician')
     }])
-    // , {
-    //     type: 'electrician',
-    //     merchants: typeSelector(merchants.serviceProviders, 'electrician')
-    // }])
 
     return (
         <View style={styles.screen} >
             <View style={{...styles.header2, marginTop: 8}}>
-                <TitleText>SERVICE PROVIDERS</TitleText>
+                <TitleText style={{fontSize: 15}} >SERVICE PROVIDERS</TitleText>
             </View>
             <FlatList
                 data={serviceProviders}
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     },
     header2: {
         width: Dimensions.get('window').width,
-        height: 70,
+        height: Dimensions.get('window').height / 10,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.primary,

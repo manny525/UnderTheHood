@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../../constants/colors';
-import TitleText from '../TitleText';
-import inputStyle from '../../styles/input'
-import MainButton from '../MainButton';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addItem } from '../../store/actions/cartItems';
 
 const InventoryItem = ({ item }) => {
-    const [error, setError] = useState('')
-    const [quantity, setQuantity] = useState(0)
     const [inCart, setInCart] = useState(false)
 
     const dispatch = useDispatch()
@@ -50,26 +45,20 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 22
-    },
-    tinyLogo: {
-        height: 40,
-        width: 40
-    },
-    itemModalContainer: {
-        alignItems: 'center'
+        fontSize: 16
     },
     button: {
         backgroundColor: colors.primary,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
         borderRadius: 25,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginRight: 5
     },
     buttonText: {
         fontFamily: 'open-sans',
         color: 'white',
-        fontSize: 15
+        fontSize: 14
     }
 })
 

@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 16
     }
 })
 

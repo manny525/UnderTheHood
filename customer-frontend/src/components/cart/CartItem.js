@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Dimensions, TextInput } from 'react-native';
 import Card from '../Card'
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
@@ -51,16 +51,17 @@ const CartItem = ({ cart }) => {
                 end: endTime
             }
         })
-        console.log(body)
         const order = await newOrder(body, token)
-        console.log(order)
         const deletedCart = await deleteCart(JSON.stringify({
             _id: cart._id
         }), token)
         dispatch(addOrder(order))
         dispatch(deleteCustomerCart(deletedCart))
-        setCartModalVisible(false)
     }
+
+    useEffect(() => {
+        setCartModalVisible(false)
+    }, [cart])
 
     const saveCart = async () => {
         const body = await JSON.stringify({
@@ -81,7 +82,7 @@ const CartItem = ({ cart }) => {
                         <Text style={styles.text} >{cart.shopName}</Text>
                         <Text style={styles.text} >Total: ₹{totalCost}</Text>
                     </View>
-                    <MainButton style={{ width: 95 }} onPress={() => setCartModalVisible(true)} >Check</MainButton>
+                    <MainButton style={{ width: 90 }} textStyle={{ fontSize: 14 }} onPress={() => setCartModalVisible(true)} >Check</MainButton>
                 </View>
             </Card>
             <Modal
@@ -160,6 +161,7 @@ const CartItem = ({ cart }) => {
 
 const styles = StyleSheet.create({
     itemContainer: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
