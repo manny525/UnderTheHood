@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
@@ -25,7 +25,6 @@ const ServiceProviderItem = ({ item }) => {
             description
         })
         const request = await newRequest(body, token)
-        console.log(request)
         dispatch(addRequest(request))
         setMerchantModalVisible(false)
     }
@@ -34,7 +33,7 @@ const ServiceProviderItem = ({ item }) => {
         <View>
             <TouchableOpacity style={styles.itemContainer} onPress={() => setMerchantModalVisible(true)}>
                 <Text style={styles.itemName} >{item.merchantName}</Text>
-                <Text style={{ marginTop: 3 }} >{item.distance}</Text>
+                <Text style={styles.itemName} >{Math.ceil(item.distance)} km</Text>
             </TouchableOpacity>
             <Modal
                 animationType="slide"
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 14
     },
     header2: {
         width: Dimensions.get('window').width,

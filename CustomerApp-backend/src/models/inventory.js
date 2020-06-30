@@ -4,8 +4,7 @@ const inventorySchema = mongoose.Schema({
     categories: [{
         categoryName: {
             type: String,
-            required: true,
-            unique: true    
+            required: true  
         },
         items: [{
             itemName: {

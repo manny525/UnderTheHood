@@ -11,7 +11,6 @@ import RequestsScreen from '../screens/RequestsScreen';
 const Tab = createBottomTabNavigator()
 
 const MerchantNavigator = ({ merchantType }) => {
-    console.log(merchantType)
     return (
         <NavigationContainer>
             <Tab.Navigator

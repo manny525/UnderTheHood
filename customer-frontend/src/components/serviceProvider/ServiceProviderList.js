@@ -39,21 +39,14 @@ const styles = StyleSheet.create({
     },
     category: {
         fontFamily: 'open-sans',
-        fontSize: 20,
+        fontSize: 16,
         color: 'white'
     },
     tinyLogo: {
         marginTop: 5,
         marginRight: 5,
-        height: 20,
-        width: 20
-    },
-    addItem: {
-        marginTop: 10,
-        width: '50%',
-        marginLeft: 50,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        height: 16,
+        width: 16
     },
     header2: {
         width: Dimensions.get('window').width,
@@ -62,16 +55,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: colors.primary,
         fontSize: 18
-    },
-    modalHeader: {
-        alignItems: 'center'
-    },
-    tinyLogoArrow: {
-        height: 40,
-        width: 40
-    },
-    itemModalContainer: {
-        alignItems: 'center'
     }
 })
 

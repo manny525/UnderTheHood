@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import Card from '../Card'
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import OrderItemList from './OrderItemList';
+import MyCard from '../card/MyCard';
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
+    const [cardModalVisible, setCardModalVisible] = useState(false)
+
+    const onPay = async () => {
+        setCardModalVisible(true)
+    }
 
     return (
         <View>
@@ -18,7 +24,12 @@ const OrderItem = ({ order }) => {
                         <Text style={styles.text} >{order.pickUpTime.date}</Text>
                         <Text style={styles.text} >{order.pickUpTime.start} - {order.pickUpTime.end}</Text>
                     </View>
-                    <MainButton style={{ width: 95 }} onPress={() => setOrderModalVisible(true)} >Check</MainButton>
+                    <MainButton
+                        style={{ width: 90 }}
+                        textStyle={{ fontSize: 14 }}
+                        onPress={() => setOrderModalVisible(true)}>
+                        Check
+                    </MainButton>
                 </View>
             </Card>
             <Modal
@@ -48,9 +59,24 @@ const OrderItem = ({ order }) => {
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
                         <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹{order.totalCost}</Text>
                         {order.status === 'ready' &&
-                            <MainButton style={{ marginTop: 5 }}>Pay</MainButton>}
+                            <MainButton style={{ marginTop: 5 }} onPress={onPay} >Pay</MainButton>}
                     </View>
                 </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                visible={cardModalVisible}
+                onRequestClose={() => {
+                    setCardModalVisible(false)
+                }}
+            >
+                <View style={styles.header2}>
+                    <TouchableOpacity onPress={() => setCardModalVisible(false)} style={styles.modalHeader} >
+                        <Image source={require('../../../assets/dropdown.png')} style={styles.tinyLogo} />
+                    </TouchableOpacity>
+                    <TitleText>MY CARDS</TitleText>
+                </View>
+                <MyCard setTab={setTab} orderDetails={order} setPayModalVisible={setCardModalVisible} orderType='goods' />
             </Modal>
         </View>
     )

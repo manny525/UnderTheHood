@@ -7,7 +7,6 @@ const EnterVerificationCode = (props) => {
     const [vCode, setVCode] = useState('')
     const validateCode = () => {
         if (vCode === props.vCode) {
-            console.log(true)
             props.onVerify(3, props.email)
         }
         else {

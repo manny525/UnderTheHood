@@ -7,7 +7,6 @@ import OrdersScreen from '../screens/OrdersScreen';
 import colors from '../constants/colors';
 import CartsScreen from '../screens/CartsScreen';
 import RequestsScreen from '../screens/RequestsScreen';
-import CardsScreen from '../screens/CardsScreen';
 
 const Tab = createBottomTabNavigator()
 
@@ -40,16 +39,12 @@ const MerchantNavigator = () => {
                     activeTintColor: colors.primary,
                     inactiveTintColor: colors.opaque,
                     activeBackgroundColor: colors.opaque,
-                    inactiveBackgroundColor: colors.primary 
+                    inactiveBackgroundColor: colors.primary,
                 }}
             >
                 <Tab.Screen
                     name="Home"
                     component={HomeScreen}
-                />
-                <Tab.Screen
-                    name="Cards"
-                    component={CardsScreen}
                 />
                 <Tab.Screen
                     name="Carts"

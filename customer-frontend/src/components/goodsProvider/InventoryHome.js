@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, TextInput, Image, Modal } from 'react-native';
-import colors from '../../constants/colors';
+import React from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
 import InventoryList from './InventoryList';
-import { useSelector, useDispatch } from 'react-redux';
 
 const InventoryHome = ({ inventory }) => {
-    const dispatch = useDispatch()
     return (
         <View style={styles.screen} >
             <FlatList

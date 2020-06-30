@@ -51,7 +51,7 @@ const AuthScreen = (props) => {
                         setExistingUser({
                             token: userData.token,
                             user: userData.user,
-                            requests: userData.requests
+                            requests: userData.services
                         })
                     }
                 }
@@ -74,7 +74,6 @@ const AuthScreen = (props) => {
                     await dispatch(setInventory(existingUser.inventory))
                 }
                 if (existingUser.orders) {
-                    console.log(existingUser.orders)
                     await dispatch(setOrders(existingUser.orders))
                 }
                 props.setLogin(true, existingUser)
@@ -91,11 +90,9 @@ const AuthScreen = (props) => {
                     await dispatch(setInventory(existingUser.inventory))
                 }
                 if (existingUser.orders) {
-                    console.log(existingUser.orders)
                     await dispatch(setOrders(existingUser.orders))
                 }
                 if (existingUser.requests) {
-                    console.log(existingUser.requests)
                     await dispatch(setRequests(existingUser.requests))
                 }
                 props.setLogin(true, existingUser)

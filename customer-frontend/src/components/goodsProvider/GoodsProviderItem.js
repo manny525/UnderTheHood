@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Image, Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
-import inputStyle from '../../styles/input';
 import MainButton from '../MainButton';
 import InventoryHome from './InventoryHome';
 import { addCart } from '../../store/actions/cart'
@@ -12,7 +11,7 @@ import addCartToDB from '../../apiCalls/addCart';
 import getInventory from '../../apiCalls/getInventory';
 
 const GoodsProviderItem = ({ item }) => {
-    console.log(item)
+    // console.log(item)
     const [merchantModalVisible, setMerchantModalVisible] = useState(false)
     const userData = useSelector(state => state.user.user)
 
@@ -30,8 +29,12 @@ const GoodsProviderItem = ({ item }) => {
     useEffect(() => {
         getMerchantInventory()
     }, [])
-    
-    console.log(inventory)
+
+    useEffect(() => {
+        if (!merchantModalVisible) {
+            dispatch(resetItems())
+        }
+    }, [merchantModalVisible])
 
     const addCustomerCart = async () => {
         const body = await JSON.stringify({
@@ -42,8 +45,6 @@ const GoodsProviderItem = ({ item }) => {
             items
         })
         const newCart = await addCartToDB(body, token)
-        console.log('new cart')
-        console.log(newCart)
         dispatch(addCart(newCart))
         dispatch(resetItems())
         setMerchantModalVisible(false)
@@ -53,14 +54,13 @@ const GoodsProviderItem = ({ item }) => {
         <View>
             <TouchableOpacity style={styles.itemContainer} onPress={() => setMerchantModalVisible(true)}>
                 <Text style={styles.itemName} >{item.shopName}</Text>
-                <Text style={{ marginTop: 3 }} >{item.distance}</Text>
+                <Text style={styles.itemName} >{Math.ceil(item.distance)} km</Text>
             </TouchableOpacity>
             <Modal
                 animationType="slide"
                 visible={merchantModalVisible}
                 onRequestClose={() => {
                     setMerchantModalVisible(false)
-                    dispatch(resetItems())
                 }}
             >
                 <View style={styles.header2}>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontFamily: 'open-sans',
-        fontSize: 20
+        fontSize: 14
     },
     header2: {
         width: Dimensions.get('window').width,

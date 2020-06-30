@@ -8,12 +8,14 @@ const { sendVerificationCode } = require('../emails/account')
 const Inventory = require('../models/inventory')
 const Order = require('../models/order')
 const Service = require('../models/service')
-const {createAlias} = require('./../routers/visa')
+const { createAlias } = require('./../routers/visa')
 
 router.post('/users/verifyEmail', async (req, res) => {
+    console.log(req.body.email)
     try {
         const vCode = await sendVerificationCode(req.body.email)
-        res.status(201).send({ vCode })
+        console.log(vCode)
+        res.send(vCode.toString())
     } catch (e) {
         res.status(400).send(e)
     }
@@ -21,9 +23,11 @@ router.post('/users/verifyEmail', async (req, res) => {
 
 router.post('/users/newUser',createAlias,async (req, res) => {
     const user = new User(req.body)
+    console.log(user)
     try {
-        await user.save()
         const token = await user.generateAuthToken()
+        console.log(token)
+        await user.save()
         if (user.typeOfMerchant === 'goods') {
             const inventory = new Inventory({
                 owner: user._id
@@ -51,11 +55,11 @@ router.post('/users/findUser', async (req, res) => {
                 const orders = await Order.find({ merchantId: user._id })
                 console.log(inventory)
                 console.log(orders)
-                return res.send({ user, token: req.body.token, inventory, orders, existingUser: true})
+                return res.send({ user, token: token, inventory, orders, existingUser: true })
             } else if (user.typeOfMerchant === 'service') {
                 const requests = await Service.findOne({ merchantId: user._id })
                 console.log(requests)
-                return res.send({ user, token: req.body.token, requests, existingUser: true})
+                return res.send({ user, token: token, requests, existingUser: true })
             }
             return res.send({ user, token, existingUser: true })
         }
@@ -72,11 +76,11 @@ router.post('/users/getUserFromToken', async (req, res) => {
             if (user.typeOfMerchant === 'goods') {
                 const inventory = await Inventory.findOne({ owner: user._id })
                 const orders = await Order.find({ merchantId: user._id })
-                return res.send({ user, token: req.body.token, inventory, orders})
+                return res.send({ user, token: req.body.token, inventory, orders })
             } else if (user.typeOfMerchant === 'service') {
                 const requests = await Service.findOne({ merchantId: user._id })
                 console.log(requests)
-                return res.send({ user, token: req.body.token, requests, existingUser: true})
+                return res.send({ user, token: req.body.token, requests, existingUser: true })
             }
             return res.send({ user, token: req.body.token })
         }

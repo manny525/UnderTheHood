@@ -12,7 +12,7 @@ const LoyaltyItems = () => {
                 data={points}
                 renderItem={({ item }) => {
                     return (
-                        <LoyaltyItem li={item} />
+                        <LoyaltyItem loyalty={item} />
                     )
                 }}
                 keyExtractor={item => item._id}

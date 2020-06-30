@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
 import colors from '../../constants/colors';
+import createAlias from '../../apiCalls/createAlias';
 
 const GeneralSignUp = (props) => {
     const [merchantName, setMerchantName] = useState('')
     const [merchantType, setMerchantType] = useState('')
+    const [merchantPAN, setMerchantPAN] = useState('')
     const [referral, setReferral] = useState('')
-    const [imgSrc, setImgSrc] = useState(null)
     const [error, setError] = useState('')
 
     const onNext = () => {
-        if (merchantName && merchantType) {
+        console.log(merchantPAN)
+        if (merchantName && merchantType && merchantPAN) {
             props.onNext({
                 merchantName,
-                merchantType
+                merchantType,
+                merchantPAN
             })
         }
         else {
@@ -23,43 +26,25 @@ const GeneralSignUp = (props) => {
         }
     }
 
-    // const verifyAadhar = async (text) => {
-    //     if (text.length === 0) {
-    //         setImgSrc(null)
-    //         setAadhar('')
-    //     }
-    //     else if (text.length != 12) {
-    //         setImgSrc(require('../../../assets/redcross.png'))
-    //         setAadhar('')
-    //     }
-    //     else if (text.length === 12) {
-    //         //render loading symbol
-    //         //use aadhar validation
-    //         setAadhar(text)
-    //         setImgSrc(require('../../../assets/greentick.png'))
-    //     }
-    // }
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
             <View style={styles.formContainer}>
                 {!!error && <Text>{error}</Text>}
+                <Text>Card Details to accept payments</Text>
                 <TextInput
                     style={inputStyle.input}
-                    placeholder='Merchant Name'
-                    onChangeText={(text) => { setMerchantName(text) }}
+                    placeholder='Name on Card'
+                    onChangeText={setMerchantName}
                     value={merchantName}
                 />
-                {/* <View style={styles.panContiner}>
-                    <TextInput
-                        style={inputStyle.input}
-                        placeholder='Aadhar Card Number'
-                        keyboardType='number-pad'
-                        onChangeText={verifyAadhar}
-                        maxLength={12}
-                    />
-                    <Image style={styles.tinyLogo} source={imgSrc} />
-                </View> */}
+                <TextInput
+                    style={inputStyle.input}
+                    placeholder='Card Number'
+                    onChangeText={setMerchantPAN}
+                    keyboardType='number-pad'
+                    value={merchantPAN}
+                    maxLength={16}
+                />
                 <Text>Merchant Type</Text>
                 <Picker
                     style={styles.onePicker} itemStyle={styles.onePickerItem}

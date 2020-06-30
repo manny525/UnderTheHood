@@ -25,9 +25,9 @@ const OrderHome = () => {
                 </TouchableOpacity>
             </View>
             <View style={{ alignItems: 'center' }} >
-                {tab === 1 && <PendingOrders />}
-                {tab === 2 && <ReadyOrders />}
-                {tab === 3 && <CompletedOrders />}
+                {tab === 1 && <PendingOrders setTab={setTab} />}
+                {tab === 2 && <ReadyOrders setTab={setTab} />}
+                {tab === 3 && <CompletedOrders setTab={setTab} />}
             </View>
         </View>
     )

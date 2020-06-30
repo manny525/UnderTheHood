@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions, TextInput } from 'react-native';
-import Card from '../Card'
-import MainButton from '../MainButton';
-import colors from '../../constants/colors';
-import inputStyles from '../../styles/input';
-import TitleText from '../TitleText';
+import Card from '../../../../customer-frontend/src/components/Card'
+import MainButton from '../../../../customer-frontend/src/components/MainButton';
+import colors from '../../../../customer-frontend/src/constants/colors';
+import inputStyles from '../../../../customer-frontend/src/styles/input';
+import TitleText from '../../../../customer-frontend/src/components/TitleText';
 import LoyaltyItemList from './LoyaltyItemList';
 import { useSelector, useDispatch } from 'react-redux';
 

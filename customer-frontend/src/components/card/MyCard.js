@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, FlatList, Modal, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, FlatList, Modal, Image, TextInput, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Header from '../Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,25 +9,40 @@ import TitleText from '../TitleText';
 import colors from '../../constants/colors';
 import inputStyles from '../../styles/input'
 import MainButton from '../MainButton';
+import Pay from '../payment/Pay'
 
-export default function MyCard() {
+export default function MyCard({ setTab, orderDetails, setPayModalVisible, orderType }) {
     const [cardModalVisible, setCardModalVisible] = useState(false)
+    const [paymentModalVisible, setPaymentModalVisible] = useState(false)
     const cards = useSelector(state => state.cards.cardList);
-    const dispatch = useDispatch();
-
-    console.log(cards);
+    const dispatch = useDispatch()
+    const [vCode, setVCode] = useState('')
+    const [expiry, setExpiry] = useState('')
+    const [cardNumber, setCardNumber] = useState('')
 
     const addNewCard = () => {
         setCardModalVisible(true)
     }
 
+    const onClose = () => {
+        setPaymentModalVisible(false)
+        setPayModalVisible(false)
+    }
+
     const myCards = cards.map(item => {
+        const onUseCard = async () => {
+            setCardNumber(item.number)
+            setExpiry(item.date)
+            setPaymentModalVisible(true)
+        }
+
         return (
             <View style={styles.cardsLayout} key={item.number}>
                 <View>
                     <Text>{item.number}</Text>
                     <Text>{item.name}</Text>
                     <Text>Valid till: {item.date}</Text>
+                    <MainButton onPress={onUseCard} >Use</MainButton>
                 </View>
                 <View>
                     <TouchableOpacity onPress={() => dispatch(deleteCustomerCard(item.number))}>
@@ -36,21 +51,19 @@ export default function MyCard() {
                         </Text>
                     </TouchableOpacity>
                 </View>
-
             </View>
         )
     })
 
     return (
         <View style={styles.container}>
-            <Header title='MY CARDS' />
             <ScrollView>
                 <View style={styles.body}>
                     <View style={styles.cards}>
                         {myCards}
                     </View>
                     <View style={styles.buttonView}>
-                    <MainButton onPress={addNewCard} >Add Card</MainButton>
+                        <MainButton onPress={addNewCard} >Add Card</MainButton>
                     </View>
                 </View>
             </ScrollView>
@@ -68,6 +81,28 @@ export default function MyCard() {
                     <TitleText>Add Card</TitleText>
                 </View>
                 <AddNewCard setCardModalVisible={setCardModalVisible} />
+            </Modal>
+            <Modal
+                animationType="slide"
+                visible={paymentModalVisible}
+                onRequestClose={() => {
+                    setPaymentModalVisible(false)
+                }}
+            >
+                <View style={styles.header2}>
+                    <TitleText>PAY</TitleText>
+                </View>
+                <Pay
+                    setTab={setTab}
+                    onClose={onClose}
+                    orderId={orderDetails._id}
+                    amount={orderDetails.totalCost}
+                    merchantName={orderDetails.merchantName || orderDetails.shopName}
+                    merchantId={orderDetails.merchantId}
+                    cardNumber={cardNumber}
+                    expiry={expiry}
+                    orderType={orderType}
+                />
             </Modal>
         </View>
     )

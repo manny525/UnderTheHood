@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, Dimensions, TextInput } from 'react-native';
-import colors from '../../constants/colors';
-import inputStyles from '../../styles/input';
+import colors from '../../../../customer-frontend/src/constants/colors';
+import inputStyles from '../../../../customer-frontend/src/styles/input';
 
 const LoyaltyItemList = ({ item }) => {
 

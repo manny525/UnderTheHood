@@ -1,9 +1,9 @@
 import { LOCAL_HOST } from 'react-native-dotenv'
 
-const updateServiceStatus = async (body, token) => {
+const getPaid = async (body, token) => {
     try {
-        const res = await fetch(`http://${LOCAL_HOST}/services/status`, {
-            method: "PATCH",
+        const res = await fetch(`http://${LOCAL_HOST}/push`, {
+            method: "POST",
             body,
             headers: {
                 'Content-Type': 'application/json',
@@ -16,4 +16,4 @@ const updateServiceStatus = async (body, token) => {
     }
 }
 
-export default updateServiceStatus
+export default getPaid

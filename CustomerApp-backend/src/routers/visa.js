@@ -18,56 +18,57 @@ const inquiry = require('./../../funds_transfer_attributes_inquiry_api/test/fund
 
 const randomize = require('randomatic')
 
-const createAlias = async(req,res,next)=>{
-    try{
+const createAlias = async (req, res, next) => {
+    try {
         const username = req.body.merchantName.split(" ")
         var data = undefined
-        inquiry({pan:req.body.pan},function(data,e){
-            if(e){
-                res.status(500).send({error:e})
+        inquiry({ pan: req.body.pan }, function (data, e) {
+            if (e) {
+                res.status(500).send({ error: e })
             }
             visa_alias_directory_api.CreateAlias(getParameters())
-            .then(function (result) {
-                next()
-            })
-            .catch(function (error) {
-                res.status(error.response.statusCode).send(error.response.body)
-            });
+                .then(function (result) {
+                    console.log(result.body)
+                    next()
+                })
+                .catch(function (error) {
+                    res.status(error.response.statusCode).send(error.response.body)
+                });
             function getParameters() {
-                const random= randomize('a0',60)
+                const random = randomize('a0', 60)
                 var parameters = {
                     "x-client-transaction-id": "{enter appropriate value}",
                     "Accept": "application/json",
                     "Content-Type": "application/json"
                 };
                 parameters.payload = {
-                    "recipientFirstName":username[0], 
+                    "recipientFirstName": username[0],
                     "consentDateTime": "2018-03-01 01:02:03",
                     "recipientPrimaryAccountNumber": req.body.pan,
-                    "alias":req.body.email, 
-                    "cardType":data.body.visaNetworkInfo[0].cardTypeCode, 
-                    "recipientLastName":username[1], 
+                    "alias": req.body.email,
+                    "cardType": data.body.visaNetworkInfo[0].cardTypeCode,
+                    "recipientLastName": username[1],
                     "country": "IND",
-                    "issuerName":data.body.visaNetworkInfo[0].issuerName, 
-                    "guid":random,
+                    "issuerName": data.body.visaNetworkInfo[0].issuerName,
+                    "guid": random,
                     "aliasType": "02"
                 };
                 return parameters;
             }
         })
-    }catch(e){
-        res.status(500).send({error:e})
+    } catch (e) {
+        res.status(500).send({ error: e })
     }
 }
 
 
-const getAlias = function(req,cb){
+const getAlias = function (req, cb) {
     visa_alias_directory_api.GetAlias(getParameters())
         .then(function (result) {
-            cb(result.response.body,undefined)
+            cb(result.response.body, undefined)
         })
         .catch(function (error) {
-            cb(undefined,error.response)
+            cb(undefined, error.response)
         });
 
     function getParameters() {
@@ -84,70 +85,70 @@ const getAlias = function(req,cb){
 
 }
 
-const pullFunds = function(req,cb){
+const pullFunds = function (req, cb) {
     funds_transfer_api.pullfunds(getParameters())
         .then(function (result) {
-            cb(result.response,undefined)
+            cb(result.response, undefined)
             // res.status(result.response.statusCode).send(result.response)
         })
         .catch(function (error) {
-            cb(undefined,error.response)
+            cb(undefined, error.response)
             // res.status(error.response.statusCode).send(error.response)
         });
 
-        function getParameters() {
-            var parameters = {
-                "x-client-transaction-id": "gv123456tghyfrasdj123",
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            };
-            parameters.payload = {
-                "businessApplicationId": "AA",
-                "cpsAuthorizationCharacteristicsIndicator": "Y",
-                "senderCardExpiryDate":req.senderCardExpiryDate,
-                "amount":req.amount, 
-                // "124.02",
-                "acquirerCountryCode": "840",
-                "retrievalReferenceNumber": "330000550000",
-                "cardAcceptor": {
-                    "name": "Acceptor 1",
-                    "terminalId": "TID-9999",
-                    "idCode": "CA-IDCode-77765",
-                    "address": {
-                        "country": "USA",
-                        "state": "CA",
-                        "zipCode": "94404"
-                    },
+    function getParameters() {
+        var parameters = {
+            "x-client-transaction-id": "gv123456tghyfrasdj123",
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        };
+        parameters.payload = {
+            "businessApplicationId": "AA",
+            "cpsAuthorizationCharacteristicsIndicator": "Y",
+            "senderCardExpiryDate": req.senderCardExpiryDate,
+            "amount": req.amount,
+            // "124.02",
+            "acquirerCountryCode": "840",
+            "retrievalReferenceNumber": "330000550000",
+            "cardAcceptor": {
+                "name": "Acceptor 1",
+                "terminalId": "TID-9999",
+                "idCode": "CA-IDCode-77765",
+                "address": {
+                    "country": "USA",
+                    "state": "CA",
+                    "zipCode": "94404"
                 },
-                "acquiringBin": "408999",
-                "systemsTraceAuditNumber": "451001",
-                "nationalReimbursementFee": "11.22",
-                "senderCurrencyCode": "USD",
-                "cavv": "0700100038238906000013405823891061668252",
-                "foreignExchangeFeeTransaction": "11.99",
-                "addressVerificationData": {
-                    "postalCode": "12345",
-                    "street": "XYZ St"
-                },
-                "senderPrimaryAccountNumber":req.senderPrimaryAccountNumber,
-                //  "4895142232120006",
-                "surcharge": "11.99"
-            };
-            parameters.payload.localTransactionDateTime = Date.now();
-        
-            return parameters;
-        }
+            },
+            "acquiringBin": "408999",
+            "systemsTraceAuditNumber": "451001",
+            "nationalReimbursementFee": "11.22",
+            "senderCurrencyCode": "USD",
+            "cavv": "0700100038238906000013405823891061668252",
+            "foreignExchangeFeeTransaction": "11.99",
+            "addressVerificationData": {
+                "postalCode": "12345",
+                "street": "XYZ St"
+            },
+            "senderPrimaryAccountNumber": req.senderPrimaryAccountNumber,
+            //  "4895142232120006",
+            "surcharge": "11.99"
+        };
+        parameters.payload.localTransactionDateTime = Date.now();
+
+        return parameters;
+    }
 
 }
 
-const pushFunds = function(req,cb){
+const pushFunds = function (req, cb) {
     funds_transfer_api.pushfunds(getParameters())
         .then(function (result) {
-            cb(result.response,undefined)
+            cb(result.response, undefined)
             // res.status(result.response.statusCode).send(result.response)
         })
         .catch(function (error) {
-            cb(undefined,error.response)
+            cb(undefined, error.response)
             // res.status(error.response.statusCode).send(error.response)
         });
 
@@ -162,18 +163,18 @@ const pushFunds = function(req,cb){
             "retrievalReferenceNumber": "330000550000",
             "acquiringBin": "408999",
             "acquirerCountryCode": "840",
-            "senderAccountNumber":req.senderAccountNumber,
+            "senderAccountNumber": req.senderAccountNumber,
             //  "4895142232120006",
             "senderCountryCode": "124",
             "transactionCurrencyCode": "USD",
-            "senderName":req.senderName,
+            "senderName": req.senderName,
             //  "Mohammed Qasim",
             "senderAddress": "901 Metro Center Blvd",
             "senderCity": "Foster City",
             "senderStateCode": "CA",
             "recipientPrimaryAccountNumber": req.recipientPrimaryAccountNumber,
             // "4761360055652118",
-            "amount":req.amount, 
+            "amount": req.amount,
             // "1200",
             "merchantCategoryCode": "6012",
             "businessApplicationId": "AA",
@@ -189,7 +190,7 @@ const pushFunds = function(req,cb){
                     "zipCode": "94404"
                 },
             },
-            "recipientName":req.recipientName,
+            "recipientName": req.recipientName,
             //  "rohan",
             "senderReference": "",
             "pointOfServiceData": {
@@ -204,7 +205,7 @@ const pushFunds = function(req,cb){
     }
 }
 
-const Resolve = function(req,cb){
+const Resolve = function (req, cb) {
 
 }
 
@@ -218,4 +219,3 @@ module.exports = {
 // 2e126c28f09c76ed17944660f8bf593c1663909ac0291e4249d99372a71a0143
 
 
- 
