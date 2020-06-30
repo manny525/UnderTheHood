@@ -30,10 +30,11 @@ router.post('/users/newUser',createAlias,async (req, res) => {
         await user.save()
         if (user.typeOfMerchant === 'goods') {
             const inventory = new Inventory({
+                categories:[{categoryName:user._id}],
                 owner: user._id
             })
             await inventory.save()
-            return res.status(201).send({ user, token, inventory })
+            return res.status(201).send({ user, token, inventory:[] })
         }
         else
         {
