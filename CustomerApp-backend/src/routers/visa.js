@@ -236,8 +236,9 @@ const pullFunds = function(req,cb){
             parameters.payload = {
                 "businessApplicationId": "AA",
                 "cpsAuthorizationCharacteristicsIndicator": "Y",
-                "senderCardExpiryDate": "2015-10",
-                "amount": "124.02",
+                "senderCardExpiryDate":req.senderCardExpiryDate,
+                "amount":req.amount, 
+                // "124.02",
                 "acquirerCountryCode": "840",
                 "retrievalReferenceNumber": "330000550000",
                 "cardAcceptor": {
@@ -260,7 +261,8 @@ const pullFunds = function(req,cb){
                     "postalCode": "12345",
                     "street": "XYZ St"
                 },
-                "senderPrimaryAccountNumber": "4895142232120006",
+                "senderPrimaryAccountNumber":req.senderPrimaryAccountNumber,
+                //  "4895142232120006",
                 "surcharge": "11.99"
             };
             parameters.payload.localTransactionDateTime = Date.now();
