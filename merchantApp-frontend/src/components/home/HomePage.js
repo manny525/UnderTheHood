@@ -64,6 +64,7 @@ const HomePage = ({ navigation }) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                <MainButton onPress={onLogout} >Logout</MainButton>
             </View>
         </View>
     )

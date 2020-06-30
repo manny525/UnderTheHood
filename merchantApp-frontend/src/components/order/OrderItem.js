@@ -31,6 +31,7 @@ const OrderItem = ({ order, setTab }) => {
             _id: order._id,
             status
         })
+        console.log(token)
         const updatedOrder = await updateOrderStatus (body, token)
         console.log(updatedOrder)
         dispatch(updateOrders(updatedOrder))

@@ -3,16 +3,19 @@ import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image, Keyboard,
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
 import colors from '../../constants/colors';
+import createAlias from '../../apiCalls/createAlias';
 
 const GeneralSignUp = (props) => {
     const [merchantName, setMerchantName] = useState('')
     const [merchantType, setMerchantType] = useState('')
+    const [merchantPAN, setMerchantPAN] = useState('')
     const [referral, setReferral] = useState('')
     const [imgSrc, setImgSrc] = useState(null)
     const [error, setError] = useState('')
+    const [cardValidated, setCardValidated] = useState(false)
 
     const onNext = () => {
-        if (merchantName && merchantType) {
+        if (merchantName && merchantType && merchantPAN && cardValidated) {
             props.onNext({
                 merchantName,
                 merchantType
@@ -23,22 +26,23 @@ const GeneralSignUp = (props) => {
         }
     }
 
-    // const verifyAadhar = async (text) => {
-    //     if (text.length === 0) {
-    //         setImgSrc(null)
-    //         setAadhar('')
-    //     }
-    //     else if (text.length != 12) {
-    //         setImgSrc(require('../../../assets/redcross.png'))
-    //         setAadhar('')
-    //     }
-    //     else if (text.length === 12) {
-    //         //render loading symbol
-    //         //use aadhar validation
-    //         setAadhar(text)
-    //         setImgSrc(require('../../../assets/greentick.png'))
-    //     }
-    // }
+    const verifyPAN = async () => {
+        
+        if (text.length != 16) {
+            setError('*Invalid Card Data')
+        }
+        else if (text.length === 16) {
+            setError('')
+            const body = await JSON.stringify({
+                merchantName,
+                recipientPrimaryAccountNumber: merchantPAN,
+                cardType: 'Visa Classic',
+                issuerName: 'Test Bank 1',
+                email
+            })
+            await createAlias(body)
+        }
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
@@ -46,20 +50,19 @@ const GeneralSignUp = (props) => {
                 {!!error && <Text>{error}</Text>}
                 <TextInput
                     style={inputStyle.input}
-                    placeholder='Merchant Name'
-                    onChangeText={(text) => { setMerchantName(text) }}
+                    placeholder='Name on Card'
+                    onChangeText={setMerchantName}
                     value={merchantName}
+                    editable={!cardValidated}
                 />
-                {/* <View style={styles.panContiner}>
-                    <TextInput
-                        style={inputStyle.input}
-                        placeholder='Aadhar Card Number'
-                        keyboardType='number-pad'
-                        onChangeText={verifyAadhar}
-                        maxLength={12}
-                    />
-                    <Image style={styles.tinyLogo} source={imgSrc} />
-                </View> */}
+                <Text>To Accept Payments</Text>
+                <TextInput
+                    style={inputStyle.input}
+                    placeholder='Card Number'
+                    onChangeText={setMerchantPAN}
+                    editable={!cardValidated}
+                />
+                <MainButton style={{ marginTop: 3, backgroundColor: colors.secondary }} onPress={verifyPAN} >Validate</MainButton>
                 <Text>Merchant Type</Text>
                 <Picker
                     style={styles.onePicker} itemStyle={styles.onePickerItem}

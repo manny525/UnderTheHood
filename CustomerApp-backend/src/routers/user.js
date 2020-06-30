@@ -49,11 +49,11 @@ router.post('/users/findUser', async (req, res) => {
                 const orders = await Order.find({ merchantId: user._id })
                 console.log(inventory)
                 console.log(orders)
-                return res.send({ user, token: req.body.token, inventory, orders, existingUser: true})
+                return res.send({ user, token: token, inventory, orders, existingUser: true})
             } else if (user.typeOfMerchant === 'service') {
                 const requests = await Service.findOne({ merchantId: user._id })
                 console.log(requests)
-                return res.send({ user, token: req.body.token, requests, existingUser: true})
+                return res.send({ user, token: token, requests, existingUser: true})
             }
             return res.send({ user, token, existingUser: true })
         }

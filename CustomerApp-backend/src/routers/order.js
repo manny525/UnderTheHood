@@ -49,6 +49,7 @@ router.get('/orders/customer', auth, async (req, res) => {
 router.patch('/orders/status', auth_merchant, async (req, res) => {
     try {
         const order = await Order.findOne({_id: req.body._id})
+        console.log(order)
         if (!order) {
             res.status(404).send({message: 'Not found'})
         }

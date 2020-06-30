@@ -11,6 +11,10 @@ const paymentSchema = new mongoose.Schema({
         required:true,
         ref:'User',
     },
+    orderId: {
+        type:mongoose.Schema.Types.ObjectId,
+        required:true
+    },
     otp:{
         type:String,
         trim:true,
@@ -30,7 +34,7 @@ const paymentSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        default:'Pending',
+        default:'pending',
         trim:true,
     }
 })

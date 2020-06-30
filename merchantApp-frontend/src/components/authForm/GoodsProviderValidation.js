@@ -11,7 +11,6 @@ import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const GoodsProviderValidation = (props) => {
-    const [merchantPAN, setMerchantPAN] = useState('')
     const [location, setLocation] = useState(null)
     const [pinCode, setPinCode] = useState('')
     const [imgSrc, setImgSrc] = useState(null)
@@ -44,7 +43,7 @@ const GoodsProviderValidation = (props) => {
     }
 
     const onSubmit = async () => {
-        if (!location || !merchantPAN || !goodsProviderType || !shopName) {
+        if (!location || !goodsProviderType || !shopName) {
             setError('*Please provide all the details to register')
         }
         else {
@@ -56,7 +55,7 @@ const GoodsProviderValidation = (props) => {
                 aadhar: props.data.aadhar,
                 shopName,
                 providerOf: goodsProviderType,
-                pan: merchantPAN,
+                pan: props.merchantPAN,
                 location: {
                     lat: location.coords.latitude,
                     lon: location.coords.longitude,
@@ -76,23 +75,6 @@ const GoodsProviderValidation = (props) => {
                 setExistingUser({ user: userData.user, token: userData.token })
             })
             .catch(e => console.log(e))
-        }
-    }
-
-    const veriftPANLength = async (text) => {
-        if (text.length === 0) {
-            setImgSrc(null)
-            setMerchantPAN('')
-        }
-        else if (text.length != 16) {
-            setImgSrc(require('../../../assets/redcross.png'))
-            setMerchantPAN('')
-        }
-        else if (text.length === 16) {
-            //render loading symbol
-            //use account validation and after validation render green tick
-            setMerchantPAN(text)
-            setImgSrc(require('../../../assets/greentick.png'))
         }
     }
     
@@ -140,16 +122,6 @@ const GoodsProviderValidation = (props) => {
                         typeOfGoodsProviders.map(type => <Picker.Item key={type} label={type} value={type.toLowerCase()} />)
                     }
                 </Picker>
-                <View style={styles.panContiner}>
-                    <TextInput
-                        style={{ ...inputStyle.input, width: 200, marginTop: 1 }}
-                        placeholder="Merchant PAN"
-                        onChangeText={veriftPANLength}
-                        maxLength={16}
-                        keyboardType='number-pad'
-                    />
-                    <Image style={styles.tinyLogo} source={imgSrc} />
-                </View>
                 {location ?
                     <MapView
                         style={styles.mapStyle}
