@@ -4,17 +4,17 @@ const router = new express.Router()
 const auth_customer = require('./../middleware/auth_customer')
 //Search By PostalCode
 router.get('/search', auth_customer, async (req, res) => {
-    console.log(req.query)
+    // console.log(req.query)
     try {
         var merchants = await User.find({ "location.postalCode": req.query.postalCode, typeOfMerchant: req.query.typeOfMerchant })
         var p = new Array()
         var i
         for (i = 0; i < merchants.length; i++) {
-            const d = await distance({ lat: merchants[i].location.lat, lng: merchants[i].location.lon }, { lat: req.body.lat, lng: req.body.lon }) * 1.609344
-            console.log(d)
+            const d = await distance({ lat: merchants[i].location.lat, lng: merchants[i].location.lon }, { lat: req.query.lat, lng: req.query.lon }) * 1.609344
+            // console.log(d)
             p.push({ _id: merchants[i]._id, shopName: merchants[i].shopName, merchantName: merchants[i].merchantName,address: merchants[i].location, type: merchants[i].providerOf, distance: d })
         }
-        console.log(p)
+        // console.log(p)
         res.send(p)
     } catch (error) {
         res.status(400).send({ error })
