@@ -19,28 +19,23 @@ router.post('/users/verifyEmail', async (req, res) => {
     }
 })
 
-router.post('/users/newUser', async (req, res) => {
+router.post('/users/newUser',createAlias,async (req, res) => {
     const user = new User(req.body)
     try {
         await user.save()
         const token = await user.generateAuthToken()
         if (user.typeOfMerchant === 'goods') {
             const inventory = new Inventory({
-                categories: [],
                 owner: user._id
             })
             await inventory.save()
-            createAlias(req,res,function(){
-                return res.status(201).send({ user, token, inventory })
-            })
+            return res.status(201).send({ user, token, inventory })
         }
         else
         {
-            createAlias(req,res,function(){
-                return res.status(201).send({ user, token })
-            })
+            return res.status(201).send({ user, token })
         }
-    } catch (e) {
+    }catch (e) {
         res.status(400).send(e)
     }
 })
