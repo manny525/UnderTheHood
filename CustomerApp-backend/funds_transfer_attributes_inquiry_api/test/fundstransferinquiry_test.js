@@ -13,20 +13,20 @@
 ---------------------------------------------------------------------------------------------------------------------- */
 
 'use strict';
-var api = require('../src/visa_alias_directory_api').visa_alias_directory_api;
+var api = require('../src/funds_transfer_attributes_inquiry_api').funds_transfer_attributes_inquiry_api;
 var authCredentials = require('../credentials.json');
 
-var visa_alias_directory_api = new api(authCredentials);
+var funds_transfer_attributes_inquiry_api = new api(authCredentials);
 
-// path invoked is '/visaaliasdirectory/v1/resolve';
-const resolve = function(req,cb){
-    visa_alias_directory_api.Resolve(getParameters())
-    .then(function(result) {
-        cb(result.response,undefined)
-    })
-    .catch(function(error) {
-        cb(undefined,error.response)
-    });
+// path invoked is '/paai/fundstransferattinq/v3/cardattributes/fundstransferinquiry';
+const inquiry = function(req,cb){
+    funds_transfer_attributes_inquiry_api.fundstransferinquiry(getParameters())
+        .then(function(result) {
+            cb(result.response,undefined)
+        })
+        .catch(function(error) {
+            cb(undefined,error.response)
+        });
 
     function getParameters() {
         var parameters = {
@@ -35,11 +35,13 @@ const resolve = function(req,cb){
             "Content-Type": "application/json"
         };
         parameters.payload = {
-            "alias": req.email,
-            "businessApplicationId": "PP"
-        }
+            "primaryAccountNumber":req.pan,
+            //  "4957030420210512",
+            "systemsTraceAuditNumber": "451006",
+            "retrievalReferenceNumber": "330000550000"
+        };
+
         return parameters;
     }
 }
-
-module.exports = resolve
+module.exports = inquiry

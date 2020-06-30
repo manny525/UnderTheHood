@@ -45,7 +45,7 @@ function getParameters() {
         "Content-Type": "application/json"
     };
     parameters.payload = {
-        "alias": "254711333888",
+        "alias": "a@gmail.com",
         "guid": "574f4b6a4c2b70472f306f300099515a789092348832455975343637a4d3170"
     };
 
