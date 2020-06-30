@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Image, Dimensions, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
@@ -25,7 +25,6 @@ const ServiceProviderItem = ({ item }) => {
             description
         })
         const request = await newRequest(body, token)
-        console.log(request)
         dispatch(addRequest(request))
         setMerchantModalVisible(false)
     }

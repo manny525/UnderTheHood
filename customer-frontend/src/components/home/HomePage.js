@@ -4,22 +4,14 @@ import MainButton from '../MainButton';
 import { useSelector } from 'react-redux';
 import Header from '../Header';
 import GoodsProviderHome from '../goodsProvider/GoodsProviderHome'
-import ServiceProviderHome from '../serviceProvider/ServiceProviderHome'
-import AsyncStorage from '@react-native-community/async-storage';
+import ServiceProviderHome from '../serviceProvider/ServiceProviderHome';
 
-const HomePage = ({ navigation }) => {
-    const userData = useSelector(state => state.user.user)
-    
-    const logout = () => {
-        AsyncStorage.clear()
-    }
-
+const HomePage = () => {
     return (
         <View style={styles.container} >
             <Header title='MERCHANTS' />
             <GoodsProviderHome />
             <ServiceProviderHome />
-            <MainButton onPress={logout} >Logout</MainButton>
         </View>
     )
 }

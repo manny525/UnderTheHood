@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text, Dimensions, Picker, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TextInput, Text, Dimensions, Picker, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import inputStyle from '../../styles/input';
 import MainButton from '../MainButton'
 import colors from '../../constants/colors';
@@ -9,11 +9,12 @@ import { setUser } from '../../store/actions/user';
 import { setInventory } from '../../store/actions/inventory';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import getPincode from '../../apiCalls/getPincode';
+import newUser from '../../apiCalls/newUser';
 
 const GoodsProviderValidation = (props) => {
     const [location, setLocation] = useState(null)
     const [pinCode, setPinCode] = useState('')
-    const [imgSrc, setImgSrc] = useState(null)
     const [shopName, setShopName] = useState('')
     const [locationError, setLocationError] = useState('')
     const [error, setError] = useState('')
@@ -33,9 +34,8 @@ const GoodsProviderValidation = (props) => {
         const lat = location.coords.latitude
         const log = location.coords.longitude
         try {
-            const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=6ed4de0702acb6&lat=${lat}&lon=${log}&format=json`)
-            const data = await res.json()
-            setPinCode(data.address.postcode)
+            const res = await getPincode(lat, log)
+            setPinCode(res.address.postcode)
         } catch (error) {
 
         }
@@ -52,32 +52,25 @@ const GoodsProviderValidation = (props) => {
                 email: props.data.email,
                 merchantName: props.data.merchantName,
                 typeOfMerchant: props.data.merchantType,
-                aadhar: props.data.aadhar,
                 shopName,
                 providerOf: goodsProviderType,
-                pan: props.merchantPAN,
+                pan: props.data.merchantPAN,
                 location: {
                     lat: location.coords.latitude,
                     lon: location.coords.longitude,
                     postalCode: pinCode
                 }
             })
-            fetch('http://192.168.1.6:3000/users/newUser', {
-                method: "POST",
-                body,
-                headers: { 
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .then(userData =>  {
-                setUserInventory(userData.inventory) 
-                setExistingUser({ user: userData.user, token: userData.token })
-            })
-            .catch(e => console.log(e))
+            try {
+                const userData = await newUser(body)
+                await setUserInventory(userData.inventory)
+                await setExistingUser({ user: userData.user, token: userData.token })
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
-    
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -90,16 +83,16 @@ const GoodsProviderValidation = (props) => {
 
     useEffect(() => {
         async function setToken() {
-          try {
-            await AsyncStorage.setItem('token', existingUser.token);
-            await AsyncStorage.setItem('owner', existingUser.user._id);
-          } catch (error) {
-            console.log(error)
-          }
+            try {
+                await AsyncStorage.setItem('token', existingUser.token);
+                await AsyncStorage.setItem('owner', existingUser.user._id);
+            } catch (error) {
+                console.log(error)
+            }
         }
         if (existingUser)
-          setToken()
-      }, [existingUser])
+            setToken()
+    }, [existingUser])
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >

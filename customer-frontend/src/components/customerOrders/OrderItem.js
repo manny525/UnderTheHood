@@ -7,7 +7,7 @@ import TitleText from '../TitleText';
 import OrderItemList from './OrderItemList';
 import MyCard from '../card/MyCard';
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
     const [cardModalVisible, setCardModalVisible] = useState(false)
 
@@ -76,7 +76,7 @@ const OrderItem = ({ order }) => {
                     </TouchableOpacity>
                     <TitleText>MY CARDS</TitleText>
                 </View>
-                <MyCard orderDetails={order} setPayModalVisible={setCardModalVisible} />
+                <MyCard setTab={setTab} orderDetails={order} setPayModalVisible={setCardModalVisible} orderType='goods' />
             </Modal>
         </View>
     )

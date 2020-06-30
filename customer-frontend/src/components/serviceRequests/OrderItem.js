@@ -7,9 +7,10 @@ import inputStyle from '../../styles/input';
 import MyCard from '../card/MyCard';
 import Card from '../Card';
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
     const [cardModalVisible, setCardModalVisible] = useState(false)
+    const [totalCost, setTotalCost] = useState('')
 
     const onPay = async () => {
         setCardModalVisible(true)
@@ -61,9 +62,16 @@ const OrderItem = ({ order }) => {
                         selection={{ start: 0, end: 0 }}
                         value={order.description}
                     />
-                    {order.status === 'upcoming' &&
-                        
-                        <MainButton style={{ marginTop: 5 }} onPress={onPay} >Pay</MainButton>}
+                    {order.status === 'new' &&
+                        <View style={styles.itemModalContainer} >
+                            <TextInput
+                                style={{...inputStyle.input, width: 150}}
+                                placeholder='Amount'
+                                onChangeText={setTotalCost}
+                                keyboardType='number-pad'
+                            />
+                            <MainButton style={{ marginTop: 5 }} onPress={onPay} >Pay</MainButton>
+                        </View>}
                 </View>
             </Modal>
             <Modal
@@ -79,7 +87,7 @@ const OrderItem = ({ order }) => {
                     </TouchableOpacity>
                     <TitleText>MY CARDS</TitleText>
                 </View>
-                <MyCard orderDetails={{...order, totalCost}} setPayModalVisible={setCardModalVisible} />
+                <MyCard setTab={setTab} orderDetails={{ ...order, totalCost }} setPayModalVisible={setCardModalVisible} orderType='service' />
             </Modal>
         </View>
     )

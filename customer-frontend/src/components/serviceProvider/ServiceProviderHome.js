@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, TextInput, Image, Modal } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { useSelector } from 'react-redux';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
-import MainButton from '../MainButton';
-import inputStyle from '../../styles/input'
-import Header from '../Header';
 import ServiceProviderList from './ServiceProviderList';
 import typeSelector from '../selectors/typeSelector';
 

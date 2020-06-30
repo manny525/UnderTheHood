@@ -2,6 +2,7 @@ const Service = require('./../models/service')
 const auth = require('./../middleware/auth_customer')
 const express = require('express')
 const router = new express.Router()
+const auth_merchant = require('../middleware/auth')
 // const moment = require('moment')
 
 router.post('/services/new', auth ,async(req,res)=>{
@@ -32,28 +33,17 @@ router.get('/services/customer', auth, async(req,res)=>{
     }
 })
 
-//to be discussed and changes
-router.patch('/services/date/:id',auth,async(req,res)=>{
-    try{
-        var service = await Service.findOne({merchant:req.user._id,date:new Date(req.body.date)})
-        if(service){
-            return res.status(400).send({message:'Merchant is not available.Try a different time.'})
-        }
-        await Service.findByIdAndUpdate({_id:req.params.id},{date:req.body.date})
-        res.send()
-    }catch(error){
-        res.status(500).send({error})
-    }
-})
-
-router.patch('/service/status', auth, async (req, res) => {
+router.patch('/services/status', auth_merchant, async (req, res) => {
+    console.log(req.body)
     try {
-        const service = await Service.findOne({_id: req.body._id})
-        if (!order) {
+        const service = await Service.findById(req.body._id)
+        console.log(service)
+        if (!service) {
             res.status(404).send({message: 'Not found'})
         }
         service.status = req.body.status
         await service.save()
+        console.log(service)
         res.send(service)
     } catch(e) {
         res.status(400).send(e)

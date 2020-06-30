@@ -12,10 +12,9 @@ const GetVerificationCodeForm = (props) => {
         if (validator.isEmail(emailText)) {
             setErrorText('')
             Keyboard.dismiss()
-            const body = JSON.stringify( { email: emailText } )
-            // const vCode = await getVerificationCode(body)
-            // props.onVerify(2, emailText, vCode.toString())
-            props.onVerify(2, emailText, '123456')
+            const body = await JSON.stringify({ email: emailText })
+            const vCode = await getVerificationCode(body)
+            props.onVerify(2, emailText, vCode.toString())
         }
         else {
             setErrorText('*Enter valid email id')

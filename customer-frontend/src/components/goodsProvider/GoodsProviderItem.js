@@ -35,8 +35,6 @@ const GoodsProviderItem = ({ item }) => {
             dispatch(resetItems())
         }
     }, [merchantModalVisible])
-    
-    console.log(inventory)
 
     const addCustomerCart = async () => {
         const body = await JSON.stringify({

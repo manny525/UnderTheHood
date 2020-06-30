@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
-import colors from '../../constants/colors';
+import { View, StyleSheet, FlatList } from 'react-native';
 import ServiceProviderItem from './ServiceProviderItem';
 
 const ServiceProviderItems = ({ items }) => {

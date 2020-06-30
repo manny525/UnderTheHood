@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, ScrollView, StyleSheet, TextInput, Text, Dimensions, Picker, KeyboardAvoidingViewBase } from 'react-native';
-import inputStyle from '../../styles/input';
-import MainButton from '../MainButton'
-import colors from '../../constants/colors';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import CustomerSignUp from './CustomerSIgnUp';
 
 const SignUpForm = (props) => {

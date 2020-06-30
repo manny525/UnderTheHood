@@ -6,7 +6,6 @@ const cartItmesReducer = (state = {items: []}, action) => {
             }
         } 
         case 'RESET_ITEMS': {
-            console.log(action.type)
             return {
                 items: []
             }

@@ -11,7 +11,7 @@ import inputStyles from '../../styles/input'
 import MainButton from '../MainButton';
 import Pay from '../payment/Pay'
 
-export default function MyCard({ orderDetails, setPayModalVisible }) {
+export default function MyCard({ setTab, orderDetails, setPayModalVisible, orderType }) {
     const [cardModalVisible, setCardModalVisible] = useState(false)
     const [paymentModalVisible, setPaymentModalVisible] = useState(false)
     const cards = useSelector(state => state.cards.cardList);
@@ -29,10 +29,7 @@ export default function MyCard({ orderDetails, setPayModalVisible }) {
         setPayModalVisible(false)
     }
 
-    console.log(orderDetails)
-
     const myCards = cards.map(item => {
-        console.log(item)
         const onUseCard = async () => {
             setCardNumber(item.number)
             setExpiry(item.date)
@@ -96,12 +93,15 @@ export default function MyCard({ orderDetails, setPayModalVisible }) {
                     <TitleText>PAY</TitleText>
                 </View>
                 <Pay
+                    setTab={setTab}
                     onClose={onClose}
+                    orderId={orderDetails._id}
                     amount={orderDetails.totalCost}
                     merchantName={orderDetails.merchantName || orderDetails.shopName}
                     merchantId={orderDetails.merchantId}
                     cardNumber={cardNumber}
                     expiry={expiry}
+                    orderType={orderType}
                 />
             </Modal>
         </View>

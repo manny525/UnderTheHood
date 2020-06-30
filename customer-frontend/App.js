@@ -31,6 +31,7 @@ export default function App() {
   const [login, setLogin] = useState(false)
   const [userData, setUserData] = useState(null)
 
+
   async function loadToken() {
     try {
       // await AsyncStorage.clear()

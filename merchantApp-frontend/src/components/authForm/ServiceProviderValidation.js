@@ -8,6 +8,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { setUser } from '../../store/actions/user';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import getPincode from '../../apiCalls/getPincode';
 
 const ServiceProviderValidation = (props) => {
     const [location, setLocation] = useState(null)
@@ -18,7 +19,7 @@ const ServiceProviderValidation = (props) => {
     const [existingUser, setExistingUser] = useState(null)
     const [pinCode, setPinCode] = useState(null)
 
-    const [typeOfServiceProviders, setTypeofServiceProviders] = useState(['Barber', 'Electrician', 'Mechanic', 'Car Washer', 'Plumber', ])
+    const [typeOfServiceProviders, setTypeofServiceProviders] = useState(['Barber', 'Electrician', 'Mechanic', 'Car Washer', 'Plumber',])
 
     const onGetLocation = async () => {
         let { status } = await Location.requestPermissionsAsync();
@@ -30,9 +31,8 @@ const ServiceProviderValidation = (props) => {
         const lat = location.coords.latitude
         const log = location.coords.longitude
         try {
-            const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=6ed4de0702acb6&lat=${lat}&lon=${log}&format=json`)
-            const data = await res.json()
-            setPinCode(data.address.postcode)
+            const res = await getPincode(lat, log)
+            setPinCode(res.address.postcode)
         } catch (error) {
 
         }
@@ -50,30 +50,24 @@ const ServiceProviderValidation = (props) => {
                 merchantName: props.data.merchantName,
                 typeOfMerchant: props.data.merchantType,
                 providerOf: serviceProviderType,
-                pan: props.merchantPAN,
+                pan: props.data.merchantPAN,
                 location: {
                     lat: location.coords.latitude,
                     lon: location.coords.longitude,
                     postalCode: pinCode
                 }
             })
-            fetch('http://192.168.1.6:3000/users/newUser', {
-                method: "POST",
-                body,
-                headers: { 
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .then(user =>  {
-                setExistingUser(user) 
-            })
-            .catch(e => console.log(e))
+            try {
+                const userData = await newUser(body)
+                setExistingUser({ user: userData.user, token: userData.token })
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
 
     const dispatch = useDispatch()
-    
+
     useEffect(() => {
         if (existingUser) {
             dispatch(setUser(existingUser))
@@ -83,16 +77,16 @@ const ServiceProviderValidation = (props) => {
 
     useEffect(() => {
         async function setToken() {
-          try {
-            await AsyncStorage.setItem('token', existingUser.token);
-            await AsyncStorage.setItem('owner', existingUser.user._id);
-          } catch (error) {
-            console.log(error)
-          }
+            try {
+                await AsyncStorage.setItem('token', existingUser.token);
+                await AsyncStorage.setItem('owner', existingUser.user._id);
+            } catch (error) {
+                console.log(error)
+            }
         }
         if (existingUser)
-          setToken()
-      }, [existingUser])
+            setToken()
+    }, [existingUser])
 
     return (
         <View style={styles.formContainer}>
@@ -105,7 +99,7 @@ const ServiceProviderValidation = (props) => {
             >
                 <Picker.Item label="Select" value="" />
                 {
-                    typeOfServiceProviders.map(type => <Picker.Item key={type} label={type} value={type.toLowerCase()} /> )
+                    typeOfServiceProviders.map(type => <Picker.Item key={type} label={type} value={type.toLowerCase()} />)
                 }
             </Picker>
             {location ?

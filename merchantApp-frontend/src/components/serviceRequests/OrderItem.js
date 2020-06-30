@@ -8,13 +8,16 @@ import TitleText from '../TitleText';
 import inputStyle from '../../styles/input';
 import moment from 'moment'
 import { updateRequest } from '../../store/actions/serviceRequest';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import updateServiceStatus from '../../apiCalls/updateServiceStatus'
 
 const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
     const [timeVisible, setTimeVisible] = useState(false)
-    const [time, setTime] = useState(Date.now());
+    const [time, setTime] = useState();
+    const [vCode, setVCode] = useState();
+
+    const token = useSelector(state => state.user.user.token)
 
     const onChangeTime = (event, selectedTime) => {
         const currentTime = selectedTime || time;
@@ -29,9 +32,15 @@ const OrderItem = ({ order, setTab }) => {
         if (order.status === 'new') {
             status = 'upcoming'
         }
-        else if (order.status === 'upcoming') {
-            status = 'completed'
-            //receive payment if vCode right
+        else if (order.status === 'completed') {
+            status = 'paymentdone'
+            const body = await JSON.stringify({ otp: vCode })
+            const paymentInfo = await getPaid(body, token)
+            if (paymentInfo.error) {
+                return
+            } else if (paymentInfo.success) {
+                setReceived(true)
+            }
         }
         const body = JSON.stringify({
             _id: order._id,
@@ -43,7 +52,7 @@ const OrderItem = ({ order, setTab }) => {
         if (status === 'upcoming') {
             setTab(1)
         }
-        else if (status === 'completed') {
+        else if (status === 'paymentdone') {
             setTab(3)
         }
     }
@@ -94,10 +103,17 @@ const OrderItem = ({ order, setTab }) => {
                         selection={{ start: 0, end: 0 }}
                         value={order.description}
                     />
-                    {order.status !== 'completed' &&
-                        <MainButton style={{ marginTop: 5 }} onPress={orderStatusChange}>
-                            {order.status === 'new' ? 'Accept' : 'Complete'}
-                        </MainButton>}
+                    {order.status === 'completed' &&
+                        <TextInput
+                            style={inputStyle.input}
+                            placeholder="Verification Code"
+                            onChangeText={setVCode}
+                            keyboardType='number-pad'
+                            maxLength={6}
+                        />}
+                    <MainButton style={{ marginTop: 5 }} onPress={orderStatusChange}>
+                        {order.status === 'new' ? 'Accept' : 'Get Paid'}
+                    </MainButton>
                 </View>
             </Modal>
         </View>

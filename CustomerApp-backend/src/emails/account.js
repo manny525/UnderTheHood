@@ -31,12 +31,30 @@ const sendVerificationCode = async (email) => {
             text: `Your verification code is ${vCode}`
         })
     } catch (e) {
+        console.log(e)
         return e
     }
     return vCode
 }
 
+const sendPaymentOTP = async (email, otp, merchantName) => {
+    try {
+        await sgMail.send({
+            to: email,
+            from: 'mtolia9@gmail.com',
+            subject: 'Verificaton Code',
+            text: `Your OTP for payment to ${merchantName} is ${otp}. 
+            Give this code to the merchant to pickup your order or end your service request.`
+        })
+    } catch (e) {
+        console.log(e)
+        return e
+    }
+    return otp
+}
+
 module.exports={
     welcomemail,
-    sendVerificationCode
+    sendVerificationCode,
+    sendPaymentOTP
 }

@@ -9,10 +9,12 @@ import OrderItemList from './OrderItemList';
 import inputStyle from '../../styles/input';
 import { updateOrders } from '../../store/actions/orders';
 import updateOrderStatus from '../../apiCalls/updateOrderStatus';
+import getPaid from '../../apiCalls/getPaid';
 
 const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
     const [vCode, setVcode] = useState('')
+    const [received, setReceived] = useState(false)
 
     const token = useSelector(state => state.user.user.token)
 
@@ -23,9 +25,15 @@ const OrderItem = ({ order, setTab }) => {
         if (order.status === 'pending') {
             status = 'ready'
         }
-        else if (order.status === 'ready') {
-            status = 'completed'
-            //receive payment if vCode right
+        else if (order.status === 'completed') {
+            status = 'paymentdone'
+            const body = await JSON.stringify({ otp: vCode })
+            const paymentInfo = getPaid(body, token)
+            if (paymentInfo.error) {
+                return
+            } else if (paymentInfo.success) {
+                setReceived(true)
+            }
         }
         const body = JSON.stringify({
             _id: order._id,
@@ -39,14 +47,8 @@ const OrderItem = ({ order, setTab }) => {
         if (status === 'ready') {
             setTab(2)
         }
-        else if (status === 'completed') {
+        else if (status === 'paymentdone') {
             setTab(3)
-        }
-    }
-
-    const vCodeChange = (text) => {
-        if (text.length === '6') {
-            setVCode(text)
         }
     }
 
@@ -88,16 +90,15 @@ const OrderItem = ({ order, setTab }) => {
                     />
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
                         <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹400</Text>
-                        {order.status === 'ready' &&
+                        {order.status === 'completed' &&
                             <TextInput 
                                 style={inputStyle.input} 
                                 placeholder="Verification Code"
-                                onChangeText={vCodeChange}
-                                keyboardType='number-pad'     
+                                onChangeText={setVcode}     
                                 maxLength={6}
                             />}
-                        {order.status !== 'completed' && <MainButton onPress={orderStatusChange} style={{ marginTop: 5 }}>
-                            {order.status === 'pending' ? 'Ready' : 'Complete'}</MainButton>}
+                        {order.status !== 'ready' && <MainButton onPress={orderStatusChange} style={{ marginTop: 5 }}>
+                            {order.status === 'pending' ? 'Ready' : 'Get Paid'}</MainButton>}
                     </View>
                 </View>
             </Modal>
