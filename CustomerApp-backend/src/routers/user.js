@@ -30,7 +30,7 @@ router.post('/users/newUser',createAlias,async (req, res) => {
         await user.save()
         if (user.typeOfMerchant === 'goods') {
             const inventory = new Inventory({
-                categories:[{categoryName:user._id}],
+                categories:[],
                 owner: user._id
             })
             await inventory.save()
@@ -58,7 +58,7 @@ router.post('/users/findUser', async (req, res) => {
                 console.log(orders)
                 return res.send({ user, token: token, inventory, orders, existingUser: true })
             } else if (user.typeOfMerchant === 'service') {
-                const requests = await Service.findOne({ merchantId: user._id })
+                const requests = await Service.find({ merchantId: user._id })
                 console.log(requests)
                 return res.send({ user, token: token, requests, existingUser: true })
             }
@@ -79,7 +79,7 @@ router.post('/users/getUserFromToken', async (req, res) => {
                 const orders = await Order.find({ merchantId: user._id })
                 return res.send({ user, token: req.body.token, inventory, orders })
             } else if (user.typeOfMerchant === 'service') {
-                const requests = await Service.findOne({ merchantId: user._id })
+                const requests = await Service.find({ merchantId: user._id })
                 console.log(requests)
                 return res.send({ user, token: req.body.token, requests, existingUser: true })
             }

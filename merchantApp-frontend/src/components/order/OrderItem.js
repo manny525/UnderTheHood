@@ -48,7 +48,7 @@ const OrderItem = ({ order, setTab }) => {
             setTab(2)
         }
         else if (status === 'paymentdone') {
-            setTab(3)
+            setTab(4)
         }
     }
 
@@ -89,7 +89,7 @@ const OrderItem = ({ order, setTab }) => {
                         keyExtractor={item => item.itemId}
                     />
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
-                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹400</Text>
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹{order.totalCost}</Text>
                         {order.status === 'completed' &&
                             <TextInput 
                                 style={inputStyle.input} 

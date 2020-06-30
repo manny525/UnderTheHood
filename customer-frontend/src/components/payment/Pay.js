@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import MainButton from '../MainButton';
 import { useSelector, useDispatch } from 'react-redux';
 import BodyText from '../BodyText';
 import TitleText from '../TitleText';
 import paymentCall from '../../apiCalls/pay';
 import { updateOrders } from '../../store/actions/orders'
+import { updateServices } from '../../store/actions/serviceRequest'
 
 const Pay = ({ setTab, orderId, amount, merchantName, cardNumber, merchantId, expiry, onClose, orderType }) => {
     const customerId = useSelector(state => state.user.user.user._id)
-    const [status, setStaus] = useState(false)
+    const [status, setStatus] = useState(false)
+    const [error, setError] = useState('')
 
     const dispatch = useDispatch()
 
@@ -23,17 +25,23 @@ const Pay = ({ setTab, orderId, amount, merchantName, cardNumber, merchantId, ex
             senderAccountNumber: cardNumber,
         })
         const transactionDetails = await paymentCall(body)
-        setStaus(true)
-        if (orderType === 'goods') {
-            dispatch(updateOrders(transactionDetails.order))
-        } else if (orderType === 'service') {
-
+        if (!transactionDetails.error) {
+            setStatus(true)
+            if (transactionDetails.order) {
+                dispatch(updateOrders(transactionDetails.order))
+            } else if (transactionDetails.service) {
+                dispatch(updateServices(transactionDetails.service))
+            }
+            setTab(3)
         }
-        setTab(3)
+        else {
+            setError('Transaction Failed')
+        }
     }
 
     return (
         <View style={styles.container} >
+            {!!error && <BodyText>{error}</BodyText>}
             {!status ?
                 <View style={{ alignItems: 'center' }} >
                     <BodyText>Card: {cardNumber}</BodyText>
@@ -46,6 +54,7 @@ const Pay = ({ setTab, orderId, amount, merchantName, cardNumber, merchantId, ex
                     <BodyText>Paid to: {merchantName}</BodyText>
                     <BodyText>Amount: ₹{amount}</BodyText>
                     <MainButton style={{ marginTop: 5 }} onPress={onClose} >Close</MainButton>
+                    <BodyText>We'll hold your money till you pick up your order or complete your service request</BodyText>
                 </View>
             }
         </View>

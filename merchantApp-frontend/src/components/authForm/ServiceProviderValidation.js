@@ -9,6 +9,7 @@ import { setUser } from '../../store/actions/user';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import getPincode from '../../apiCalls/getPincode';
+import newUser from '../../apiCalls/newUser';
 
 const ServiceProviderValidation = (props) => {
     const [location, setLocation] = useState(null)

@@ -6,7 +6,7 @@ const serviceRequestReducer = (state = initalState, action) => {
     switch (action.type) {
         case 'SET_SERVICE_REQUESTS': {
             return {
-                requests: state.requests.concat(action.requests)
+                requests: [...action.requests]
             }
         }
         case 'UPDATE_SERVICE_REQUEST': {

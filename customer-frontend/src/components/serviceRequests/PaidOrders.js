@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
 import OrderItem from './OrderItem'
 import orderTypeSelector from '../selectors/orderTypeSelector';
 
-const CompletedOrders = ({setTab}) => {
-    const orders = useSelector(state => state.orders.orders)
+const PaidOrders = ({setTab}) => {
+    const orders = useSelector(state => state.serviceRequest.requests)
 
-    const [completingOrders] = useState(orderTypeSelector(orders, 'completed'))
+    const [paidOrders] = useState(orderTypeSelector(orders, 'paymentdone'))
 
     return (
         <View style={styles.itemsContainer} >
             <FlatList
-                data={completingOrders}
+                data={paidOrders}
                 renderItem={({ item }) => {
                     return (
                         <OrderItem setTab={setTab} order={item} />
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CompletedOrders
+export default PaidOrders

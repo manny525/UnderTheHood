@@ -93,6 +93,7 @@ const AuthScreen = (props) => {
                     await dispatch(setOrders(existingUser.orders))
                 }
                 if (existingUser.requests) {
+                    console.log(existingUser.requests)
                     await dispatch(setRequests(existingUser.requests))
                 }
                 props.setLogin(true, existingUser)

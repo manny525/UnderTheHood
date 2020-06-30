@@ -19,6 +19,7 @@ const inquiry = require('./../../funds_transfer_attributes_inquiry_api/test/fund
 const randomize = require('randomatic')
 
 const createAlias = async (req, res, next) => {
+    console.log(req.body)
     try {
         const username = req.body.merchantName.split(" ")
         var data = undefined
@@ -32,6 +33,7 @@ const createAlias = async (req, res, next) => {
                     next()
                 })
                 .catch(function (error) {
+                    console.log(error.response)
                     res.status(error.response.statusCode).send(error.response.body)
                 });
             function getParameters() {
@@ -92,6 +94,7 @@ const pullFunds = function (req, cb) {
             // res.status(result.response.statusCode).send(result.response)
         })
         .catch(function (error) {
+            console.log(error.response)
             cb(undefined, error.response)
             // res.status(error.response.statusCode).send(error.response)
         });
@@ -106,7 +109,7 @@ const pullFunds = function (req, cb) {
             "businessApplicationId": "AA",
             "cpsAuthorizationCharacteristicsIndicator": "Y",
             "senderCardExpiryDate": req.senderCardExpiryDate,
-            "amount": req.amount,
+            "amount": "100",
             // "124.02",
             "acquirerCountryCode": "840",
             "retrievalReferenceNumber": "330000550000",

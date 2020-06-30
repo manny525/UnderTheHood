@@ -1,29 +1,23 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Switch, Dimensions, TextInput } from 'react-native';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 import Card from '../Card'
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
 import TitleText from '../TitleText';
 import inputStyle from '../../styles/input';
-import moment from 'moment'
 import { updateRequest } from '../../store/actions/serviceRequest';
 import { useDispatch, useSelector } from 'react-redux';
 import updateServiceStatus from '../../apiCalls/updateServiceStatus'
+import inputStyles from '../../styles/input';
+import getPaid from '../../apiCalls/getPaid'
 
 const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
-    const [timeVisible, setTimeVisible] = useState(false)
-    const [time, setTime] = useState();
+    const [time, setTime] = useState('');
     const [vCode, setVCode] = useState();
+    const [received, setReceived] = useState(false)
 
     const token = useSelector(state => state.user.user.token)
-
-    const onChangeTime = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        setTime(currentTime);
-        setTimeVisible(false)
-    };
 
     const dispatch = useDispatch()
 
@@ -44,7 +38,8 @@ const OrderItem = ({ order, setTab }) => {
         }
         const body = JSON.stringify({
             _id: order._id,
-            status
+            status,
+            time
         })
         const updatedService = await updateServiceStatus(body, token)
         dispatch(updateRequest(updatedService))
@@ -53,7 +48,7 @@ const OrderItem = ({ order, setTab }) => {
             setTab(1)
         }
         else if (status === 'paymentdone') {
-            setTab(3)
+            setTab(4)
         }
     }
 
@@ -69,8 +64,6 @@ const OrderItem = ({ order, setTab }) => {
                     </View>
                     <MainButton style={{ width: 95 }} onPress={() => setOrderModalVisible(true)} >Check</MainButton>
                 </View>
-                {timeVisible && order.status === 'new' &&
-                    <RNDateTimePicker mode="time" onChange={onChangeTime} value={time} />}
             </Card>
             <Modal
                 animationType="slide"
@@ -88,12 +81,14 @@ const OrderItem = ({ order, setTab }) => {
                 <View style={styles.itemModalContainer}>
                     <Text style={styles.itemName} >Date: {order.date}</Text>
                     {order.status === 'new' ?
-                        <TouchableOpacity onPress={() => {
-                            setTimeVisible(true)
-                        }} >
-                            <Text style={{ ...styles.itemName, color: colors.primary }} >Time: {moment(time).format("hh:mm A")}</Text>
-                        </TouchableOpacity> :
-                        <Text style={{ ...styles.itemName }} >Time: {moment(time).format("hh:mm A")}</Text>
+                        <TextInput
+                            style={inputStyles.input}
+                            placeholder='Time: hh/mm AM/PM'
+                            onChangeText={setTime}
+                            value={time}
+                        />
+                        :
+                        <Text style={{ ...styles.itemName }} >Time: {order.time}</Text>
                     }
                     <TextInput
                         editable={false}
@@ -108,12 +103,11 @@ const OrderItem = ({ order, setTab }) => {
                             style={inputStyle.input}
                             placeholder="Verification Code"
                             onChangeText={setVCode}
-                            keyboardType='number-pad'
                             maxLength={6}
                         />}
-                    <MainButton style={{ marginTop: 5 }} onPress={orderStatusChange}>
+                    {order.status !== 'upcoming' && <MainButton style={{ marginTop: 5 }} onPress={orderStatusChange}>
                         {order.status === 'new' ? 'Accept' : 'Get Paid'}
-                    </MainButton>
+                    </MainButton>}
                 </View>
             </Modal>
         </View>

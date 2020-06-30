@@ -41,19 +41,23 @@ router.post('/pull', async (req, res) => {
                         otp,
                         transactionIdentifier: ans.body.transactionIdentifier,
                     })
-                    await payment.save()
                     const customer = await Customer.findById(req.body.customerId)
                     const merchant = await User.findById(req.body.merchantId)
                     const vCode = await sendPaymentOTP(customer.email, otp, merchant.merchantName)
-                    console.log(vCode)
                     const order = await Order.findById(req.body.orderId)
                     if (!order) {
-                        order = await Service.findById(req.body.orderId)
+                        const service = await Service.findById(req.body.orderId)
+                        console.log(service || 'service not found')
+                        service.status = 'completed'
+                        await service.save()
+                        await payment.save()
+                        res.send({ transactionIdentifier: ans.body.transactionIdentifier, otp, service })
+                    } else {
+                        order.status = 'completed'
+                        await order.save()
+                        await payment.save()
+                        res.send({ transactionIdentifier: ans.body.transactionIdentifier, otp, order })
                     }
-                    console.log(order)
-                    order.status = 'completed'
-                    await order.save()
-                    res.send({ transactionIdentifier: ans.body.transactionIdentifier, otp, order })
                 } catch (e) {
                     res.status(500).send({ error: e })
                 }

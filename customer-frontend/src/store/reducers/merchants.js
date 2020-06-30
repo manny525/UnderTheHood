@@ -9,13 +9,13 @@ const merchantsReducer = (state = initalState, action) => {
         // console.log(action.goodsProviders)
             return {
                 ...state,
-                goodsProviders: state.goodsProviders.concat(action.goodsProviders)
+                goodsProviders: [...action.goodsProviders]
             }
         }
         case 'SET_SERVICE_PROVIDERS':
             return {
                 ...state,
-                serviceProviders: state.serviceProviders.concat(action.serviceProviders)
+                serviceProviders: [...action.serviceProviders]
             }
         default:
             return state

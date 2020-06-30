@@ -2,7 +2,7 @@ import { LOCAL_HOST } from 'react-native-dotenv'
 
 const newUser = async (body) => {
     try {
-        const res = fetch(`http://${LOCAL_HOST}/users/newUser`, {
+        const res = await fetch(`http://${LOCAL_HOST}/users/newUser`, {
                 method: "POST",
                 body,
                 headers: {

@@ -41,6 +41,9 @@ router.patch('/services/status', auth_merchant, async (req, res) => {
         if (!service) {
             res.status(404).send({message: 'Not found'})
         }
+        if (service.status === 'new') {
+            service.time = req.body.time
+        }
         service.status = req.body.status
         await service.save()
         console.log(service)

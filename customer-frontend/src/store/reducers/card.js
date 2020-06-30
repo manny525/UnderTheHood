@@ -2,7 +2,7 @@ const cardReducer = (state = {cardList: []}, action) => {
     switch (action.type) {
         case 'SET_CARDS':
             return {
-                cardList: state.cardList.concat(action.cards)
+                cardList: [...action.cards]
             }
         case 'ADD_CARD':
             return {

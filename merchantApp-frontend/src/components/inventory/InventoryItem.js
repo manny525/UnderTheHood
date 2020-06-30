@@ -113,7 +113,7 @@ const InventoryItem = ({ item, categoryId }) => {
                     <TextInput
                         keyboardType='number-pad'
                         style={{ ...inputStyle.input, marginTop: 2 }}
-                        placeholder='Item Name'
+                        placeholder='Item Price'
                         onChangeText={(text) => { setSellingPrice(text) }}
                         value={sellingPrice}
                     />

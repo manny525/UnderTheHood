@@ -22,7 +22,7 @@ const OrderItem = ({ order, setTab }) => {
                     <View>
                         <Text style={styles.text} >{order.merchantName}</Text>
                         <Text style={styles.text} >{order.date}</Text>
-                        {order.status === 'upcoming' &&
+                        {order.status !== 'new' &&
                             <Text style={styles.text} >{order.time}</Text>}
                     </View>
                     <MainButton
@@ -48,12 +48,7 @@ const OrderItem = ({ order, setTab }) => {
                 </View>
                 <View style={styles.itemModalContainer}>
                     <TitleText style={{ color: 'black' }} >Date: {order.date}</TitleText>
-                    {order.status === 'new' &&
-                        <TouchableOpacity onPress={() => {
-                            setTimeVisible(true)
-                        }} >
-                            <Text style={{ ...styles.itemName, color: colors.primary }} >Time: {order.time}</Text>
-                        </TouchableOpacity>}
+                    {order.status !== 'new' && <TitleText style={{ color: 'black' }} >Time: {order.time}</TitleText>}
                     <TextInput
                         editable={false}
                         multiline={true}
@@ -62,7 +57,7 @@ const OrderItem = ({ order, setTab }) => {
                         selection={{ start: 0, end: 0 }}
                         value={order.description}
                     />
-                    {order.status === 'new' &&
+                    {order.status === 'upcoming' &&
                         <View style={styles.itemModalContainer} >
                             <TextInput
                                 style={{...inputStyle.input, width: 150}}

@@ -63,8 +63,9 @@ const GoodsProviderValidation = (props) => {
             })
             try {
                 const userData = await newUser(body)
-                await setUserInventory(userData.inventory)
+                console.log(userData)
                 await setExistingUser({ user: userData.user, token: userData.token })
+                await setUserInventory(userData.inventory)
             } catch (e) {
                 console.log(e)
             }

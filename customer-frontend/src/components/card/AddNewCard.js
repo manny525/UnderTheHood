@@ -8,7 +8,7 @@ export default function AddNewCard({ setCardModalVisible }) {
 
      const [state, setState] = useState({
           cvv: '',
-          expiry: '',
+          date: '',
           name: '',
           number: ''
      })
@@ -21,7 +21,7 @@ export default function AddNewCard({ setCardModalVisible }) {
                var cardNumber = (state.number).split(' ').join('');
                const body = await JSON.stringify({
                     number: cardNumber,
-                    date: state.expiry,
+                    date: state.date,
                     cvv: state.cvv
                })
                try {
@@ -51,7 +51,7 @@ export default function AddNewCard({ setCardModalVisible }) {
           else if (state.name == '') {
                alert('Enter Carholder\'s name');
           }
-          else if (date.test(state.expiry) === false) {
+          else if (date.test(state.date) === false) {
                alert('Enter valid expiry date');
           }
           else if ((state.cvv).length != 3) {
@@ -99,8 +99,8 @@ export default function AddNewCard({ setCardModalVisible }) {
                          type="text"
                          name="expiry"
                          placeholder="yyyy-mm Expiry"
-                         value={state.expiry}
-                         onChangeText={(expiry) => setState({ ...state, expiry: expiry })}
+                         value={state.date}
+                         onChangeText={(date) => setState({ ...state, date })}
                          //onFocus={e=>this.setState({focus:e.target.name})}
                          style={styles.input}
                          autoCompleteType='cc-exp'
