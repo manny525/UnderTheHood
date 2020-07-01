@@ -29,10 +29,11 @@ const OrderItem = ({ order, setTab }) => {
             status = 'paymentdone'
             const body = await JSON.stringify({ otp: vCode })
             const paymentInfo = getPaid(body, token)
-            if (paymentInfo.error) {
-                return
-            } else if (paymentInfo.success) {
+            console.log(paymentInfo)
+            if (paymentInfo.success) {
                 setReceived(true)
+            } else {
+                return
             }
         }
         const body = JSON.stringify({
@@ -40,7 +41,7 @@ const OrderItem = ({ order, setTab }) => {
             status
         })
         console.log(token)
-        const updatedOrder = await updateOrderStatus (body, token)
+        const updatedOrder = await updateOrderStatus(body, token)
         console.log(updatedOrder)
         dispatch(updateOrders(updatedOrder))
         setOrderModalVisible(false)
@@ -91,10 +92,10 @@ const OrderItem = ({ order, setTab }) => {
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
                         <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹{order.totalCost}</Text>
                         {order.status === 'completed' &&
-                            <TextInput 
-                                style={inputStyle.input} 
+                            <TextInput
+                                style={inputStyle.input}
                                 placeholder="Verification Code"
-                                onChangeText={setVcode}     
+                                onChangeText={setVcode}
                                 maxLength={6}
                             />}
                         {order.status !== 'ready' && <MainButton onPress={orderStatusChange} style={{ marginTop: 5 }}>

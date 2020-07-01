@@ -15,6 +15,7 @@ import { setRequests } from '../store/actions/serviceRequest';
 import getMerchant from '../apiCalls/getMerchants';
 import { setGoodsProviders, setServiceProviders } from '../store/actions/merchants';
 import { setCustomerCards } from '../store/actions/card';
+import getPincode from '../apiCalls/getPincode';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
@@ -37,8 +38,7 @@ const AuthScreen = (props) => {
         const lat = location.coords.latitude
         const lon = location.coords.longitude
         try {
-            const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=6ed4de0702acb6&lat=${lat}&lon=${lon}&format=json`)
-            const data = await res.json()
+            const data = await getPincode(lat, lon)
             pincode = data.address.postcode
             let body = ({
                 postalCode: pincode,

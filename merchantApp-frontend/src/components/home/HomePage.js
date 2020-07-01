@@ -54,7 +54,7 @@ const HomePage = ({ navigation }) => {
                             `Upcoming Visits: ${upcomingRequests.length}`}
                     </Text>
                     <TouchableOpacity onPress={() => {
-                        if (!user.typeOfMerchant === 'goods')
+                        if (user.typeOfMerchant === 'goods')
                             navigation.jumpTo('Orders')
                         else
                             navigation.jumpTo('Requests')

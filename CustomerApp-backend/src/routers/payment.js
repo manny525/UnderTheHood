@@ -14,7 +14,6 @@ const Order = require('../models/order')
 const Service = require('../models/service')
 
 router.post('/pull', async (req, res) => {
-    console.log(req.body)
     try {
         pullFunds(
             {
@@ -43,7 +42,8 @@ router.post('/pull', async (req, res) => {
                     })
                     const customer = await Customer.findById(req.body.customerId)
                     const merchant = await User.findById(req.body.merchantId)
-                    const vCode = await sendPaymentOTP(customer.email, otp, merchant.merchantName)
+                    // const vCode = await sendPaymentOTP(customer.email, otp, merchant.merchantName)
+                    console.log(otp)
                     const order = await Order.findById(req.body.orderId)
                     if (!order) {
                         const service = await Service.findById(req.body.orderId)
@@ -71,11 +71,15 @@ router.post('/pull', async (req, res) => {
 router.post('/push', auth, async (req, res) => {
     try {
         const payment = await Payment.findOne({ merchantId: req.user._id, otp: req.body.otp })
+        // console.log(payment)
         if (!payment) {
             return res.status(400).send({ error: 'Invalid data' })
         }
         const customer = await Customer.findById(payment.customerId)
+        // console.log(customer)
         resolve({ email: req.user.email }, (ans, e) => {
+            console.log(ans.body)
+            console.log(payment.senderAccountNumber)
             if (e) {
                 return res.status(500).send({ error: e })
             }
@@ -87,14 +91,17 @@ router.post('/push', auth, async (req, res) => {
                 senderName: customer.name,
             }, async (ans, e) => {
                 if (e) {
+                    console.log(e.body)
                     return res.status(500).send({ error: e })
                 }
                 try {
                     payment.status = 'completed'
                     payment.otp = undefined
                     await payment.save()
+                    console.log('successful')
                     res.send({ success: 'payment successful' })
                 } catch (e) {
+                    // console.log(e)
                     res.send({error: 'failed'})
                 }
             })

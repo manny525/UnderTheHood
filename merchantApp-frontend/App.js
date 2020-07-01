@@ -27,7 +27,7 @@ export default function App() {
 
   async function loadToken() {
     try {
-      // await AsyncStorage.clear()
+      await AsyncStorage.clear()
       const token = await AsyncStorage.getItem('token');
       const _id = await AsyncStorage.getItem('owner');
       if (token !== null) {

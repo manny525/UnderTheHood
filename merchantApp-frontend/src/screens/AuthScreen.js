@@ -10,6 +10,7 @@ import { setInventory } from '../store/actions/inventory';
 import { setOrders } from '../store/actions/orders';
 import AsyncStorage from '@react-native-community/async-storage';
 import { setRequests } from '../store/actions/serviceRequest';
+import findUser from '../apiCalls/findUser';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
@@ -18,14 +19,15 @@ const AuthScreen = (props) => {
         const body = await JSON.stringify({
             email
         })
-        const response = await fetch('http://192.168.1.6:3000/users/findUser', {
-            method: "POST",
-            body,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        const user = await response.json()
+        const user = await findUser(body)
+        // const response = await fetch('http://192.168.1.6:3000/users/findUser', {
+        //     method: "POST",
+        //     body,
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // })
+        // const user = await response.json()
         return user
     }
 

@@ -108,13 +108,13 @@ const pullFunds = function (req, cb) {
         parameters.payload = {
             "businessApplicationId": "AA",
             "cpsAuthorizationCharacteristicsIndicator": "Y",
-            "senderCardExpiryDate": req.senderCardExpiryDate,
+            "senderCardExpiryDate": "2020-03",
             "amount": "100",
             // "124.02",
             "acquirerCountryCode": "840",
             "retrievalReferenceNumber": "330000550000",
             "cardAcceptor": {
-                "name": "Acceptor 1",
+                "name": "Acceptor 9",
                 "terminalId": "TID-9999",
                 "idCode": "CA-IDCode-77765",
                 "address": {
@@ -133,7 +133,7 @@ const pullFunds = function (req, cb) {
                 "postalCode": "12345",
                 "street": "XYZ St"
             },
-            "senderPrimaryAccountNumber": req.senderPrimaryAccountNumber,
+            "senderPrimaryAccountNumber": "4895142232120006",
             //  "4895142232120006",
             "surcharge": "11.99"
         };
@@ -166,7 +166,7 @@ const pushFunds = function (req, cb) {
             "retrievalReferenceNumber": "330000550000",
             "acquiringBin": "408999",
             "acquirerCountryCode": "840",
-            "senderAccountNumber": req.senderAccountNumber,
+            "senderAccountNumber": "4957030005123353",
             //  "4895142232120006",
             "senderCountryCode": "124",
             "transactionCurrencyCode": "USD",
@@ -175,16 +175,16 @@ const pushFunds = function (req, cb) {
             "senderAddress": "901 Metro Center Blvd",
             "senderCity": "Foster City",
             "senderStateCode": "CA",
-            "recipientPrimaryAccountNumber": req.recipientPrimaryAccountNumber,
+            "recipientPrimaryAccountNumber": "4895142232120006",
             // "4761360055652118",
-            "amount": req.amount,
+            "amount": "320",
             // "1200",
             "merchantCategoryCode": "6012",
             "businessApplicationId": "AA",
             "transactionIdentifier": "740379596591403",
             "sourceOfFundsCode": "05",
             "cardAcceptor": {
-                "name": "Acceptor 1",
+                "name": "Acceptor 9",
                 "terminalId": "TID-9999",
                 "idCode": "CA-IDCode-77765",
                 "address": {

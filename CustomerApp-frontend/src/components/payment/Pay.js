@@ -41,7 +41,7 @@ const Pay = ({ setTab, orderId, amount, merchantName, cardNumber, merchantId, ex
 
     return (
         <View style={styles.container} >
-            {!!error && <BodyText>{error}</BodyText>}
+            {!!error && <BodyText style={{color: 'red'}} >{error}</BodyText>}
             {!status ?
                 <View style={{ alignItems: 'center' }} >
                     <BodyText>Card: {cardNumber}</BodyText>
