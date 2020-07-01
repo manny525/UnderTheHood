@@ -26,6 +26,7 @@ const OrderItem = ({ order, setTab }) => {
             status = 'ready'
         }
         else if (order.status === 'completed') {
+            console.log('pay me')
             status = 'paymentdone'
             const body = await JSON.stringify({ otp: vCode })
             const paymentInfo = getPaid(body, token)

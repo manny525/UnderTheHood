@@ -2,10 +2,6 @@ const mongoose = require('mongoose')
 
 const inventorySchema = mongoose.Schema({
     categories: [{
-        categoryName: {
-            type: String,
-            required: true  
-        },
         items: [{
             itemName: {
                 type: String,
@@ -20,7 +16,10 @@ const inventorySchema = mongoose.Schema({
                 type: String,
                 required: true
             }
-        }]
+        }],
+        categoryName: {
+            type: String
+        }
     }],
     owner: {
         type: mongoose.Schema.Types.ObjectId,

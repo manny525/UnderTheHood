@@ -5,17 +5,11 @@ const authCredentials = require('../../visa_direct/funds_transfer_api/credential
 const { response } = require('express');
 
 const api_alias = require('../../visa_direct/visa_alias_directory_api/src/visa_alias_directory_api').visa_alias_directory_api;
-
 const visa_alias_directory_api = new api_alias(authCredentials);
-
 const funds_transfer_api = new api(authCredentials);
-
 const router = new express.Router()
-
 const auth = require('./../middleware/auth')
-
 const inquiry = require('./../../funds_transfer_attributes_inquiry_api/test/fundstransferinquiry_test')
-
 const randomize = require('randomatic')
 
 const createAlias = async (req, res, next) => {
@@ -162,45 +156,41 @@ const pushFunds = function (req, cb) {
             "Content-Type": "application/json"
         };
         parameters.payload = {
-            "systemsTraceAuditNumber": "451000",
-            "retrievalReferenceNumber": "330000550000",
-            "acquiringBin": "408999",
-            "acquirerCountryCode": "840",
-            "senderAccountNumber": "4957030005123353",
-            //  "4895142232120006",
-            "senderCountryCode": "124",
-            "transactionCurrencyCode": "USD",
-            "senderName": req.senderName,
-            //  "Mohammed Qasim",
-            "senderAddress": "901 Metro Center Blvd",
-            "senderCity": "Foster City",
-            "senderStateCode": "CA",
-            "recipientPrimaryAccountNumber": "4895142232120006",
-            // "4761360055652118",
-            "amount": "320",
-            // "1200",
-            "merchantCategoryCode": "6012",
             "businessApplicationId": "AA",
-            "transactionIdentifier": "740379596591403",
-            "sourceOfFundsCode": "05",
+            "transactionIdentifier": "381228649430015",
             "cardAcceptor": {
-                "name": "Acceptor 9",
-                "terminalId": "TID-9999",
                 "idCode": "CA-IDCode-77765",
                 "address": {
+                    "county": "San Mateo",
                     "country": "USA",
                     "state": "CA",
                     "zipCode": "94404"
                 },
+                "terminalId": "TID-9999",
+                "name": "Visa Inc. USA-Foster City"
             },
-            "recipientName": req.recipientName,
-            //  "rohan",
+            "senderAddress": "901 Metro Center Blvd",
+            "sourceOfFundsCode": "05",
+            "recipientName": "rohan",
+            "senderName": "Mohammed Qasim",
+            "senderStateCode": "CA",
+            "merchantCategoryCode": "6012",
+            "acquirerCountryCode": "840",
             "senderReference": "",
+            "recipientPrimaryAccountNumber": "4957030420210496",
+            "retrievalReferenceNumber": "412770451018",
+            "senderAccountNumber": "4653459515756154",
+            "transactionCurrencyCode": "USD",
+            "acquiringBin": "408999",
             "pointOfServiceData": {
+                "posConditionCode": "00",
                 "panEntryMode": "90",
-                "posConditionCode": "0",
                 "motoECIIndicator": "0"
             },
+            "senderCity": "Foster City",
+            "amount": "124.05",
+            "systemsTraceAuditNumber": "451018",
+            "senderCountryCode": "124"
         };
         parameters.payload.localTransactionDateTime = Date.now();
 

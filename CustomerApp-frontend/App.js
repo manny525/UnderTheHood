@@ -34,7 +34,7 @@ export default function App() {
 
   async function loadToken() {
     try {
-      await AsyncStorage.clear()
+      // await AsyncStorage.clear()
       const token = await AsyncStorage.getItem('token');
       if (token !== null) {
         const user = await findUserByToken(token)

@@ -69,6 +69,7 @@ router.post('/pull', async (req, res) => {
 })
 
 router.post('/push', auth, async (req, res) => {
+    console.log(req.body)
     try {
         const payment = await Payment.findOne({ merchantId: req.user._id, otp: req.body.otp })
         // console.log(payment)
@@ -78,6 +79,7 @@ router.post('/push', auth, async (req, res) => {
         const customer = await Customer.findById(payment.customerId)
         // console.log(customer)
         resolve({ email: req.user.email }, (ans, e) => {
+            console.log('god knows')
             console.log(ans.body)
             console.log(payment.senderAccountNumber)
             if (e) {

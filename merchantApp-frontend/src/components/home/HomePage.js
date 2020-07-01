@@ -12,15 +12,17 @@ const HomePage = ({ navigation }) => {
     const userData = useSelector(state => state.user.user)
     const token = userData.token
     const user = userData.user
+
     const orders = useSelector(state => state.orders.orders)
-    const requests = useSelector(state => state.serviceRequest.requests)
-
-
     const [upcomingOrders] = useState(orderTypeSelector(orders, 'pending'))
     const [readyOrders] = useState(orderTypeSelector(orders, 'ready'))
 
+    const requests = useSelector(state => state.serviceRequest.requests)
     const [newRequests] = useState(orderTypeSelector(requests, 'new'))
     const [upcomingRequests] = useState(orderTypeSelector(requests, 'upcoming'))
+
+
+    console.log(newRequests.length)
 
     const onLogout = () => {
         AsyncStorage.clear()
