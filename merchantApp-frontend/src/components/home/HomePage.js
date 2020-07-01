@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, Dimensions, TouchableOpacity, BackHandler } from 'react-native';
 import MainButton from '../MainButton';
 import { useSelector } from 'react-redux';
 import Header from '../Header';
@@ -22,15 +22,16 @@ const HomePage = ({ navigation }) => {
     const [upcomingRequests] = useState(orderTypeSelector(requests, 'upcoming'))
 
 
-    console.log(newRequests.length)
+    console.log(newRequests)
 
     const onLogout = () => {
         AsyncStorage.clear()
+        BackHandler.exitApp()
     }
 
     return (
         <View>
-            <Header title='HOME' />
+            {/* <Header title='HOME' /> */}
             <View style={styles.container} >
                 <View style={styles.textContainer} >
                     <Text style={styles.text} >

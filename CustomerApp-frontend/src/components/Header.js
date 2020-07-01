@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import colors from '../constants/colors'
 import TitleText from './TitleText';
 
@@ -27,8 +27,7 @@ const styles = StyleSheet.create({
         height: 70,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.primary,
-        fontSize: 18
+        backgroundColor: colors.primary
     }
 })
 

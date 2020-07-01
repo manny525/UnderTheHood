@@ -14,6 +14,7 @@ import serviceRequestReducer from './src/store/reducers/serviceRequest';
 import findUserByToken from './src/apiCalls/findUserByToken';
 import cartItmesReducer from './src/store/reducers/cartItems';
 import cardReducer from './src/store/reducers/card';
+import Header from './src/components/Header';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -34,7 +35,7 @@ export default function App() {
 
   async function loadToken() {
     try {
-      // await AsyncStorage.clear()
+      await AsyncStorage.clear()
       const token = await AsyncStorage.getItem('token');
       if (token !== null) {
         const user = await findUserByToken(token)
@@ -49,14 +50,13 @@ export default function App() {
     })
   }
   if (!tokenLoaded) {
-    return <AppLoading
-      startAsync={loadToken}
-      onFinish={() => setTokenLoaded(true)}
-      onError={(err) => console.log(err)}
-    />
+    return (
+      <AppLoading startAsync={loadToken} onFinish={() => setTokenLoaded(true)} onError={(err) => console.log(err)} />
+    )
   }
   return (
     <Provider store={store}>
+      <Header title='SERVIKART' />
       {login ? <MerchantNavigator /> : <AuthScreen setLogin={setLogin} userData={userData} />}
     </Provider>
   )

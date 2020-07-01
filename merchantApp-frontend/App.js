@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import getUserFromToken from './src/apiCalls/getUserFromToken';
 import ordersReducer from './src/store/reducers/orders';
 import serviceRequestReducer from './src/store/reducers/serviceRequest';
+import Header from './src/components/Header';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -61,6 +62,7 @@ export default function App() {
   }
   return (
     <Provider store={store}>
+      <Header title='SERVIKART' />
       {login ? <MerchantNavigator merchantType={userData.user.typeOfMerchant} /> : <AuthScreen setLogin={onLogin} userData={userData} />}
     </Provider>
   )

@@ -57,10 +57,26 @@ const OrderItem = ({ order, setTab }) => {
                         selection={{ start: 0, end: 0 }}
                         value={order.description}
                     />
+                    {order.status === 'paymentdone' &&
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 25 }} >
+                            Service Request Completed
+                            </Text>}
+                    {order.status === 'ready' &&
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                            Pay to receive Payment OTP
+                            </Text>}
+                    {order.status === 'completed' &&
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                            Provide the received OTP to the merchant
+                            </Text>}
+                    {order.status === 'new' &&
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                            Wait for the merchant to accept
+                            </Text>}
                     {order.status === 'upcoming' &&
                         <View style={styles.itemModalContainer} >
                             <TextInput
-                                style={{...inputStyle.input, width: 150}}
+                                style={{ ...inputStyle.input, width: 150 }}
                                 placeholder='Amount'
                                 onChangeText={setTotalCost}
                                 keyboardType='number-pad'

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, Image, View } from 'react-native';
 import * as Location from 'expo-location';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -19,6 +19,7 @@ import getPincode from '../apiCalls/getPincode';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
+    const [userLoaded, setUserLoaded] = useState(true)
 
     const checkExistingUser = async (email) => {
         const body = await JSON.stringify({
@@ -68,8 +69,9 @@ const AuthScreen = (props) => {
         }
         else if (number === 3) {
             if (!existingUser) {
+                setUserLoaded(false)
                 const userData = await checkExistingUser(email)
-                console.log(userData.existingUser)
+                setUserLoaded(true)
                 if (userData.existingUser) {
                     setExistingUser({
                         token: userData.token,
@@ -115,11 +117,13 @@ const AuthScreen = (props) => {
         }
         async function populateMerchants() {
             if (existingUser) {
+                setUserLoaded(false)
                 const merchants = await onGetMerchants()
                 console.log(merchants)
                 await dispatch(setGoodsProviders(merchants.goodsProviders))
                 await dispatch(setServiceProviders(merchants.serviceProviders))
                 login()
+                setUserLoaded(true)
             }
         }
         populateMerchants()
@@ -138,9 +142,16 @@ const AuthScreen = (props) => {
             setToken()
     }, [existingUser])
 
+    if (!userLoaded) {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+                <Image source={require('../../assets/load.gif')} />
+            </View>
+        )
+    }
+
     return (
         <SafeAreaView style={styles.screen} >
-            <Header title="CUSTOMER APP" />
             {verificationStage}
         </SafeAreaView>
     )

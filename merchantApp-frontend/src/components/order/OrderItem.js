@@ -15,6 +15,8 @@ const OrderItem = ({ order, setTab }) => {
     const [orderModalVisible, setOrderModalVisible] = useState(false)
     const [vCode, setVcode] = useState('')
     const [received, setReceived] = useState(false)
+    const [paying, setPaying] = useState(false)
+
 
     const token = useSelector(state => state.user.user.token)
 
@@ -29,11 +31,16 @@ const OrderItem = ({ order, setTab }) => {
             console.log('pay me')
             status = 'paymentdone'
             const body = await JSON.stringify({ otp: vCode })
-            const paymentInfo = getPaid(body, token)
+            setPaying(true)
+            const paymentInfo = await getPaid(body, token)
             console.log(paymentInfo)
             if (paymentInfo.success) {
+                alert('Payment Received')
                 setReceived(true)
             } else {
+                setPaying(false)
+                setOrderModalVisible(false)
+                alert('Transaction Failed')
                 return
             }
         }
@@ -45,13 +52,14 @@ const OrderItem = ({ order, setTab }) => {
         const updatedOrder = await updateOrderStatus(body, token)
         console.log(updatedOrder)
         dispatch(updateOrders(updatedOrder))
-        setOrderModalVisible(false)
         if (status === 'ready') {
             setTab(2)
         }
         else if (status === 'paymentdone') {
             setTab(4)
         }
+        setPaying(false)
+        setOrderModalVisible(false)
     }
 
     return (
@@ -92,6 +100,18 @@ const OrderItem = ({ order, setTab }) => {
                     />
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
                         <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹{order.totalCost}</Text>
+                        {order.status === 'paymentdone' &&
+                            <Text style={{ fontFamily: 'open-sans-bold', fontSize: 25 }} >
+                                Payment Received
+                            </Text>}
+                        {order.status === 'ready' &&
+                            <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                                Wait for the customer to pay
+                            </Text>}
+                        {order.status === 'completed' &&
+                            <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                                Ask the customer for the Payment OTP
+                            </Text>}
                         {order.status === 'completed' &&
                             <TextInput
                                 style={inputStyle.input}
@@ -99,8 +119,9 @@ const OrderItem = ({ order, setTab }) => {
                                 onChangeText={setVcode}
                                 maxLength={6}
                             />}
-                        {order.status !== 'ready' && <MainButton onPress={orderStatusChange} style={{ marginTop: 5 }}>
+                        {order.status !== 'ready' && order.status !== 'paymentdone' && <MainButton onPress={orderStatusChange} style={{ marginTop: 5 }}>
                             {order.status === 'pending' ? 'Ready' : 'Get Paid'}</MainButton>}
+                        {paying && <Image source={require('../../../assets/load.gif')} />}
                     </View>
                 </View>
             </Modal>

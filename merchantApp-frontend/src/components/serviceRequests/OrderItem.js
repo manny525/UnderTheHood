@@ -16,6 +16,7 @@ const OrderItem = ({ order, setTab }) => {
     const [time, setTime] = useState('');
     const [vCode, setVCode] = useState();
     const [received, setReceived] = useState(false)
+    const [paying, setPaying] = useState(false)
 
     const token = useSelector(state => state.user.user.token)
 
@@ -29,14 +30,17 @@ const OrderItem = ({ order, setTab }) => {
         else if (order.status === 'completed') {
             status = 'paymentdone'
             const body = await JSON.stringify({ otp: vCode })
+            setPaying(true)
             const paymentInfo = await getPaid(body, token)
+            console.log(paymentInfo)
             if (paymentInfo.error) {
+                setPaying(false)
                 return
             } else if (paymentInfo.success) {
                 setReceived(true)
             }
         }
-        const body = JSON.stringify({
+        const body = await JSON.stringify({
             _id: order._id,
             status,
             time
@@ -50,6 +54,7 @@ const OrderItem = ({ order, setTab }) => {
         else if (status === 'paymentdone') {
             setTab(4)
         }
+        setPaying(false)
     }
 
     return (
@@ -98,6 +103,14 @@ const OrderItem = ({ order, setTab }) => {
                         selection={{ start: 0, end: 0 }}
                         value={order.description}
                     />
+                    {order.status === 'paymentdone' &&
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 25 }} >
+                            Payment Received
+                            </Text>}
+                    {order.status === 'completed' &&
+                        <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                            Ask the customer for the Payment OTP
+                            </Text>}
                     {order.status === 'completed' &&
                         <TextInput
                             style={inputStyle.input}
@@ -105,9 +118,11 @@ const OrderItem = ({ order, setTab }) => {
                             onChangeText={setVCode}
                             maxLength={6}
                         />}
-                    {order.status !== 'upcoming' && <MainButton style={{ marginTop: 5 }} onPress={orderStatusChange}>
-                        {order.status === 'new' ? 'Accept' : 'Get Paid'}
-                    </MainButton>}
+                    {order.status !== 'upcoming' && order.status !== 'paymentdone' &&
+                        <MainButton style={{ marginTop: 5 }} onPress={orderStatusChange}>
+                            {order.status === 'new' ? 'Accept' : 'Get Paid'}
+                        </MainButton>}
+                    {paying && <Image source={require('../../../assets/load.gif')} />}
                 </View>
             </Modal>
         </View>

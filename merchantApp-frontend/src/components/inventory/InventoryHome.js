@@ -39,7 +39,6 @@ const InventoryHome = () => {
 
     return (
         <View style={styles.screen} >
-            <Header title='MY INVENTORY' />
             <TouchableOpacity style={styles.addItem} onPress={() => setAddCategoryModalVisible(true)} >
                 <Text>Add Category</Text>
                 <Text>+</Text>

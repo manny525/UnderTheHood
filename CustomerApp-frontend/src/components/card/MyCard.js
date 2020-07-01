@@ -40,7 +40,6 @@ export default function MyCard({ setTab, orderDetails, setPayModalVisible, order
             <View style={styles.cardsLayout} key={item.number}>
                 <View>
                     <Text>{item.number}</Text>
-                    <Text>{item.name}</Text>
                     <Text>Valid till: {item.date}</Text>
                     <MainButton onPress={onUseCard} >Use</MainButton>
                 </View>

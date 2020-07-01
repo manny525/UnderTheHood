@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Modal, FlatList, TouchableOpacity, Image, Dimensions, TextInput } from 'react-native';
 import Card from '../Card'
 import MainButton from '../MainButton';
 import colors from '../../constants/colors';
@@ -58,6 +58,22 @@ const OrderItem = ({ order, setTab }) => {
                     />
                     <View style={{ marginTop: 20, alignItems: 'center' }} >
                         <Text style={{ fontFamily: 'open-sans-bold', fontSize: 40 }} >Total: ₹{order.totalCost}</Text>
+                        {order.status === 'paymentdone' &&
+                            <Text style={{ fontFamily: 'open-sans-bold', fontSize: 25 }} >
+                                Order Completed
+                            </Text>}
+                        {order.status === 'ready' &&
+                            <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                                Pay to receive Payment OTP
+                            </Text>}
+                        {order.status === 'completed' &&
+                            <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                                Provide the received OTP while pick-up
+                            </Text>}
+                        {order.status === 'pending' &&
+                            <Text style={{ fontFamily: 'open-sans-bold', fontSize: 16 }} >
+                                Wait for the merchant to accept
+                            </Text>}
                         {order.status === 'ready' &&
                             <MainButton style={{ marginTop: 5 }} onPress={onPay} >Pay</MainButton>}
                     </View>

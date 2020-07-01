@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
 import PendingOrders from './PendingOrders';
 import colors from '../../constants/colors';
@@ -13,7 +13,6 @@ const OrderHome = ({ defaultTab }) => {
 
     return (
         <View style={styles.screen} >
-            <Header title='MY SERVICE REQUESTS' />
             <View style={styles.tabContainer} >
                 <TouchableOpacity onPress={() => setTab(1)}>
                     {tab === 1 ? <Text style={styles.tabTextBold}>Upcoming</Text> : <Text style={styles.tabText}>Upcoming</Text>}
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     tabContainer: {
+        width: Dimensions.get('window').width,
         marginTop: 2,
         flexDirection: 'row',
         justifyContent: 'space-around',

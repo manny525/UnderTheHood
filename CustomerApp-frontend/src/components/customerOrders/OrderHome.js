@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
 import PendingOrders from './PendingOrders';
 import colors from '../../constants/colors';
@@ -9,11 +9,10 @@ import Header from '../Header';
 import PaidOrders from './PaidOrders';
 
 const OrderHome = () => {
-    const [tab, setTab] = useState(1)
+    const [tab, setTab] = useState(2)
 
     return (
         <View style={styles.screen} >
-            <Header title='MY ORDERS' />
             <View style={styles.tabContainer} >
                 <TouchableOpacity onPress={() => setTab(1)}>
                     {tab === 1 ? <Text style={styles.tabTextBold}>Pending</Text> : <Text style={styles.tabText}>Pending</Text>}
@@ -22,10 +21,10 @@ const OrderHome = () => {
                     {tab === 2 ? <Text style={styles.tabTextBold}>Ready</Text> : <Text style={styles.tabText}>Ready</Text>}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setTab(3)}>
-                    {tab === 3 ? <Text style={styles.tabTextBold}>Completed</Text> : <Text style={styles.tabText}>Completed</Text>}
+                    {tab === 3 ? <Text style={styles.tabTextBold}>Paid</Text> : <Text style={styles.tabText}>Paid</Text>}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setTab(4)}>
-                    {tab === 4 ? <Text style={styles.tabTextBold}>Paid</Text> : <Text style={styles.tabText}>Paid</Text>}
+                    {tab === 4 ? <Text style={styles.tabTextBold}>Completed</Text> : <Text style={styles.tabText}>Completed</Text>}
                 </TouchableOpacity>
             </View>
             <View style={{ alignItems: 'center' }} >
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     tabContainer: {
+        width: Dimensions.get('window').width,
         marginTop: 2,
         flexDirection: 'row',
         justifyContent: 'space-around',

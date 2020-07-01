@@ -14,20 +14,13 @@ import findUser from '../apiCalls/findUser';
 
 const AuthScreen = (props) => {
     const [existingUser, setExistingUser] = useState(props.userData)
+    const [userLoaded, setUserLoaded] = useState(true)
 
     const checkExistingUser = async (email) => {
         const body = await JSON.stringify({
             email
         })
         const user = await findUser(body)
-        // const response = await fetch('http://192.168.1.6:3000/users/findUser', {
-        //     method: "POST",
-        //     body,
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // })
-        // const user = await response.json()
         return user
     }
 
@@ -50,6 +43,7 @@ const AuthScreen = (props) => {
                             orders: userData.orders
                         })
                     } else if (userData.user.typeOfMerchant === "service") {
+                        console.log(userData.services)
                         setExistingUser({
                             token: userData.token,
                             user: userData.user,
@@ -119,7 +113,6 @@ const AuthScreen = (props) => {
 
     return (
         <SafeAreaView style={styles.screen} >
-            <Header title="MERCHANT APP" />
             {verificationStage}
         </SafeAreaView>
     )

@@ -139,6 +139,7 @@ const pullFunds = function (req, cb) {
 }
 
 const pushFunds = function (req, cb) {
+    console.log(req.body)
     funds_transfer_api.pushfunds(getParameters())
         .then(function (result) {
             cb(result.response, undefined)
@@ -151,7 +152,7 @@ const pushFunds = function (req, cb) {
 
     function getParameters() {
         var parameters = {
-            "x-client-transaction-id": "gv123456tghyfrasdj123",
+            "x-client-transaction-id": "gv123456tghyfasdgft123grt",
             "Accept": "application/json",
             "Content-Type": "application/json"
         };

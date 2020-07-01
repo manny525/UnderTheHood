@@ -9,7 +9,7 @@ import ServiceProviderHome from '../serviceProvider/ServiceProviderHome';
 const HomePage = () => {
     return (
         <View style={styles.container} >
-            <Header title='MERCHANTS' />
+            {/* <Header title='MERCHANTS' /> */}
             <GoodsProviderHome />
             <ServiceProviderHome />
         </View>

@@ -6,7 +6,7 @@ import CartItems from './CartItems';
 const CartHome = () => {
     return (
         <View style={styles.screen} >
-            <Header title='MY CARTS' />
+            {/* <Header title='MY CARTS' /> */}
             <CartItems />
         </View>
     )
